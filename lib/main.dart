@@ -1,3 +1,4 @@
+import 'package:agu_meetup_mobile/features/sign_in/model_view/sign_in_model_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './features/authentication/view_model/authentication_model_view.dart';
@@ -13,6 +14,9 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (_) => IntroModelView(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => SignInModelView(),
         ),
       ],
       child: const MyApp(),

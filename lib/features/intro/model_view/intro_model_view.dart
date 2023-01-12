@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:agu_meetup_mobile/core/constants.dart';
+import 'package:agu_meetup_mobile/features/sign_in/view/sign_in_view.dart';
 import 'package:flutter/material.dart';
 
 class IntroModelView extends ChangeNotifier {
@@ -41,6 +42,11 @@ class IntroModelView extends ChangeNotifier {
   double loginButtonOpacity = 0.15;
   Function loginButton(BuildContext context) => () {
         /// Router to login page
-        print("go login page");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const SignInView(),
+          ),
+        );
       };
 }

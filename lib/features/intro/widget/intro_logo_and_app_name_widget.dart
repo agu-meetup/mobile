@@ -1,4 +1,6 @@
+import 'package:agu_meetup_mobile/features/intro/model_view/intro_model_view.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constants.dart';
 import '../../../core/size_config.dart';
@@ -14,7 +16,7 @@ class IntroLogoAndAppNameWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Text(
-            "LOGO",
+            context.read<IntroModelView>().logoName,
             style: TextStyle(
               fontSize: 40,
               color: kWhite,
@@ -22,7 +24,7 @@ class IntroLogoAndAppNameWidget extends StatelessWidget {
             ),
           ),
           Text(
-            "app name",
+            context.read<IntroModelView>().appName,
             style: TextStyle(
               fontSize: 35,
               color: kWhite,
