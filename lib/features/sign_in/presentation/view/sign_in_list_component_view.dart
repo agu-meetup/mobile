@@ -32,7 +32,7 @@ class _SignInListComponentViewState extends State<SignInListComponentView> {
             const SizedBox(height: 16),
             WidTextFieldWidget(
               hintText: "E-mail",
-              ctr: signInMV.emailCtr,
+              changeValueFunc: signInMV.changeEmailVal,
               validatorFunc: signInMV.emailValidatorFunc,
               textInputType: signInMV.emailTextInputType,
             ),
@@ -42,7 +42,7 @@ class _SignInListComponentViewState extends State<SignInListComponentView> {
               builder: (context, snapshot) {
                 return WidTextFieldWidget(
                   hintText: "Password",
-                  ctr: signInMV.passwordCtr,
+                  changeValueFunc: signInMV.changePasswordVal,
                   validatorFunc: signInMV.passwordValidatorFunc,
                   isPassword: true,
                   isSecure: snapshot.data ?? true,
@@ -52,6 +52,7 @@ class _SignInListComponentViewState extends State<SignInListComponentView> {
             ),
             WidTextButtonWidget(
               text: "Forgot Password?",
+              onTanFunc: signInMV.goForgotPasswordPage,
             ),
             const SizedBox(height: 32),
             WidButtonWidget(

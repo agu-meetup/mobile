@@ -4,15 +4,22 @@ import '../../core/constants.dart';
 
 class WidTextButtonWidget extends StatelessWidget {
   String text;
+  Function onTanFunc;
 
-  WidTextButtonWidget({super.key, required this.text});
+  WidTextButtonWidget({
+    super.key,
+    required this.text,
+    required this.onTanFunc,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.centerRight,
       child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          onTanFunc(context);
+        },
         child: Text(
           text,
           style: TextStyle(

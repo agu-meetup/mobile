@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:agu_meetup_mobile/features/sign_up/presentation/view/sign_up_view.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SignInModelView extends ChangeNotifier {
@@ -9,7 +9,7 @@ class SignInModelView extends ChangeNotifier {
 
   /// Sign In Properties
   String emailHintText = "E-mail";
-  TextEditingController emailCtr = TextEditingController();
+  String? emailVal;
   TextInputType emailTextInputType = TextInputType.emailAddress;
   String? emailValidatorFunc(String? val) {
     if (val == null) {
@@ -21,13 +21,21 @@ class SignInModelView extends ChangeNotifier {
     return null;
   }
 
+  void changeEmailVal(String? newEmailVal) {
+    emailVal = newEmailVal;
+  }
+
   /// Password Properties
   String passwordHintText = "Password";
-  TextEditingController passwordCtr = TextEditingController();
-  final isEyeOpenController = StreamController<bool>();
+  String? passwordVal;
+  final isEyeOpenController = StreamController<bool>.broadcast();
   Stream<bool> isEyeOpenStream() async* {
     yield true;
     yield* isEyeOpenController.stream;
+  }
+
+  void changePasswordVal(String? newPasswordVal) {
+    passwordVal = newPasswordVal;
   }
 
   String? passwordValidatorFunc(String? val) {
@@ -45,10 +53,23 @@ class SignInModelView extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Forgot Password Properties
+  void goForgotPasswordPage(BuildContext context) {
+    // go forgot password
+  }
+
   /// Sign In Button Properties
   void signInButtonFunc() {
     if (formKey.currentState!.validate()) {
       print("Let\'s sign in");
     }
+  }
+
+  /// Sign Up Button Properties
+  void goSignUpPage(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const SignUpView()),
+        (route) => false);
   }
 }

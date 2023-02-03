@@ -32,7 +32,7 @@ class AuthenticationModelView extends ChangeNotifier {
 
   Future<void> getJwtFromLocalDB() async {
     await Future.delayed(const Duration(seconds: 2));
-    token = "asdgmfevjknrek";
+    token = null;
     if (token == null) {
       _authenticationStatusController.add(AuthenticationStatus.unauthenticated);
       _authenticationStatus = AuthenticationStatus.unauthenticated;

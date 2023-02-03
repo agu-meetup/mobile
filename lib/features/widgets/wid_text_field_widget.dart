@@ -7,16 +7,16 @@ import '../../core/constants.dart';
 class WidTextFieldWidget extends StatelessWidget {
   String hintText;
   Function? validatorFunc;
-  TextEditingController ctr;
   TextInputType? textInputType;
   bool isPassword;
   bool isSecure;
+  Function changeValueFunc;
   Function? changePasswordEye;
 
   WidTextFieldWidget({
     Key? key,
     required this.hintText,
-    required this.ctr,
+    required this.changeValueFunc,
     this.validatorFunc,
     this.textInputType,
     this.isPassword = false,
@@ -32,6 +32,9 @@ class WidTextFieldWidget extends StatelessWidget {
           return validatorFunc!(val);
         }
         return null;
+      },
+      onChanged: (String? val) {
+        changeValueFunc(val);
       },
       keyboardType: textInputType,
       obscureText: isSecure,
