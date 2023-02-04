@@ -1,13 +1,23 @@
 import 'dart:async';
 
+import 'package:agu_meetup_mobile/core/exceptions.dart';
+import 'package:agu_meetup_mobile/data/sign_in/models/sign_in_request_model.dart';
+import 'package:agu_meetup_mobile/domains/sign_in/repository/sign_in_repository.dart';
+import 'package:agu_meetup_mobile/presentations/authentication/view/authentication_view.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 import '../../sign_up/view/sign_up_view.dart';
 
-
 class SignInModelView extends ChangeNotifier {
+  SignInRepository signInRepository = SignInRepository();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  BuildContext? ctx;
+
+  /// Update Context data
+  void updateContextData(BuildContext context) {
+    ctx = context;
+  }
 
   /// Sign In Properties
   String emailHintText = "E-mail";
@@ -61,9 +71,29 @@ class SignInModelView extends ChangeNotifier {
   }
 
   /// Sign In Button Properties
-  void signInButtonFunc() {
+  Future<void> signInButtonFunc() async {
     if (formKey.currentState!.validate()) {
-      print("Let\'s sign in");
+      try {
+        await signInRepository.signInRepo(
+          SignInRequestModel(
+            email: emailVal!,
+            password: passwordVal!,
+          ),
+        );
+
+        /// Auth router
+        Navigator.pushAndRemoveUntil(
+            ctx!,
+            MaterialPageRoute(builder: (_) => AuthenticationView()),
+            (route) => false);
+        print("Let\'s sign in");
+      } catch (e) {
+        if (e == WrongEmailOrPassword) {
+          print("Wrong Password or Email");
+        } else {
+          print(e);
+        }
+      }
     }
   }
 

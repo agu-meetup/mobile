@@ -1,0 +1,1 @@
+class WrongEmailOrPassword implements Exception {}

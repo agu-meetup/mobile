@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../../components/my_buttons/my_text_button_widget.dart';
 import '../model_view/sign_up_model_view.dart';
 
-
 class SignUpSignInButtonWidget extends StatelessWidget {
   const SignUpSignInButtonWidget({Key? key}) : super(key: key);
 

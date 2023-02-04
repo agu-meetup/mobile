@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +21,7 @@ class _SignInListComponentViewState extends State<SignInListComponentView> {
   @override
   Widget build(BuildContext context) {
     SignInModelView signInMV = context.read<SignInModelView>();
+    signInMV.updateContextData(context);
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Form(

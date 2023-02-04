@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/size_config.dart';
+import '../../../core/enums.dart';
 import '../../bottom_bar/view/bottom_bar_view.dart';
 import '../../intro/model_view/intro_model_view.dart';
 import '../../intro/view/intro_view.dart';
@@ -17,6 +18,7 @@ class _AuthenticationViewState extends State<AuthenticationView> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    context.read<AuthenticationModelView>().updateAuthStatus();
     return StreamBuilder<AuthenticationStatus?>(
       stream: context.read<AuthenticationModelView>().authStatus,
       builder: (context, snapshot) {
