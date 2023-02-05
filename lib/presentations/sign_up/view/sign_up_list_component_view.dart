@@ -22,6 +22,7 @@ class _SignUpListComponentViewState extends State<SignUpListComponentView> {
   @override
   Widget build(BuildContext context) {
     SignUpModelView signUpMV = context.read<SignUpModelView>();
+    signUpMV.updateContextData(context);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Form(

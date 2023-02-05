@@ -4,6 +4,7 @@ import 'package:agu_meetup_mobile/core/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../../sign_in/view/sign_in_view.dart';
+import '../../sign_up/view/sign_up_view.dart';
 
 class IntroModelView extends ChangeNotifier {
   bool isLoading = true;
@@ -33,6 +34,12 @@ class IntroModelView extends ChangeNotifier {
   Color signUpButtonBackgroundColor = kWhite;
   Function signUpButton(BuildContext context) => () {
         /// Router to sign up page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const SignUpView(),
+          ),
+        );
         print("go sign up page");
       };
 

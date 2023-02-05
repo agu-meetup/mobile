@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:agu_meetup_mobile/core/assets.dart';
+import 'package:agu_meetup_mobile/core/constants.dart';
+import 'package:agu_meetup_mobile/core/size_config.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +10,12 @@ import '../../sign_in/view/sign_in_view.dart';
 
 class SignUpModelView extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  BuildContext? ctx;
+
+  /// Update Context data
+  void updateContextData(BuildContext context) {
+    ctx = context;
+  }
 
   /// Name field Properties
   String nameHintText = "Name";
@@ -140,8 +149,57 @@ class SignUpModelView extends ChangeNotifier {
   }
 
   /// Sign Up Button Properties
-  void signUpButtonFunc() {
+  void signUpButtonFunc() async {
     if (formKey.currentState!.validate()) {
+      late Timer timer;
+      await showDialog(
+          context: ctx!,
+          builder: (BuildContext builderContext) {
+            timer = Timer(const Duration(seconds: 5), () {
+              Navigator.of(builderContext).pop();
+            });
+
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              content: Container(
+                width: SizeConfig.screenWidth! * 2 / 3,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image(
+                      image: AssetImage(successStar),
+                      height: SizeConfig.screenWidth! / 4,
+                      width: SizeConfig.screenWidth! / 4,
+                      fit: BoxFit.cover,
+                    ),
+                    const Text(
+                      'Congratulations!',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Your account has been successfully created. You will be redirected to the homepage in a few seconds.',
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 20,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 15,
+                        color: kDarkGray,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).then((val) {
+        if (timer.isActive) {
+          timer.cancel();
+        }
+      });
       print("Let\'s sign up");
     }
   }
