@@ -18,6 +18,7 @@ class SignInListComponentView extends StatefulWidget {
 }
 
 class _SignInListComponentViewState extends State<SignInListComponentView> {
+  // no arguments...
   @override
   Widget build(BuildContext context) {
     SignInModelView signInMV = context.read<SignInModelView>();
@@ -32,7 +33,7 @@ class _SignInListComponentViewState extends State<SignInListComponentView> {
             const SignInTextsWidget(),
             const SizedBox(height: 16),
             MyTextFieldWidget(
-              hintText: "E-mail",
+              hintText: signInMV.emailHintText,
               changeValueFunc: signInMV.changeEmailVal,
               validatorFunc: signInMV.emailValidatorFunc,
               textInputType: signInMV.emailTextInputType,

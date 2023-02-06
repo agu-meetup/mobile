@@ -2,13 +2,17 @@ import 'dart:async';
 
 import 'package:agu_meetup_mobile/core/assets.dart';
 import 'package:agu_meetup_mobile/core/constants.dart';
+import 'package:agu_meetup_mobile/core/exceptions.dart';
 import 'package:agu_meetup_mobile/core/size_config.dart';
+import 'package:agu_meetup_mobile/data/sign_up/models/sign_up_request_model.dart';
+import 'package:agu_meetup_mobile/domains/sign_up/repository/sign_up_repository.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 import '../../sign_in/view/sign_in_view.dart';
 
 class SignUpModelView extends ChangeNotifier {
+  SignUpRepository signUpRepository = SignUpRepository();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   BuildContext? ctx;
 
@@ -149,58 +153,79 @@ class SignUpModelView extends ChangeNotifier {
   }
 
   /// Sign Up Button Properties
-  void signUpButtonFunc() async {
+  Future<void> signUpButtonFunc() async {
     if (formKey.currentState!.validate()) {
-      late Timer timer;
-      await showDialog(
-          context: ctx!,
-          builder: (BuildContext builderContext) {
-            timer = Timer(const Duration(seconds: 5), () {
-              Navigator.of(builderContext).pop();
-            });
+      try {
+        await signUpRepository.signUpRepo(SignUpRequestModel(
+          name: nameVal!,
+          surname: surnameVal!,
+          phoneNumber: phoneNumVal!,
+          email: emailVal!,
+          password: passwordVal!,
+        ));
+        late Timer timer;
+        await showDialog(
+            context: ctx!,
+            builder: (BuildContext builderContext) {
+              timer = Timer(const Duration(seconds: 4), () {
+                Navigator.of(builderContext).pop();
+              });
 
-            return AlertDialog(
-              backgroundColor: Colors.white,
-              content: Container(
-                width: SizeConfig.screenWidth! * 2 / 3,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image(
-                      image: AssetImage(successStar),
-                      height: SizeConfig.screenWidth! / 4,
-                      width: SizeConfig.screenWidth! / 4,
-                      fit: BoxFit.cover,
-                    ),
-                    const Text(
-                      'Congratulations!',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
+              return AlertDialog(
+                backgroundColor: Colors.white,
+                content: Container(
+                  width: SizeConfig.screenWidth! * 2 / 3,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image(
+                        image: AssetImage(successStar),
+                        height: SizeConfig.screenWidth! / 4,
+                        width: SizeConfig.screenWidth! / 4,
+                        fit: BoxFit.cover,
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Your account has been successfully created. You will be redirected to the homepage in a few seconds.',
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 20,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 15,
-                        color: kDarkGray,
+                      const Text(
+                        'Congratulations!',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 20),
+                      Text(
+                        'Your account has been successfully created. You will be redirected to the homepage in a few seconds.',
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 20,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 15,
+                          color: kDarkGray,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }).then((val) {
-        if (timer.isActive) {
-          timer.cancel();
+              );
+            }).then((val) {
+          if (timer.isActive) {
+            timer.cancel();
+          }
+        });
+        print("Let\'s sign up");
+        Navigator.pushAndRemoveUntil(
+            ctx!,
+            MaterialPageRoute(
+              builder: (_) => SignInView(),
+            ),
+            (route) => false);
+      } catch (e) {
+        if (e == EmailAlreadyUsed()) {
+          print("Email is already used");
+        } else {
+          print("Hata");
         }
-      });
-      print("Let\'s sign up");
+      }
     }
   }
 
