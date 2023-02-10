@@ -9,6 +9,7 @@ import 'package:agu_meetup_mobile/domains/sign_up/repository/sign_up_repository.
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
+import '../../../components/my_dialogs/my_simple_dialog_widget.dart';
 import '../../sign_in/view/sign_in_view.dart';
 
 class SignUpModelView extends ChangeNotifier {
@@ -70,11 +71,7 @@ class SignUpModelView extends ChangeNotifier {
   /// Password Properties
   String passwordHintText = "Password";
   String? passwordVal;
-  final isEyeOpenController1 = StreamController<bool>.broadcast();
-  Stream<bool> isEyeOpenStream1() async* {
-    yield true;
-    yield* isEyeOpenController1.stream;
-  }
+  bool passwordIsEyeOpen = true;
 
   void changePasswordVal(String? newPasswordVal) {
     passwordVal = newPasswordVal;
@@ -90,19 +87,15 @@ class SignUpModelView extends ChangeNotifier {
     return null;
   }
 
-  void changePasswordEye1(bool newEyeOpen) {
-    isEyeOpenController1.add(newEyeOpen);
+  void changePasswordEye(bool newEyeOpen) {
+    passwordIsEyeOpen = newEyeOpen;
     notifyListeners();
   }
 
   /// Password Again Properties
   String passwordAgainHintText = "Password Again";
   String? passwordAgainVal;
-  final isEyeOpenController2 = StreamController<bool>.broadcast();
-  Stream<bool> isEyeOpenStream2() async* {
-    yield true;
-    yield* isEyeOpenController2.stream;
-  }
+  bool passwordAgainIsEyeOpen = true;
 
   void changePasswordAgainVal(String? newPasswordAgainVal) {
     passwordAgainVal = newPasswordAgainVal;
@@ -121,8 +114,8 @@ class SignUpModelView extends ChangeNotifier {
     return null;
   }
 
-  void changePasswordEye2(bool newEyeOpen) {
-    isEyeOpenController2.add(newEyeOpen);
+  void changePasswordAgainEye(bool newEyeOpen) {
+    passwordAgainIsEyeOpen = newEyeOpen;
     notifyListeners();
   }
 
@@ -136,11 +129,6 @@ class SignUpModelView extends ChangeNotifier {
 
   /// Gender Selection
   String? genderDropdownValue;
-  final genderDropdownController = StreamController<String?>.broadcast();
-  Stream<String?> genderDropdownStream() async* {
-    yield genderDropdownValue;
-    yield* genderDropdownController.stream;
-  }
 
   List<String> genderList = const [
     "Male",
@@ -148,7 +136,6 @@ class SignUpModelView extends ChangeNotifier {
   ];
   void changeSelectedGender(String? selectedGender) {
     genderDropdownValue = selectedGender;
-    genderDropdownController.add(selectedGender);
     notifyListeners();
   }
 
@@ -163,56 +150,12 @@ class SignUpModelView extends ChangeNotifier {
           email: emailVal!,
           password: passwordVal!,
         ));
-        late Timer timer;
-        await showDialog(
-            context: ctx!,
-            builder: (BuildContext builderContext) {
-              timer = Timer(const Duration(seconds: 4), () {
-                Navigator.of(builderContext).pop();
-              });
-
-              return AlertDialog(
-                backgroundColor: Colors.white,
-                content: Container(
-                  width: SizeConfig.screenWidth! * 2 / 3,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image(
-                        image: AssetImage(successStar),
-                        height: SizeConfig.screenWidth! / 4,
-                        width: SizeConfig.screenWidth! / 4,
-                        fit: BoxFit.cover,
-                      ),
-                      const Text(
-                        'Congratulations!',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'Your account has been successfully created. You will be redirected to the homepage in a few seconds.',
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 20,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15,
-                          color: kDarkGray,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }).then((val) {
-          if (timer.isActive) {
-            timer.cancel();
-          }
-        });
-        print("Let\'s sign up");
+        await mySimpleDialogWidget(
+          context: ctx!,
+          title: "Congratulations!",
+          description:
+              "Your account has been successfully created. You will be redirected to the homepage in a few seconds.",
+        );
         Navigator.pushAndRemoveUntil(
             ctx!,
             MaterialPageRoute(

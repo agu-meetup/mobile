@@ -7,6 +7,7 @@ import 'package:agu_meetup_mobile/presentations/authentication/view/authenticati
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
+import '../../forgot_password/view/forgot_password_view.dart';
 import '../../sign_up/view/sign_up_view.dart';
 
 class SignInModelView extends ChangeNotifier {
@@ -40,11 +41,7 @@ class SignInModelView extends ChangeNotifier {
   /// Password Properties
   String passwordHintText = "Password";
   String? passwordVal;
-  final isEyeOpenController = StreamController<bool>.broadcast();
-  Stream<bool> isEyeOpenStream() async* {
-    yield true;
-    yield* isEyeOpenController.stream;
-  }
+  bool isEyeOpen = true;
 
   void changePasswordVal(String? newPasswordVal) {
     passwordVal = newPasswordVal;
@@ -61,12 +58,17 @@ class SignInModelView extends ChangeNotifier {
   }
 
   void changePasswordEye(bool newEyeOpen) {
-    isEyeOpenController.add(newEyeOpen);
+    isEyeOpen = newEyeOpen;
     notifyListeners();
   }
 
   /// Forgot Password Properties
   void goForgotPasswordPage(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ForgotPasswordView(),
+        ));
     // go forgot password
   }
 

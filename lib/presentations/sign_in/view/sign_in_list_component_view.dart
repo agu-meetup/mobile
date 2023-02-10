@@ -21,52 +21,48 @@ class _SignInListComponentViewState extends State<SignInListComponentView> {
   // no arguments...
   @override
   Widget build(BuildContext context) {
-    SignInModelView signInMV = context.read<SignInModelView>();
-    signInMV.updateContextData(context);
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Form(
-        key: signInMV.formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SignInTextsWidget(),
-            const SizedBox(height: 16),
-            MyTextFieldWidget(
-              hintText: signInMV.emailHintText,
-              changeValueFunc: signInMV.changeEmailVal,
-              validatorFunc: signInMV.emailValidatorFunc,
-              textInputType: signInMV.emailTextInputType,
-            ),
-            const SizedBox(height: 16),
-            StreamBuilder<bool>(
-              stream: signInMV.isEyeOpenStream(),
-              builder: (context, snapshot) {
-                return MyTextFieldWidget(
-                  hintText: "Password",
-                  changeValueFunc: signInMV.changePasswordVal,
-                  validatorFunc: signInMV.passwordValidatorFunc,
-                  isPassword: true,
-                  isSecure: snapshot.data ?? true,
-                  changePasswordEye: signInMV.changePasswordEye,
-                );
-              },
-            ),
-            MyTextButtonWidget(
-              text: "Forgot Password?",
-              onTanFunc: signInMV.goForgotPasswordPage,
-            ),
-            const SizedBox(height: 32),
-            MyButtonWidget(
-              buttonText: "Sign In",
-              buttonTextColor: kWhite,
-              backgroundColor: kNavyBlue,
-              onTapFunction: signInMV.signInButtonFunc,
-            ),
-            SignInSignUpButtonWidget(),
-          ],
+    context.read<SignInModelView>().updateContextData(context);
+    return Consumer<SignInModelView>(builder: (context, mv, child) {
+      return Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Form(
+          key: mv.formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SignInTextsWidget(),
+              const SizedBox(height: 16),
+              MyTextFieldWidget(
+                hintText: mv.emailHintText,
+                changeValueFunc: mv.changeEmailVal,
+                validatorFunc: mv.emailValidatorFunc,
+                textInputType: mv.emailTextInputType,
+              ),
+              const SizedBox(height: 16),
+              MyTextFieldWidget(
+                hintText: "Password",
+                changeValueFunc: mv.changePasswordVal,
+                validatorFunc: mv.passwordValidatorFunc,
+                isPassword: true,
+                isSecure: mv.isEyeOpen,
+                changePasswordEye: mv.changePasswordEye,
+              ),
+              MyTextButtonWidget(
+                text: "Forgot Password?",
+                onTanFunc: mv.goForgotPasswordPage,
+              ),
+              const SizedBox(height: 32),
+              MyButtonWidget(
+                buttonText: "Sign In",
+                buttonTextColor: kWhite,
+                backgroundColor: kNavyBlue,
+                onTapFunction: mv.signInButtonFunc,
+              ),
+              SignInSignUpButtonWidget(),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
