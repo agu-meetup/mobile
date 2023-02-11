@@ -15,6 +15,7 @@ class ForgotPasswordCodeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<ForgotPasswordCodeViewModel>().startFocusListener();
+    context.read<ForgotPasswordCodeViewModel>().updateBuildContext(context);
     return Consumer<ForgotPasswordCodeViewModel>(
       builder: (context, mv, child) {
         return Column(
@@ -60,7 +61,7 @@ class ForgotPasswordCodeView extends StatelessWidget {
               buttonText: 'Verify',
               buttonTextColor: kWhite,
               backgroundColor: kNavyBlue,
-              onTapFunction: () {},
+              onTapFunction: mv.verifyButtonFunc,
             ),
           ],
         );

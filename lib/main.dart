@@ -1,5 +1,6 @@
 import 'package:agu_meetup_mobile/presentations/authentication/view_model/authentication_model_view.dart';
 import 'package:agu_meetup_mobile/presentations/bottom_bar/model_view/bottom_bar_model_view.dart';
+import 'package:agu_meetup_mobile/presentations/forgot_password/view_model/forgot_password_change_view_model.dart';
 import 'package:agu_meetup_mobile/presentations/forgot_password/view_model/forgot_password_code_view_model.dart';
 import 'package:agu_meetup_mobile/presentations/forgot_password/view_model/forgot_password_mail_phone_view_model.dart';
 import 'package:agu_meetup_mobile/presentations/forgot_password/view_model/forgot_password_selection_view_model.dart';
@@ -41,6 +42,9 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (_) => ForgotPasswordCodeViewModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ForgotPasswordChangeViewModel(),
         ),
       ],
       child: const MyApp(),

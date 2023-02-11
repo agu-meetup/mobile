@@ -1,3 +1,4 @@
+import 'package:agu_meetup_mobile/presentations/forgot_password/view/forgot_password_change_view.dart';
 import 'package:agu_meetup_mobile/presentations/forgot_password/view_model/forgot_password_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +39,8 @@ class ForgotPasswordView extends StatelessWidget {
               return ForgotPasswordMailPhoneView();
             } else if (mv.currentPageIndex == 2) {
               return ForgotPasswordCodeView();
+            } else if (mv.currentPageIndex == 3) {
+              return ForgotPasswordChangeView();
             } else {
               return Container();
             }

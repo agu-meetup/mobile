@@ -1,7 +1,14 @@
+import 'package:agu_meetup_mobile/presentations/forgot_password/view_model/forgot_password_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ForgotPasswordCodeViewModel extends ChangeNotifier {
+  late BuildContext ctx;
   String? sentCodeTo;
+
+  void updateBuildContext(BuildContext context) {
+    ctx = context;
+  }
 
   void updateSentCodeTo(String newSentCodeTo) {
     sentCodeTo = newSentCodeTo;
@@ -9,7 +16,7 @@ class ForgotPasswordCodeViewModel extends ChangeNotifier {
   }
 
   FocusNode focusNode1 = FocusNode();
-  String? code1;
+  String? code1 = "";
   bool isCode1Focused = false;
   void changeCode1(String? val) {
     code1 = val;
@@ -20,7 +27,7 @@ class ForgotPasswordCodeViewModel extends ChangeNotifier {
   }
 
   FocusNode focusNode2 = FocusNode();
-  String? code2;
+  String? code2 = "";
   bool isCode2Focused = false;
   void changeCode2(String? val) {
     code2 = val;
@@ -33,7 +40,7 @@ class ForgotPasswordCodeViewModel extends ChangeNotifier {
   }
 
   FocusNode focusNode3 = FocusNode();
-  String? code3;
+  String? code3 = "";
   bool isCode3Focused = false;
   void changeCode3(String? val) {
     code3 = val;
@@ -46,7 +53,7 @@ class ForgotPasswordCodeViewModel extends ChangeNotifier {
   }
 
   FocusNode focusNode4 = FocusNode();
-  String? code4;
+  String? code4 = "";
   bool isCode4Focused = false;
   void changeCode4(String? val) {
     code4 = val;
@@ -73,6 +80,17 @@ class ForgotPasswordCodeViewModel extends ChangeNotifier {
       isCode4Focused = focusNode4.hasFocus;
       notifyListeners();
     });
-    // notifyListeners();
+  }
+
+  void verifyButtonFunc() {
+    if (code1!.isNotEmpty &&
+        code2!.isNotEmpty &&
+        code3!.isNotEmpty &&
+        code4!.isNotEmpty) {
+      ctx.read<ForgotPasswordViewModel>().goNextPage();
+    } else {
+      ScaffoldMessenger.of(ctx)
+          .showSnackBar(const SnackBar(content: Text('Please full all blank')));
+    }
   }
 }
