@@ -43,6 +43,7 @@ dependencies:
   control_style: ^0.0.3
   shared_preferences: ^2.0.17
   http: ^0.13.5
+  pin_code_text_field: ^1.8.0
   # For Bottom Bar
   animated_bottom_navigation_bar: ^1.1.0+1
 
