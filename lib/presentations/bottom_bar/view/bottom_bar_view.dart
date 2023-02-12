@@ -20,6 +20,7 @@ class BottomBarView extends StatelessWidget {
       stream: bottomBarMV.loadingStatus,
       builder: (context, snapshot) {
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           body: changingPage(snapshot.data),
           floatingActionButton: BottomBarFloatingActButtonWidget(
             onTabFunc: bottomBarMV.changeBarIndex,

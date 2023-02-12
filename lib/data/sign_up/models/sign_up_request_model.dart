@@ -4,6 +4,7 @@ class SignUpRequestModel {
   String phoneNumber;
   String email;
   String password;
+  String gender;
 
   SignUpRequestModel({
     required this.name,
@@ -11,6 +12,7 @@ class SignUpRequestModel {
     required this.phoneNumber,
     required this.email,
     required this.password,
+    required this.gender,
   });
 
   Map<String, dynamic> toJson() {
@@ -20,6 +22,7 @@ class SignUpRequestModel {
       "phone_number": phoneNumber,
       "email": email,
       "_password": password,
+      "gender": gender,
     };
   }
 }

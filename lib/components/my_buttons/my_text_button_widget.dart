@@ -14,19 +14,16 @@ class MyTextButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () {
-          onTanFunc(context);
-        },
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 14,
-            color: kNavyBlue,
-            fontWeight: FontWeight.w600,
-          ),
+    return TextButton(
+      onPressed: () {
+        onTanFunc();
+      },
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 14,
+          color: kNavyBlue,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );

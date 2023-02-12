@@ -12,6 +12,7 @@ class MyTextFieldWidget extends StatelessWidget {
   bool isSecure;
   Function changeValueFunc;
   Function? changePasswordEye;
+  bool isThereShadow;
 
   MyTextFieldWidget({
     Key? key,
@@ -22,6 +23,7 @@ class MyTextFieldWidget extends StatelessWidget {
     this.isPassword = false,
     this.isSecure = false,
     this.changePasswordEye,
+    this.isThereShadow = true,
   }) : super(key: key);
 
   @override
@@ -55,7 +57,9 @@ class MyTextFieldWidget extends StatelessWidget {
                       ),
               )
             : null,
-        enabledBorder: textFieldBorder(Colors.transparent),
+        enabledBorder: textFieldBorder(
+          isThereShadow ? Colors.transparent : kDarkGray,
+        ),
         focusedBorder: textFieldBorder(kNavyBlue),
         errorBorder: textFieldBorder(Colors.red),
         focusedErrorBorder: textFieldBorder(Colors.red),
@@ -68,13 +72,15 @@ class MyTextFieldWidget extends StatelessWidget {
 
   DecoratedInputBorder textFieldBorder(Color borderColor) {
     return DecoratedInputBorder(
-      shadow: const [
-        BoxShadow(
-          color: Colors.grey,
-          blurRadius: 8,
-          offset: Offset(0, 4),
-        )
-      ],
+      shadow: isThereShadow
+          ? [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 8,
+                offset: Offset(0, 4),
+              ),
+            ]
+          : [],
       child: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(color: borderColor),

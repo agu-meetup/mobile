@@ -29,10 +29,18 @@ class ForgotPasswordSelectionViewModel extends ChangeNotifier {
 
   /// Button Func
   void continueButton() {
-    ctx
-        .read<ForgotPasswordViewModel>()
-        .updateForgotPasswordWay(selectedForgotPasswordWay);
-    ctx.read<ForgotPasswordViewModel>().goNextPage();
-    notifyListeners();
+    if (selectedForgotPasswordWay == "Email") {
+      ctx
+          .read<ForgotPasswordViewModel>()
+          .updateForgotPasswordWay(selectedForgotPasswordWay);
+      ctx.read<ForgotPasswordViewModel>().goNextPage();
+      notifyListeners();
+    } else if (selectedForgotPasswordWay == "Phone") {
+      ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
+          content: Text('Forgot password service via SMS is not active.')));
+    } else {
+      ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(content: Text('Please select one of the choices.')));
+    }
   }
 }

@@ -63,9 +63,9 @@ class SignInModelView extends ChangeNotifier {
   }
 
   /// Forgot Password Properties
-  void goForgotPasswordPage(BuildContext context) {
+  void goForgotPasswordPage() {
     Navigator.push(
-        context,
+        ctx!,
         MaterialPageRoute(
           builder: (_) => ForgotPasswordView(),
         ));
@@ -100,9 +100,9 @@ class SignInModelView extends ChangeNotifier {
   }
 
   /// Sign Up Button Properties
-  void goSignUpPage(BuildContext context) {
+  void goSignUpPage() {
     Navigator.pushAndRemoveUntil(
-        context,
+        ctx!,
         MaterialPageRoute(builder: (_) => const SignUpView()),
         (route) => false);
   }

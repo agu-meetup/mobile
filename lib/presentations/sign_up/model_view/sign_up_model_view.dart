@@ -149,6 +149,7 @@ class SignUpModelView extends ChangeNotifier {
           phoneNumber: phoneNumVal!,
           email: emailVal!,
           password: passwordVal!,
+          gender: genderDropdownValue!,
         ));
         await mySimpleDialogWidget(
           context: ctx!,
@@ -173,9 +174,9 @@ class SignUpModelView extends ChangeNotifier {
   }
 
   /// Sign In Text Button Properties
-  void signInTextButtonFunc(BuildContext context) {
+  void signInTextButtonFunc() {
     Navigator.pushAndRemoveUntil(
-        context,
+        ctx!,
         MaterialPageRoute(builder: (_) => const SignInView()),
         (route) => false);
   }

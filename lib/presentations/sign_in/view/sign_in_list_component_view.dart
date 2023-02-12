@@ -47,9 +47,12 @@ class _SignInListComponentViewState extends State<SignInListComponentView> {
                 isSecure: mv.isEyeOpen,
                 changePasswordEye: mv.changePasswordEye,
               ),
-              MyTextButtonWidget(
-                text: "Forgot Password?",
-                onTanFunc: mv.goForgotPasswordPage,
+              Align(
+                alignment: Alignment.centerRight,
+                child: MyTextButtonWidget(
+                  text: "Forgot Password?",
+                  onTanFunc: mv.goForgotPasswordPage,
+                ),
               ),
               const SizedBox(height: 32),
               MyButtonWidget(
