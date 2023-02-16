@@ -21,11 +21,13 @@ class CreateEventImagesView extends StatelessWidget {
           itemBuilder: (context, index) {
             if (index == mv.selectedImages.length) {
               return CreateEventUploadButtonWidget(
-                onTabFunc: mv.uploadButtonFunc,
+                onTabFunc: mv.photoUploadButtonFunc,
               );
             }
             return CreateEventSelectedImageWidget(
               selectedImagePath: mv.selectedImages[index].path,
+              index: index,
+              removeFunc: mv.removeImage,
             );
           },
         ),

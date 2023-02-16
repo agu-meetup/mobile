@@ -12,6 +12,7 @@ import '../widget/create_event_selected_image_widget.dart';
 import '../widget/create_event_upload_button_widget.dart';
 import 'create_event_detail_text_view.dart';
 import 'create_event_images_view.dart';
+import 'create_event_select_date_view.dart';
 import 'create_event_select_location_view.dart';
 import 'create_event_title_view.dart';
 
@@ -36,6 +37,8 @@ class CreateEventView extends StatelessWidget {
                   CreateEventTitleView(),
                   SizedBox(height: 25),
                   CreateEventSelectLocationView(),
+                  SizedBox(height: 32),
+                  CreateEventSelectDateView(),
                 ],
               );
             },

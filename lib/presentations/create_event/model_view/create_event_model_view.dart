@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:screenshot/screenshot.dart';
 
 import '../view/create_event_maps_view.dart';
@@ -21,6 +22,61 @@ class CreateEventModelView extends ChangeNotifier {
     ctx = context;
   }
 
+  /// Image Upload
+  void photoUploadButtonFunc() {
+    showModalBottomSheet<void>(
+      backgroundColor: Colors.transparent,
+      context: ctx,
+      builder: (BuildContext context) {
+        return Container(
+          height: 150,
+          decoration: BoxDecoration(
+            color: kWhite,
+            borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(12),
+              topLeft: Radius.circular(12),
+            ),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                MyTextButtonWidget(
+                  text: 'From Gallery',
+                  onTanFunc: () async {
+                    photo =
+                        await _picker.pickImage(source: ImageSource.gallery);
+                    if (photo != null) {
+                      selectedImages.add(photo!);
+                    }
+                    notifyListeners();
+                  },
+                ),
+                MyTextButtonWidget(
+                  text: 'From Camera',
+                  onTanFunc: () async {
+                    photo = await _picker.pickImage(source: ImageSource.camera);
+                    if (photo != null) {
+                      selectedImages.add(photo!);
+                    }
+                    notifyListeners();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void removeImage(int imageIndex) {
+    selectedImages.removeAt(imageIndex);
+    notifyListeners();
+  }
+
+  /// Event Title
   String? eventTitleVal;
   void changeEventTitle(String? val) {
     eventTitleVal = eventTitleVal;
@@ -119,51 +175,26 @@ class CreateEventModelView extends ChangeNotifier {
     notifyListeners();
   }
 
-  void uploadButtonFunc() {
-    showModalBottomSheet<void>(
-      backgroundColor: Colors.transparent,
+  /// Select Date
+  bool isActiveAllDay = false;
+  void changeActiveAllDayValue(bool newVal) {
+    isActiveAllDay = newVal;
+    notifyListeners();
+  }
+
+  TextEditingController dateSelectorController = TextEditingController();
+  Icon dateIcon = Icon(Icons.date_range, color: kGray.withOpacity(0.5));
+  void changeDateValueFunc() async {
+    DateTime? pickedDate = await showDatePicker(
       context: ctx,
-      builder: (BuildContext context) {
-        return Container(
-          height: 150,
-          decoration: BoxDecoration(
-            color: kWhite,
-            borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(12),
-              topLeft: Radius.circular(12),
-            ),
-          ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                MyTextButtonWidget(
-                  text: 'From Gallery',
-                  onTanFunc: () async {
-                    photo =
-                        await _picker.pickImage(source: ImageSource.gallery);
-                    if (photo != null) {
-                      selectedImages.add(photo!);
-                    }
-                    notifyListeners();
-                  },
-                ),
-                MyTextButtonWidget(
-                  text: 'From Camera',
-                  onTanFunc: () async {
-                    photo = await _picker.pickImage(source: ImageSource.camera);
-                    if (photo != null) {
-                      selectedImages.add(photo!);
-                    }
-                    notifyListeners();
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
     );
+    if (pickedDate != null) {
+      String formattedDate = DateFormat('yMMMMd').format(pickedDate);
+      dateSelectorController.text = formattedDate;
+      notifyListeners();
+    }
   }
 }

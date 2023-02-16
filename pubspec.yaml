@@ -49,6 +49,7 @@ dependencies:
   google_maps_flutter: ^2.2.3
   geolocator: ^9.0.2
   screenshot: ^1.3.0
+  intl: ^0.18.0
   # For Bottom Bar
   animated_bottom_navigation_bar: ^1.1.0+1
 

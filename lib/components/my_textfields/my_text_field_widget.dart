@@ -13,6 +13,11 @@ class MyTextFieldWidget extends StatelessWidget {
   Function changeValueFunc;
   Function? changePasswordEye;
   bool isThereShadow;
+  TextEditingController? controller;
+  bool isActive;
+  Function? onTabFunc;
+  bool isReadOnly;
+  Icon? specificSuffixIcon;
 
   MyTextFieldWidget({
     Key? key,
@@ -24,11 +29,17 @@ class MyTextFieldWidget extends StatelessWidget {
     this.isSecure = false,
     this.changePasswordEye,
     this.isThereShadow = true,
+    this.controller,
+    this.isActive = true,
+    this.onTabFunc,
+    this.isReadOnly = false,
+    this.specificSuffixIcon,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       validator: (val) {
         if (validatorFunc != null) {
           return validatorFunc!(val);
@@ -38,25 +49,32 @@ class MyTextFieldWidget extends StatelessWidget {
       onChanged: (String? val) {
         changeValueFunc(val);
       },
+      onTap: () {
+        if (onTabFunc != null) {
+          onTabFunc!();
+        }
+      },
+      readOnly: isReadOnly,
       keyboardType: textInputType,
       obscureText: isSecure,
       decoration: InputDecoration(
-        suffixIcon: isPassword
-            ? IconButton(
-                onPressed: () {
-                  changePasswordEye!(!isSecure!);
-                },
-                icon: isSecure
-                    ? Icon(
-                        Icons.visibility_off,
-                        color: kNavyBlue,
-                      )
-                    : Icon(
-                        Icons.visibility,
-                        color: kNavyBlue,
-                      ),
-              )
-            : null,
+        suffixIcon: specificSuffixIcon ??
+            (isPassword
+                ? IconButton(
+                    onPressed: () {
+                      changePasswordEye!(!isSecure!);
+                    },
+                    icon: isSecure
+                        ? Icon(
+                            Icons.visibility_off,
+                            color: kNavyBlue,
+                          )
+                        : Icon(
+                            Icons.visibility,
+                            color: kNavyBlue,
+                          ),
+                  )
+                : null),
         enabledBorder: textFieldBorder(
           isThereShadow ? Colors.transparent : kDarkGray,
         ),
