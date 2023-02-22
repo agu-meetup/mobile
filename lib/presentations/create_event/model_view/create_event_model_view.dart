@@ -266,4 +266,16 @@ class CreateEventModelView extends ChangeNotifier {
   void changeEventPrice(String? val) {
     priceVal = val;
   }
+
+  /// Hosts
+  List<TextEditingController> hostsControllers = [];
+  void addNewHostValue() {
+    hostsControllers.add(TextEditingController());
+    notifyListeners();
+  }
+
+  void removeHostValue(int index) {
+    hostsControllers.removeAt(index);
+    notifyListeners();
+  }
 }

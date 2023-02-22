@@ -12,6 +12,7 @@ import '../widget/create_event_selected_image_widget.dart';
 import '../widget/create_event_upload_button_widget.dart';
 import 'create_event_detail_text_view.dart';
 import 'create_event_details_view.dart';
+import 'create_event_hosts_view.dart';
 import 'create_event_images_view.dart';
 import 'create_event_price_view.dart';
 import 'create_event_qouta_and_gender_view.dart';
@@ -33,7 +34,7 @@ class CreateEventView extends StatelessWidget {
           child: Consumer<CreateEventModelView>(
             builder: (context, mv, child) {
               return ListView(
-                children: [
+                children: const [
                   CreateEventImagesView(),
                   SizedBox(height: 25),
                   CreateEventDetailTextView(),
@@ -51,6 +52,8 @@ class CreateEventView extends StatelessWidget {
                   CreateEventQuotaAndGenderView(),
                   SizedBox(height: 24),
                   CreateEventPriceView(),
+                  SizedBox(height: 24),
+                  CreateEventHostsView(),
                 ],
               );
             },

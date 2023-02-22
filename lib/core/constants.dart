@@ -7,3 +7,4 @@ Color kNavyBlue = const Color(0XFF002F5D);
 Color kDarkGray = const Color(0XFF737373);
 Color kGray = const Color(0XFFCECECE);
 Color kGreen = const Color(0XFF37CB94);
+Color kBeige = const Color(0XFFFE8177);
