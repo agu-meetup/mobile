@@ -18,6 +18,8 @@ class MyTextFieldWidget extends StatelessWidget {
   Function? onTabFunc;
   bool isReadOnly;
   Icon? specificSuffixIcon;
+  bool isEnabled;
+  int maxLength;
 
   MyTextFieldWidget({
     Key? key,
@@ -34,6 +36,8 @@ class MyTextFieldWidget extends StatelessWidget {
     this.onTabFunc,
     this.isReadOnly = false,
     this.specificSuffixIcon,
+    this.isEnabled = true,
+    this.maxLength = 1,
   }) : super(key: key);
 
   @override
@@ -57,6 +61,11 @@ class MyTextFieldWidget extends StatelessWidget {
       readOnly: isReadOnly,
       keyboardType: textInputType,
       obscureText: isSecure,
+      enabled: isEnabled,
+      maxLines: maxLength,
+      style: TextStyle(
+        color: isEnabled ? Colors.black : kDarkGray.withOpacity(0.4),
+      ),
       decoration: InputDecoration(
         suffixIcon: specificSuffixIcon ??
             (isPassword
@@ -81,6 +90,7 @@ class MyTextFieldWidget extends StatelessWidget {
         focusedBorder: textFieldBorder(kNavyBlue),
         errorBorder: textFieldBorder(Colors.red),
         focusedErrorBorder: textFieldBorder(Colors.red),
+        disabledBorder: textFieldBorder(kDarkGray.withOpacity(0.4)),
         filled: true,
         fillColor: Colors.white,
         hintText: hintText,

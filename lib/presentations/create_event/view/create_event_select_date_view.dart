@@ -37,7 +37,7 @@ class CreateEventSelectDateView extends StatelessWidget {
             ),
             MyTextFieldWidget(
               hintText: 'Select Date',
-              changeValueFunc: mv.changeEventTitle,
+              changeValueFunc: () {},
               isThereShadow: false,
               controller: mv.dateSelectorController,
               onTabFunc: mv.changeDateValueFunc,

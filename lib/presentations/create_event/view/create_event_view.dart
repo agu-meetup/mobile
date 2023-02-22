@@ -11,9 +11,13 @@ import '../../../core/assets.dart';
 import '../widget/create_event_selected_image_widget.dart';
 import '../widget/create_event_upload_button_widget.dart';
 import 'create_event_detail_text_view.dart';
+import 'create_event_details_view.dart';
 import 'create_event_images_view.dart';
+import 'create_event_price_view.dart';
+import 'create_event_qouta_and_gender_view.dart';
 import 'create_event_select_date_view.dart';
 import 'create_event_select_location_view.dart';
+import 'create_event_select_time_view.dart';
 import 'create_event_title_view.dart';
 
 class CreateEventView extends StatelessWidget {
@@ -39,6 +43,14 @@ class CreateEventView extends StatelessWidget {
                   CreateEventSelectLocationView(),
                   SizedBox(height: 32),
                   CreateEventSelectDateView(),
+                  SizedBox(height: 24),
+                  CreateEventSelectTimeView(),
+                  SizedBox(height: 24),
+                  CreateEventDetailsView(),
+                  SizedBox(height: 24),
+                  CreateEventQuotaAndGenderView(),
+                  SizedBox(height: 24),
+                  CreateEventPriceView(),
                 ],
               );
             },

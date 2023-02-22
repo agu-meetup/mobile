@@ -7,8 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-import 'package:screenshot/screenshot.dart';
+import 'package:intl/intl.dart' as intl;
 
 import '../view/create_event_maps_view.dart';
 
@@ -192,9 +191,79 @@ class CreateEventModelView extends ChangeNotifier {
       lastDate: DateTime(2101),
     );
     if (pickedDate != null) {
-      String formattedDate = DateFormat('yMMMMd').format(pickedDate);
+      String formattedDate = intl.DateFormat('yMMMMd').format(pickedDate);
       dateSelectorController.text = formattedDate;
       notifyListeners();
     }
+  }
+
+  /// Times
+  TextEditingController startTimeController = TextEditingController();
+  void changeStartTimeValueFunc() async {
+    TimeOfDay? selectedTimeRTL = await showTimePicker(
+      context: ctx,
+      initialTime: TimeOfDay.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: child!,
+        );
+      },
+    );
+    if (selectedTimeRTL != null) {
+      startTimeController.text =
+          "${selectedTimeRTL.hour}:${selectedTimeRTL.minute}";
+      notifyListeners();
+    }
+  }
+
+  TextEditingController endTimeController = TextEditingController();
+  void changeEndTimeValueFunc() async {
+    TimeOfDay? selectedTimeRTL = await showTimePicker(
+      context: ctx,
+      initialTime: TimeOfDay.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: child!,
+        );
+      },
+    );
+    if (selectedTimeRTL != null) {
+      endTimeController.text =
+          "${selectedTimeRTL.hour}:${selectedTimeRTL.minute}";
+      notifyListeners();
+    }
+  }
+
+  /// Detail
+  String? detailVal;
+  void changeEventDetail(String? val) {
+    detailVal = val;
+  }
+
+  /// Quota
+  String? quotaVal;
+  void changeEventQuota(String? val) {
+    quotaVal = val;
+  }
+
+  /// Gender
+  String? genderDropdownValue;
+
+  List<String> genderList = const [
+    "All",
+    "Male",
+    "Female",
+  ];
+  void changeSelectedGender(String? selectedGender) {
+    genderDropdownValue = selectedGender;
+    notifyListeners();
+  }
+
+  /// Price
+  String? priceVal;
+  void changeEventPrice(String? val) {
+    priceVal = val;
   }
 }

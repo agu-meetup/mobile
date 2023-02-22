@@ -5,11 +5,13 @@ class MyDropdownWidget extends StatelessWidget {
   String? dropdownValue;
   List<String> elementList;
   Function onChangedFunc;
+  bool isThereShadow;
 
   MyDropdownWidget({
     required this.dropdownValue,
     required this.elementList,
     required this.onChangedFunc,
+    this.isThereShadow = true,
   });
 
   @override
@@ -21,15 +23,20 @@ class MyDropdownWidget extends StatelessWidget {
         vertical: 6,
       ),
       decoration: BoxDecoration(
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          )
-        ],
+        boxShadow: isThereShadow
+            ? [
+                const BoxShadow(
+                  color: Colors.grey,
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                )
+              ]
+            : [],
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: isThereShadow ? Colors.transparent : kDarkGray,
+        ),
       ),
       child: DropdownButton<String>(
         hint: Text("Gender"),

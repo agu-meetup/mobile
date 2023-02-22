@@ -24,3 +24,4 @@ String profileButtonPassive = "$assetsIconRoot/profile_button_passive.png";
 String chatRed = "$assetsIconRoot/chat_red.png";
 String mailRed = "$assetsIconRoot/mail_red.png";
 String upload = "$assetsIconRoot/upload.png";
+String turkishLira = "$assetsIconRoot/turkish_lira.png";
