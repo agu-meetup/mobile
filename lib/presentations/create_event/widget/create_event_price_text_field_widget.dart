@@ -18,7 +18,7 @@ class CreateEventPriceTextFieldWidget extends StatelessWidget {
           height: 63,
           width: 60,
           decoration: BoxDecoration(
-            color: kOrange,
+            color: kBeige,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(12),
               bottomLeft: Radius.circular(12),

@@ -11,26 +11,28 @@ class CreateEventPriceView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CreateEventModelView>(builder: (context, mv, child) {
-      return Column(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'PRICE',
-              style: TextStyle(
-                fontSize: 12,
-                color: kDarkGray,
-                fontWeight: FontWeight.w600,
+    return Consumer<CreateEventModelView>(
+      builder: (context, mv, child) {
+        return Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'PRICE',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: kDarkGray,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 4),
-          CreateEventPriceTextFieldWidget(
-            onChangeFunc: mv.changeEventPrice,
-          ),
-        ],
-      );
-    });
+            const SizedBox(height: 4),
+            CreateEventPriceTextFieldWidget(
+              onChangeFunc: mv.changeEventPrice,
+            ),
+          ],
+        );
+      },
+    );
   }
 }
