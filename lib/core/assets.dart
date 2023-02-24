@@ -28,3 +28,6 @@ String turkishLira = "$assetsIconRoot/turkish_lira.png";
 String saveBlack = "$assetsIconRoot/save_black.png";
 String shareBlack = "$assetsIconRoot/share_black.png";
 String turkishLiraGray = "$assetsIconRoot/turkish_lira_gray.png";
+String pinGray = "$assetsIconRoot/pin_gray.png";
+String userGray = "$assetsIconRoot/user_gray.png";
+String watchGray = "$assetsIconRoot/watch_gray.png";
