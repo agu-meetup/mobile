@@ -27,3 +27,4 @@ String upload = "$assetsIconRoot/upload.png";
 String turkishLira = "$assetsIconRoot/turkish_lira.png";
 String saveBlack = "$assetsIconRoot/save_black.png";
 String shareBlack = "$assetsIconRoot/share_black.png";
+String turkishLiraGray = "$assetsIconRoot/turkish_lira_gray.png";

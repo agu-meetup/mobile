@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../../../core/assets.dart';
 
-class DetailAppBarWidget extends StatelessWidget with PreferredSizeWidget {
-  const DetailAppBarWidget({
+class DetailAppBarView extends StatelessWidget with PreferredSizeWidget {
+  const DetailAppBarView({
     Key? key,
   }) : super(key: key);
 
@@ -50,5 +50,5 @@ class DetailAppBarWidget extends StatelessWidget with PreferredSizeWidget {
 
   @override
   // TODO: implement preferredSize
-  Size get preferredSize => const Size.fromHeight(100);
+  Size get preferredSize => AppBar().preferredSize;
 }
