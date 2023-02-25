@@ -54,19 +54,43 @@ class DetailGeneralInfoView extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    mv.eventPlaceInfo,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  VerticalDivider(thickness: 1.5, color: kDarkGray),
-                  Text(
-                    mv.eventCityInfo,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: kDarkGray,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            mv.eventPlaceInfo,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          VerticalDivider(thickness: 1.5, color: kDarkGray),
+                          Text(
+                            mv.eventCityInfo,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: kDarkGray,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      GestureDetector(
+                        onTap: () {
+                          mv.openMapButton();
+                        },
+                        child: Text(
+                          'Open Map',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: kBeige,
+                            fontWeight: FontWeight.w800,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../detail/view/detail_view.dart';
+
 class NotificationView extends StatelessWidget {
   const NotificationView({Key? key}) : super(key: key);
 
@@ -7,7 +9,13 @@ class NotificationView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('Notification'),
+        child: ElevatedButton(
+          child: Text('Detail Page Example'),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => const DetailView()));
+          },
+        ),
       ),
     );
   }

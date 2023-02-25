@@ -20,6 +20,7 @@ class DetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<DetailModelView>().updateBuildContext(context);
     return Scaffold(
       appBar: DetailAppBarView(),
       body: Padding(

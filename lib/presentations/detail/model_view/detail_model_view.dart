@@ -1,8 +1,16 @@
+import 'dart:async';
+
 import 'package:agu_meetup_mobile/presentations/detail/model/detail_comment_model.dart';
-import 'package:carousel_slider/carousel_controller.dart';
+import 'package:agu_meetup_mobile/presentations/detail/view/detail_map_view.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class DetailModelView extends ChangeNotifier {
+  late BuildContext ctx;
+  void updateBuildContext(BuildContext context) {
+    ctx = context;
+  }
+
   /// Carousel Slider
   List<String> imagePaths = [
     'assets/test_image/test_detail_1.png',
@@ -32,7 +40,7 @@ class DetailModelView extends ChangeNotifier {
 
   /// Detail
   String detailTextInfo =
-      "Efsane batak etkinliği\n - Yenilen son 2 kişinin hesap ödeyeceği etkinliğimize herkesi bekleriz.";
+      "Efsane batak etkinliği\n - Yenilen son 2 kişisap ödeyeceği etkinliğimize herkesi bekleriz.";
 
   /// Comments
   List<DetailCommentModel> comments = [
@@ -80,5 +88,38 @@ class DetailModelView extends ChangeNotifier {
     // Send Comment to back end
     commentController.text = "";
     notifyListeners();
+  }
+
+  /// Map
+  Completer<GoogleMapController> mapController =
+      Completer<GoogleMapController>();
+  String eventAddress = "Erciyesevler, Güney Sk. 2-8, 38020 Kocasinan/Kayseri";
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+
+  void openMapButton() {
+    setPlaceLocationToInitialLocation();
+    setPlaceMarker();
+    Navigator.push(ctx, MaterialPageRoute(builder: (_) => DetailMapView()));
+  }
+
+  late CameraPosition initialLocation = const CameraPosition(
+    target: LatLng(0, 0),
+    zoom: 14.4746,
+  );
+
+  void setPlaceLocationToInitialLocation() {
+    initialLocation = const CameraPosition(
+      target: LatLng(38.731639, 35.518228),
+      zoom: 14.4746,
+    );
+  }
+
+  void setPlaceMarker() {
+    MarkerId markerId = const MarkerId("marker1");
+    Marker marker = Marker(
+      markerId: markerId,
+      position: const LatLng(38.731639, 35.518228),
+    );
+    markers[markerId] = marker;
   }
 }
