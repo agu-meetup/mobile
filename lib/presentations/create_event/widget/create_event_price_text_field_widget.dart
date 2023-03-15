@@ -5,9 +5,15 @@ import '../../../core/assets.dart';
 
 class CreateEventPriceTextFieldWidget extends StatelessWidget {
   Function onChangeFunc;
+  TextEditingController? controller;
+  TextInputType textInputType;
+  bool isEnabled;
 
   CreateEventPriceTextFieldWidget({
     required this.onChangeFunc,
+    this.controller,
+    required this.isEnabled,
+    required this.textInputType,
   });
 
   @override
@@ -18,7 +24,7 @@ class CreateEventPriceTextFieldWidget extends StatelessWidget {
           height: 63,
           width: 60,
           decoration: BoxDecoration(
-            color: kBeige,
+            color: isEnabled ? kBeige : kBeige.withOpacity(0.4),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(12),
               bottomLeft: Radius.circular(12),
@@ -34,6 +40,9 @@ class CreateEventPriceTextFieldWidget extends StatelessWidget {
         ),
         Expanded(
           child: TextFormField(
+            controller: controller,
+            enabled: isEnabled,
+            keyboardType: textInputType,
             decoration: InputDecoration(
               enabledBorder: customInputBorder(),
               disabledBorder: customInputBorder(),
@@ -54,7 +63,7 @@ class CreateEventPriceTextFieldWidget extends StatelessWidget {
         bottomLeft: Radius.circular(0),
       ),
       borderSide: BorderSide(
-        color: kDarkGray,
+        color: isEnabled ? kDarkGray : kDarkGray.withOpacity(0.4),
       ),
     );
   }

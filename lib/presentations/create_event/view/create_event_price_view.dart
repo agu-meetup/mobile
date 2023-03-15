@@ -4,6 +4,7 @@ import 'package:agu_meetup_mobile/presentations/create_event/model_view/create_e
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../widget/create_event_all_day_event_button_widget.dart';
 import '../widget/create_event_price_text_field_widget.dart';
 
 class CreateEventPriceView extends StatelessWidget {
@@ -15,20 +16,30 @@ class CreateEventPriceView extends StatelessWidget {
       builder: (context, mv, child) {
         return Column(
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'PRICE',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: kDarkGray,
-                  fontWeight: FontWeight.w600,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'PRICE',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: kDarkGray,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
+                CreateEventSwitchButtonWidget(
+                  text: "Free",
+                  changeSwitchValueFunc: mv.changeIsFree,
+                  value: mv.isFree,
+                ),
+              ],
             ),
             const SizedBox(height: 4),
             CreateEventPriceTextFieldWidget(
-              onChangeFunc: mv.changeEventPrice,
+              onChangeFunc: (val) {},
+              controller: mv.priceCtr,
+              isEnabled: !mv.isFree,
+              textInputType: mv.priceInputType,
             ),
           ],
         );

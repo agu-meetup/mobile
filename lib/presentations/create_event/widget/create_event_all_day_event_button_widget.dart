@@ -1,13 +1,15 @@
 import 'package:agu_meetup_mobile/core/constants.dart';
 import 'package:flutter/material.dart';
 
-class CreateEventAllDayEventButtonWidget extends StatelessWidget {
+class CreateEventSwitchButtonWidget extends StatelessWidget {
   Function changeSwitchValueFunc;
   bool value;
-  CreateEventAllDayEventButtonWidget({
+  String text;
+  CreateEventSwitchButtonWidget({
     Key? key,
     required this.changeSwitchValueFunc,
     required this.value,
+    required this.text,
   }) : super(key: key);
 
   @override
@@ -16,8 +18,8 @@ class CreateEventAllDayEventButtonWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          'All Day Event',
-          style: TextStyle(
+          text,
+          style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
           ),

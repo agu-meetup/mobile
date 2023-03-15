@@ -29,9 +29,10 @@ class CreateEventSelectDateView extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                CreateEventAllDayEventButtonWidget(
+                CreateEventSwitchButtonWidget(
                   changeSwitchValueFunc: mv.changeActiveAllDayValue,
                   value: mv.isActiveAllDay,
+                  text: "All Day Event",
                 ),
               ],
             ),

@@ -100,6 +100,7 @@ class _SignUpListComponentViewState extends State<SignUpListComponentView> {
                             dropdownValue: mv.genderDropdownValue,
                             elementList: mv.genderList,
                             onChangedFunc: mv.changeSelectedGender,
+                            hintText: "Gender",
                           ),
                         ),
                       ],

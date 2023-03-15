@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:intl/intl.dart' as intl;
 
 import '../view/create_event_maps_view.dart';
@@ -76,12 +77,11 @@ class CreateEventModelView extends ChangeNotifier {
   }
 
   /// Event Title
-  String? eventTitleVal;
-  void changeEventTitle(String? val) {
-    eventTitleVal = eventTitleVal;
-  }
+  TextEditingController titleCtr = TextEditingController();
 
-  /// Google Maps
+  /// Google Maps - Location
+  TextEditingController placeNameCtr = TextEditingController();
+  String? addressSelectedLocation;
   Completer<GoogleMapController> mapController =
       Completer<GoogleMapController>();
 
@@ -162,7 +162,37 @@ class CreateEventModelView extends ChangeNotifier {
 
   Future<void> selectPlaceButtonFunc() async {
     await captureSsMap();
+    await updateAddress();
     currentPosition = null;
+    notifyListeners();
+  }
+
+  Future<void> updateAddress() async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+        targetPosition!.latitude, targetPosition!.longitude);
+    if (placemarks.isNotEmpty) {
+      addressSelectedLocation = "";
+      if (placemarks[0].subLocality!.isNotEmpty) {
+        addressSelectedLocation =
+            "$addressSelectedLocation${placemarks[0].subLocality}, ";
+      }
+      if (placemarks[0].thoroughfare!.isNotEmpty) {
+        addressSelectedLocation =
+            "$addressSelectedLocation${placemarks[0].thoroughfare}, ";
+      }
+      if (placemarks[0].subThoroughfare!.isNotEmpty) {
+        addressSelectedLocation =
+            "$addressSelectedLocation${placemarks[0].subThoroughfare}, ";
+      }
+      if (placemarks[0].subAdministrativeArea!.isNotEmpty) {
+        addressSelectedLocation =
+            "$addressSelectedLocation${placemarks[0].subAdministrativeArea}/";
+      }
+      if (placemarks[0].administrativeArea!.isNotEmpty) {
+        addressSelectedLocation =
+            "$addressSelectedLocation${placemarks[0].administrativeArea!.toUpperCase()}";
+      }
+    }
   }
 
   /// Capture ScreenShot
@@ -237,16 +267,10 @@ class CreateEventModelView extends ChangeNotifier {
   }
 
   /// Detail
-  String? detailVal;
-  void changeEventDetail(String? val) {
-    detailVal = val;
-  }
+  TextEditingController detailCtr = TextEditingController();
 
   /// Quota
-  String? quotaVal;
-  void changeEventQuota(String? val) {
-    quotaVal = val;
-  }
+  TextEditingController quotaCtr = TextEditingController();
 
   /// Gender
   String? genderDropdownValue;
@@ -261,11 +285,29 @@ class CreateEventModelView extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Price
-  String? priceVal;
-  void changeEventPrice(String? val) {
-    priceVal = val;
+  /// Category
+  String? categoryDropdownValue;
+  List<String> categoryList = const [
+    "Sport",
+    "Table Game",
+    "Theatre",
+    "Cinema",
+    "Trip",
+  ];
+  void changeSelectedCategory(String? selectedCategory) {
+    categoryDropdownValue = selectedCategory;
+    notifyListeners();
   }
+
+  /// Price
+  bool isFree = false;
+  void changeIsFree(bool newVal) {
+    isFree = newVal;
+    notifyListeners();
+  }
+
+  TextInputType priceInputType = TextInputType.number;
+  TextEditingController priceCtr = TextEditingController();
 
   /// Hosts
   List<TextEditingController> hostsControllers = [];

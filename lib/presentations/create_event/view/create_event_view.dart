@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../../../core/assets.dart';
 import '../widget/create_event_selected_image_widget.dart';
 import '../widget/create_event_upload_button_widget.dart';
+import 'create_event_category_view.dart';
 import 'create_event_detail_text_view.dart';
 import 'create_event_details_view.dart';
 import 'create_event_hosts_view.dart';
@@ -50,6 +51,8 @@ class CreateEventView extends StatelessWidget {
                   CreateEventDetailsView(),
                   SizedBox(height: 24),
                   CreateEventQuotaAndGenderView(),
+                  SizedBox(height: 24),
+                  CreateEventCategoryView(),
                   SizedBox(height: 24),
                   CreateEventPriceView(),
                   SizedBox(height: 24),

@@ -28,7 +28,8 @@ class CreateEventTitleView extends StatelessWidget {
             const SizedBox(height: 12),
             MyTextFieldWidget(
               hintText: '',
-              changeValueFunc: mv.changeEventTitle,
+              changeValueFunc: (val) {},
+              controller: mv.titleCtr,
               isThereShadow: false,
             ),
           ],

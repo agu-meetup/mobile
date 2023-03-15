@@ -3,7 +3,7 @@ import 'package:http/http.dart';
 
 class Service {
   static String? jwtToken;
-  static String baseUrl = "192.168.218.1:3005";
+  static String baseUrl = "192.168.1.104:3006";
 
   Future<Response> postRequest({
     required String pathRequest,

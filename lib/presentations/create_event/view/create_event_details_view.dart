@@ -29,7 +29,8 @@ class CreateEventDetailsView extends StatelessWidget {
             const SizedBox(height: 4),
             MyTextFieldWidget(
               hintText: 'Details about event',
-              changeValueFunc: mv.changeEventDetail,
+              changeValueFunc: (val) {},
+              controller: mv.detailCtr,
               isThereShadow: false,
               maxLength: 4,
             ),

@@ -6,12 +6,14 @@ class MyDropdownWidget extends StatelessWidget {
   List<String> elementList;
   Function onChangedFunc;
   bool isThereShadow;
+  String hintText;
 
   MyDropdownWidget({
     required this.dropdownValue,
     required this.elementList,
     required this.onChangedFunc,
     this.isThereShadow = true,
+    required this.hintText,
   });
 
   @override
@@ -39,7 +41,7 @@ class MyDropdownWidget extends StatelessWidget {
         ),
       ),
       child: DropdownButton<String>(
-        hint: Text("Gender"),
+        hint: Text(hintText),
         value: dropdownValue,
         icon: const Icon(Icons.arrow_drop_down_outlined),
         elevation: 16,
