@@ -1,19 +1,16 @@
 import 'dart:async';
 
-import 'package:agu_meetup_mobile/core/assets.dart';
-import 'package:agu_meetup_mobile/core/constants.dart';
 import 'package:agu_meetup_mobile/core/exceptions.dart';
-import 'package:agu_meetup_mobile/core/size_config.dart';
-import 'package:agu_meetup_mobile/data/sign_up/models/sign_up_request_model.dart';
-import 'package:agu_meetup_mobile/domains/sign_up/repository/sign_up_repository.dart';
+import 'package:agu_meetup_mobile/domains/authentication/repository/authentication_repository.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 import '../../../components/my_dialogs/my_simple_dialog_widget.dart';
+import '../../../data/authentication/models/sign_up_request_model.dart';
 import '../../sign_in/view/sign_in_view.dart';
 
 class SignUpModelView extends ChangeNotifier {
-  SignUpRepository signUpRepository = SignUpRepository();
+  AuthenticationRepository authenticationRepository = AuthenticationRepository();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   BuildContext? ctx;
 
@@ -143,7 +140,7 @@ class SignUpModelView extends ChangeNotifier {
   Future<void> signUpButtonFunc() async {
     if (formKey.currentState!.validate()) {
       try {
-        await signUpRepository.signUpRepo(SignUpRequestModel(
+        await authenticationRepository.signUp(SignUpRequestModel(
           name: nameVal!,
           surname: surnameVal!,
           phoneNumber: phoneNumVal!,

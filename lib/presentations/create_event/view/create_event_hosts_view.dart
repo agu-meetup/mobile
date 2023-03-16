@@ -30,9 +30,35 @@ class CreateEventHostsView extends StatelessWidget {
               height: 60,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: mv.hostsControllers.length + 1,
+                itemCount: mv.hostsControllers.length + 2,
                 itemBuilder: (context, index) {
-                  if (index == mv.hostsControllers.length) {
+                  if (index == 0) {
+                    return Container(
+                      height: 60,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      margin: const EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: kDarkGray),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 36,
+                            width: 36,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(color: kDarkGray),
+                            ),
+                            child: Icon(Icons.person, color: kDarkGray),
+                          ),
+                          const SizedBox(width: 4),
+                          Text('${mv.createEventCurrentUserModel!.name} ${mv.createEventCurrentUserModel!.surname}'),
+                        ],
+                      ),
+                    );
+                  }
+                  if (index == (mv.hostsControllers.length + 1)) {
                     return GestureDetector(
                       onTap: () {
                         mv.addNewHostValue();
@@ -62,7 +88,7 @@ class CreateEventHostsView extends StatelessWidget {
                         width: SizeConfig.screenWidth! / 3,
                         child: MyTextFieldWidget(
                           hintText: 'Host name',
-                          controller: mv.hostsControllers[index],
+                          controller: mv.hostsControllers[index - 1],
                           isThereShadow: false,
                           changeValueFunc: (val) {},
                         ),
@@ -72,7 +98,7 @@ class CreateEventHostsView extends StatelessWidget {
                         right: 0,
                         child: GestureDetector(
                           onTap: () {
-                            mv.removeHostValue(index);
+                            mv.removeHostValue(index - 1);
                           },
                           child: Container(
                             height: 20,

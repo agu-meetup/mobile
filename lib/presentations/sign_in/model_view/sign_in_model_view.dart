@@ -1,17 +1,17 @@
 import 'dart:async';
 
 import 'package:agu_meetup_mobile/core/exceptions.dart';
-import 'package:agu_meetup_mobile/data/sign_in/models/sign_in_request_model.dart';
-import 'package:agu_meetup_mobile/domains/sign_in/repository/sign_in_repository.dart';
 import 'package:agu_meetup_mobile/presentations/authentication/view/authentication_view.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
+import '../../../data/authentication/models/sign_in_request_model.dart';
+import '../../../domains/authentication/repository/authentication_repository.dart';
 import '../../forgot_password/view/forgot_password_view.dart';
 import '../../sign_up/view/sign_up_view.dart';
 
 class SignInModelView extends ChangeNotifier {
-  SignInRepository signInRepository = SignInRepository();
+  AuthenticationRepository authenticationRepository = AuthenticationRepository();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   BuildContext? ctx;
 
@@ -76,7 +76,7 @@ class SignInModelView extends ChangeNotifier {
   Future<void> signInButtonFunc() async {
     if (formKey.currentState!.validate()) {
       try {
-        await signInRepository.signInRepo(
+        await authenticationRepository.signIn(
           SignInRequestModel(
             email: emailVal!,
             password: passwordVal!,

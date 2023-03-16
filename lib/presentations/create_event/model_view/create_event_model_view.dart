@@ -3,6 +3,8 @@ import 'dart:typed_data';
 
 import 'package:agu_meetup_mobile/components/my_buttons/my_text_button_widget.dart';
 import 'package:agu_meetup_mobile/core/constants.dart';
+import 'package:agu_meetup_mobile/domains/user/repository/user_repository.dart';
+import 'package:agu_meetup_mobile/presentations/create_event/model/create_event_current_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -13,13 +15,22 @@ import 'package:intl/intl.dart' as intl;
 import '../view/create_event_maps_view.dart';
 
 class CreateEventModelView extends ChangeNotifier {
+  /// Domain Layers
+  UserRepository userRepository = UserRepository();
+
   late BuildContext ctx;
+  bool isPageLoaded = false;
   final ImagePicker _picker = ImagePicker();
   XFile? photo;
   List<XFile> selectedImages = [];
 
   void updateBuildContext(BuildContext context) {
     ctx = context;
+  }
+
+  Future<void> initialMethods() async{
+    updateCreateEventUserModel();
+    isPageLoaded = true;
   }
 
   /// Image Upload
@@ -310,6 +321,15 @@ class CreateEventModelView extends ChangeNotifier {
   TextEditingController priceCtr = TextEditingController();
 
   /// Hosts
+  CreateEventCurrentUserModel? createEventCurrentUserModel;
+  void updateCreateEventUserModel() {
+    createEventCurrentUserModel = CreateEventCurrentUserModel(
+      userId: userRepository.getUserInfo()!.id,
+      name: userRepository.getUserInfo()!.name,
+      surname: userRepository.getUserInfo()!.surname,
+    );
+  }
+
   List<TextEditingController> hostsControllers = [];
   void addNewHostValue() {
     hostsControllers.add(TextEditingController());

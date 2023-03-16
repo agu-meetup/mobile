@@ -28,12 +28,16 @@ class CreateEventView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<CreateEventModelView>().updateBuildContext(context);
+    context.read<CreateEventModelView>().initialMethods();
     return SafeArea(
       child: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Consumer<CreateEventModelView>(
             builder: (context, mv, child) {
+              if (mv.isPageLoaded == false){
+                return const Center(child: CircularProgressIndicator());
+              }
               return ListView(
                 children: const [
                   CreateEventImagesView(),
