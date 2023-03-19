@@ -33,6 +33,7 @@ class CreateEventQuotaAndGenderView extends StatelessWidget {
                     hintText: '',
                     changeValueFunc: (val) {},
                     controller: mv.quotaCtr,
+                    textInputType: mv.quotaInputType,
                     isThereShadow: false,
                   ),
                 ],

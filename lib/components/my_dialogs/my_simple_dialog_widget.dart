@@ -10,6 +10,7 @@ Future<void> mySimpleDialogWidget({
   required BuildContext context,
   required String title,
   required String description,
+  required String imagePath,
 }) async {
   late Timer timer;
   await showDialog(
@@ -27,7 +28,7 @@ Future<void> mySimpleDialogWidget({
               mainAxisSize: MainAxisSize.min,
               children: [
                 Image(
-                  image: AssetImage(successStar),
+                  image: AssetImage(imagePath),
                   height: SizeConfig.screenWidth! / 4,
                   width: SizeConfig.screenWidth! / 4,
                   fit: BoxFit.cover,

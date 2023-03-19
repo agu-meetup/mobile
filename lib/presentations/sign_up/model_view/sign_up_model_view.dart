@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:agu_meetup_mobile/core/assets.dart';
 import 'package:agu_meetup_mobile/core/exceptions.dart';
 import 'package:agu_meetup_mobile/domains/authentication/repository/authentication_repository.dart';
 import 'package:email_validator/email_validator.dart';
@@ -149,6 +150,7 @@ class SignUpModelView extends ChangeNotifier {
           gender: genderDropdownValue!,
         ));
         await mySimpleDialogWidget(
+          imagePath: successStar,
           context: ctx!,
           title: "Congratulations!",
           description:

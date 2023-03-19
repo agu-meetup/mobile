@@ -2,7 +2,10 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:agu_meetup_mobile/components/my_buttons/my_text_button_widget.dart';
+import 'package:agu_meetup_mobile/core/assets.dart';
 import 'package:agu_meetup_mobile/core/constants.dart';
+import 'package:agu_meetup_mobile/data/event/models/create_event_request_model.dart';
+import 'package:agu_meetup_mobile/domains/event/repository/event_repository.dart';
 import 'package:agu_meetup_mobile/domains/user/repository/user_repository.dart';
 import 'package:agu_meetup_mobile/presentations/create_event/model/create_event_current_user_model.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +15,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:intl/intl.dart' as intl;
 
+import '../../../components/my_dialogs/my_simple_dialog_widget.dart';
 import '../view/create_event_maps_view.dart';
 
 class CreateEventModelView extends ChangeNotifier {
   /// Domain Layers
   UserRepository userRepository = UserRepository();
+  EventRepository eventRepository = EventRepository();
 
   late BuildContext ctx;
   bool isPageLoaded = false;
@@ -28,7 +33,7 @@ class CreateEventModelView extends ChangeNotifier {
     ctx = context;
   }
 
-  Future<void> initialMethods() async{
+  Future<void> initialMethods() async {
     updateCreateEventUserModel();
     isPageLoaded = true;
   }
@@ -223,6 +228,7 @@ class CreateEventModelView extends ChangeNotifier {
   }
 
   TextEditingController dateSelectorController = TextEditingController();
+  DateTime? selectedDate;
   Icon dateIcon = Icon(Icons.date_range, color: kGray.withOpacity(0.5));
   void changeDateValueFunc() async {
     DateTime? pickedDate = await showDatePicker(
@@ -232,6 +238,7 @@ class CreateEventModelView extends ChangeNotifier {
       lastDate: DateTime(2101),
     );
     if (pickedDate != null) {
+      selectedDate = pickedDate;
       String formattedDate = intl.DateFormat('yMMMMd').format(pickedDate);
       dateSelectorController.text = formattedDate;
       notifyListeners();
@@ -240,6 +247,8 @@ class CreateEventModelView extends ChangeNotifier {
 
   /// Times
   TextEditingController startTimeController = TextEditingController();
+  int startTimeHour = -1;
+  int startTimeMinute = -1;
   void changeStartTimeValueFunc() async {
     TimeOfDay? selectedTimeRTL = await showTimePicker(
       context: ctx,
@@ -252,6 +261,8 @@ class CreateEventModelView extends ChangeNotifier {
       },
     );
     if (selectedTimeRTL != null) {
+      startTimeHour = selectedTimeRTL.hour;
+      startTimeMinute = selectedTimeRTL.minute;
       startTimeController.text =
           "${selectedTimeRTL.hour}:${selectedTimeRTL.minute}";
       notifyListeners();
@@ -259,6 +270,8 @@ class CreateEventModelView extends ChangeNotifier {
   }
 
   TextEditingController endTimeController = TextEditingController();
+  int endTimeHour = -1;
+  int endTimeMinute = -1;
   void changeEndTimeValueFunc() async {
     TimeOfDay? selectedTimeRTL = await showTimePicker(
       context: ctx,
@@ -271,6 +284,8 @@ class CreateEventModelView extends ChangeNotifier {
       },
     );
     if (selectedTimeRTL != null) {
+      endTimeHour = selectedTimeRTL.hour;
+      endTimeMinute = selectedTimeRTL.minute;
       endTimeController.text =
           "${selectedTimeRTL.hour}:${selectedTimeRTL.minute}";
       notifyListeners();
@@ -281,6 +296,7 @@ class CreateEventModelView extends ChangeNotifier {
   TextEditingController detailCtr = TextEditingController();
 
   /// Quota
+  TextInputType quotaInputType = TextInputType.number;
   TextEditingController quotaCtr = TextEditingController();
 
   /// Gender
@@ -339,5 +355,98 @@ class CreateEventModelView extends ChangeNotifier {
   void removeHostValue(int index) {
     hostsControllers.removeAt(index);
     notifyListeners();
+  }
+
+  /// Create Event Button
+  void createEventButtonFunc() async {
+    try {
+      if (selectedDate != null &&
+          startTimeHour != -1 &&
+          startTimeMinute != -1 &&
+          endTimeHour != -1 &&
+          endTimeMinute != -1 &&
+          targetPosition != null &&
+          titleCtr.text != "" &&
+          detailCtr.text != "" &&
+          categoryDropdownValue != null &&
+          quotaCtr.text != "" &&
+          genderDropdownValue != null) {
+        if (int.tryParse(quotaCtr.text) == null) {
+          await mySimpleDialogWidget(
+            imagePath: errorRedCross,
+            context: ctx,
+            title: 'Error',
+            description: 'Please enter valid quota number',
+          );
+        } else if (priceCtr.text != "" && isFree == false) {
+          if (double.tryParse(priceCtr.text) == null) {
+            await mySimpleDialogWidget(
+              imagePath: errorRedCross,
+              context: ctx,
+              title: 'Error',
+              description: 'Please enter valid price number',
+            );
+          }
+          else {
+            await createEventRequestFunction();
+          }
+        } else {
+          await createEventRequestFunction();
+        }
+      } else {
+        await mySimpleDialogWidget(
+          imagePath: errorRedCross,
+          context: ctx,
+          title: 'Error',
+          description: 'Please select all choices',
+        );
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> createEventRequestFunction() async {
+    String priceTempText = priceCtr.text;
+    if (isFree == true || priceCtr.text == "") {
+      priceTempText = "0";
+    }
+    String tempHosts =
+        "${userRepository.getUserInfo()!.name} ${userRepository.getUserInfo()!.surname}";
+    for (int i = 0; i < hostsControllers.length; i++) {
+      if (hostsControllers[i].text != "") {
+        tempHosts += "-${hostsControllers[i].text}";
+      }
+    }
+    await eventRepository.createEvent(
+      CreateEventRequestModel(
+        userId: userRepository.getUserInfo()!.id,
+        creatingTime: DateTime.now().toIso8601String(),
+        startTime: DateTime(selectedDate!.year, selectedDate!.month,
+            selectedDate!.day, startTimeHour, startTimeMinute)
+            .toIso8601String(),
+        endTime: DateTime(selectedDate!.year, selectedDate!.month,
+            selectedDate!.day, endTimeHour, endTimeMinute)
+            .toIso8601String(),
+        users: "${userRepository.getUserInfo()!.id}",
+        lattiude: targetPosition!.latitude,
+        longitude: targetPosition!.longitude,
+        name: titleCtr.text,
+        description: detailCtr.text,
+        title: titleCtr.text,
+        category: categoryDropdownValue!,
+        maxParticipants: int.parse(quotaCtr.text),
+        hosts: tempHosts,
+        gender: genderDropdownValue!,
+        imageUrl: "img",
+        price: double.parse(priceTempText),
+      ),
+    );
+    await mySimpleDialogWidget(
+      title: "Success",
+      description: "Event was created successfully",
+      imagePath: successStar,
+      context: ctx,
+    );
   }
 }
