@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/assets.dart';
 import '../../../core/constants.dart';
 
 class NotificationCardWidget extends StatelessWidget {
@@ -28,15 +29,15 @@ class NotificationCardWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(12),
       padding: EdgeInsets.all(5),
-      height: 120,
+      height: 100,
       decoration: BoxDecoration(
-        color: kGray.withOpacity(0.4),
+        color: kGray.withOpacity(0.3),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 5),
+            margin: EdgeInsets.only(right: 5),
             height: 90,
             width: 90,
             decoration: BoxDecoration(
@@ -113,10 +114,14 @@ class NotificationCardWidget extends StatelessWidget {
                       onTap: () {
                         deleteFunc(id);
                       },
-                      child: Icon(
-                        Icons.delete,
-                        color: kDarkGray,
-                        size: 24,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Image(
+                          image: AssetImage(trash),
+                          height: 18,
+                          width: 18,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ],

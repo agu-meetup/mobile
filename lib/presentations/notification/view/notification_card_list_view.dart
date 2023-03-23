@@ -15,13 +15,13 @@ class NotificationCardListView extends StatelessWidget {
         itemCount: mv.cardsInfo.length,
         itemBuilder: (context, index) {
           return NotificationCardWidget(
-            id: mv.cardsInfo[index]!.id,
-            city: mv.cardsInfo[index]!.city,
-            date: mv.cardsInfo[index]!.date,
-            eventTitle: mv.cardsInfo[index]!.eventTitle,
-            locationName: mv.cardsInfo[index]!.locationName,
-            notificationTitle: mv.cardsInfo[index]!.notificationTitle,
-            time: mv.cardsInfo[index]!.time,
+            id: mv.cardsInfo[index].id,
+            city: mv.cardsInfo[index].city,
+            date: mv.cardsInfo[index].date,
+            eventTitle: mv.cardsInfo[index].eventTitle,
+            locationName: mv.cardsInfo[index].locationName,
+            notificationTitle: mv.cardsInfo[index].notificationTitle,
+            time: mv.cardsInfo[index].time,
             deleteFunc: mv.deleteNotificationById,
           );
         },

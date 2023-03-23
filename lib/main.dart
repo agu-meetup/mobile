@@ -9,6 +9,7 @@ import 'package:agu_meetup_mobile/presentations/forgot_password/view_model/forgo
 import 'package:agu_meetup_mobile/presentations/forgot_password/view_model/forgot_password_view_model.dart';
 import 'package:agu_meetup_mobile/presentations/intro/model_view/intro_model_view.dart';
 import 'package:agu_meetup_mobile/presentations/notification/model_view/notification_model_view.dart';
+import 'package:agu_meetup_mobile/presentations/profile/model_view/profile_model_view.dart';
 import 'package:agu_meetup_mobile/presentations/sign_in/model_view/sign_in_model_view.dart';
 import 'package:agu_meetup_mobile/presentations/sign_up/model_view/sign_up_model_view.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +58,9 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (_) => NotificationModelView(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ProfileModelView(),
         ),
       ],
       child: const MyApp(),
