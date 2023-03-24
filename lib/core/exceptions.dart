@@ -5,3 +5,5 @@ class EmailAlreadyUsed implements Exception {}
 class InvalidToken implements Exception {}
 
 class CreateEventError implements Exception {}
+
+class UpdateUserError implements Exception {}

@@ -24,14 +24,14 @@ class AuthenticationRepository {
   Future<void> takeJwtTokenFromLocal() async {
     jwtToken = await _authenticationLocalDatasource.getJwtToken();
     MyService().updateJwtToken(jwtToken);
-    await userRepository.updateUserInfo();
+    await userRepository.fetchUserInfoFromDS();
   }
 
   Future<void> signIn(SignInRequestModel signInRequestModel) async {
     String newToken = await _authenticationServerDatasource.signInDS(signInRequestModel);
     jwtToken = newToken;
     MyService().updateJwtToken(jwtToken);
-    await userRepository.updateUserInfo();
+    await userRepository.fetchUserInfoFromDS();
     await _authenticationLocalDatasource.saveJwtToken(newToken);
   }
 
@@ -43,7 +43,7 @@ class AuthenticationRepository {
     await _authenticationLocalDatasource.saveJwtToken("");
     jwtToken = "";
     MyService().updateJwtToken(jwtToken);
-    await userRepository.updateUserInfo();
+    await userRepository.fetchUserInfoFromDS();
   }
 
   String? getJwtToken() {
