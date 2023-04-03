@@ -19,6 +19,10 @@ class UserRepository {
     userInfo = await userServerDatasource.updateUserInfo(updateUserInfoRequest);
   }
 
+  void makeUserInfoNull() {
+    userInfo = null;
+  }
+
   GetUserInfoResponseModel? getUserInfo() {
     return userInfo;
   }

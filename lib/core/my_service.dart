@@ -39,7 +39,6 @@ class MyService {
       'Content-type': 'application/json;charset=UTF-8',
       'Charset': 'utf-8',
     };
-    print(jwtToken);
     if (isRequiredToken) {
       headersMap["Authorization"] = "bearer ${jwtToken!}";
     }
@@ -48,6 +47,28 @@ class MyService {
     var response = await client.get(
       url,
       headers: headersMap,
+    );
+    return response;
+  }
+
+  Future<Response> putRequest({
+    required String pathRequest,
+    required String parameters,
+    bool isRequiredToken = true,
+  }) async {
+    var headersMap = {
+      'Content-type': 'application/json;charset=UTF-8',
+      'Charset': 'utf-8',
+    };
+    if (isRequiredToken) {
+      headersMap["Authorization"] = "bearer ${jwtToken!}";
+    }
+    var client = http.Client();
+    var url = Uri.http(baseUrl, pathRequest);
+    var response = await client.put(
+      url,
+      headers: headersMap,
+      body: parameters,
     );
     return response;
   }

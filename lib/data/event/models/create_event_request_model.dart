@@ -1,3 +1,5 @@
+import 'dart:io';
+
 class CreateEventRequestModel {
   int userId;
   String creatingTime;
@@ -15,6 +17,8 @@ class CreateEventRequestModel {
   String gender;
   String imageUrl;
   double price;
+  /// For presentation -> domain
+  List<File> imageFiles;
 
   CreateEventRequestModel({
     required this.userId,
@@ -33,6 +37,8 @@ class CreateEventRequestModel {
     required this.gender,
     required this.imageUrl,
     required this.price,
+    /// For presentation -> domain
+    required this.imageFiles,
   });
 
   Map<String, dynamic> toJson() {

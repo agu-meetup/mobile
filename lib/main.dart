@@ -12,11 +12,18 @@ import 'package:agu_meetup_mobile/presentations/notification/model_view/notifica
 import 'package:agu_meetup_mobile/presentations/profile/model_view/profile_model_view.dart';
 import 'package:agu_meetup_mobile/presentations/sign_in/model_view/sign_in_model_view.dart';
 import 'package:agu_meetup_mobile/presentations/sign_up/model_view/sign_up_model_view.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './app.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
     MultiProvider(
       providers: [

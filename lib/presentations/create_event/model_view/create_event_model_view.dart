@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:agu_meetup_mobile/components/my_buttons/my_text_button_widget.dart';
@@ -418,35 +419,49 @@ class CreateEventModelView extends ChangeNotifier {
         tempHosts += "-${hostsControllers[i].text}";
       }
     }
-    await eventRepository.createEvent(
-      CreateEventRequestModel(
-        userId: userRepository.getUserInfo()!.id,
-        creatingTime: DateTime.now().toIso8601String(),
-        startTime: DateTime(selectedDate!.year, selectedDate!.month,
-            selectedDate!.day, startTimeHour, startTimeMinute)
-            .toIso8601String(),
-        endTime: DateTime(selectedDate!.year, selectedDate!.month,
-            selectedDate!.day, endTimeHour, endTimeMinute)
-            .toIso8601String(),
-        users: "${userRepository.getUserInfo()!.id}",
-        lattiude: targetPosition!.latitude,
-        longitude: targetPosition!.longitude,
-        name: titleCtr.text,
-        description: detailCtr.text,
-        title: titleCtr.text,
-        category: categoryDropdownValue!,
-        maxParticipants: int.parse(quotaCtr.text),
-        hosts: tempHosts,
-        gender: genderDropdownValue!,
-        imageUrl: "img",
-        price: double.parse(priceTempText),
-      ),
-    );
-    await mySimpleDialogWidget(
-      title: "Success",
-      description: "Event was created successfully",
-      imagePath: successStar,
-      context: ctx,
-    );
+    List<File> imageFiles = selectedImages.map((e) => File(e.path)).toList();
+    try {
+      await eventRepository.createEvent(
+        CreateEventRequestModel(
+          userId: userRepository.getUserInfo()!.id,
+          creatingTime: DateTime.now().toIso8601String(),
+          startTime: DateTime(selectedDate!.year, selectedDate!.month,
+              selectedDate!.day, startTimeHour, startTimeMinute)
+              .toIso8601String(),
+          endTime: DateTime(selectedDate!.year, selectedDate!.month,
+              selectedDate!.day, endTimeHour, endTimeMinute)
+              .toIso8601String(),
+          users: "${userRepository.getUserInfo()!.id}",
+          lattiude: targetPosition!.latitude,
+          longitude: targetPosition!.longitude,
+          name: titleCtr.text,
+          description: detailCtr.text,
+          title: titleCtr.text,
+          category: categoryDropdownValue!,
+          maxParticipants: int.parse(quotaCtr.text),
+          hosts: tempHosts,
+          gender: genderDropdownValue!,
+          imageUrl: "img",
+          price: double.parse(priceTempText),
+          imageFiles: imageFiles,
+        ),
+      );
+      await mySimpleDialogWidget(
+        title: "Success",
+        description: "Event was created successfully",
+        imagePath: successStar,
+        context: ctx,
+      );
+    } catch (e) {
+      print(e);
+      await mySimpleDialogWidget(
+        title: "Error",
+        description: "Event creation was failed",
+        imagePath: errorRedCross,
+        context: ctx,
+      );
+
+    }
+
   }
 }

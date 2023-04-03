@@ -54,6 +54,9 @@ dependencies:
   carousel_slider: ^4.2.1
   # For Bottom Bar
   animated_bottom_navigation_bar: ^1.1.0+1
+  uuid: ^3.0.7
+  firebase_core: ^2.9.0
+  firebase_storage: ^11.1.0
 
 dev_dependencies:
   flutter_test:
