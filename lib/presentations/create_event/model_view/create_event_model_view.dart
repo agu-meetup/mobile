@@ -460,7 +460,6 @@ class CreateEventModelView extends ChangeNotifier {
         imagePath: errorRedCross,
         context: ctx,
       );
-
     }
 
   }

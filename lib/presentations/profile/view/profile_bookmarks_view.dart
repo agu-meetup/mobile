@@ -42,6 +42,7 @@ class ProfileBookmarksView extends StatelessWidget {
                 eventPlace: mv.myBookmarksList[index].eventPlace,
                 currentMember: mv.myBookmarksList[index].numberCurrentMember,
                 maxMember: mv.myBookmarksList[index].numberMaxMember,
+                networkImageLink: mv.myBookmarksList[index].firstImagePath,
                 iconFunc: mv.removeEventFromMyBookmarks,
                 iconImagePath: mv.myBookmarksIconPath,
               );

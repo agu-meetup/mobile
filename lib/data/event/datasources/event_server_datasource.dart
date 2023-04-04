@@ -5,6 +5,8 @@ import 'package:agu_meetup_mobile/data/event/models/create_event_request_model.d
 import 'package:http/http.dart';
 
 import '../../../core/exceptions.dart';
+import '../models/get_event_response_model.dart';
+import '../models/get_events_by_user_response_model.dart';
 
 class EventServerDatasource {
   MyService myService = MyService();
@@ -39,11 +41,51 @@ class EventServerDatasource {
       isRequiredToken: false,
     );
 
-    if (response.statusCode == 200){
+    if (response.statusCode == 200) {
       return;
+    } else {
+      throw UpdateEventError();
+    }
+  }
+
+  Future<List<GetEventsByUserResponseModel>> getEventsByUser(int userId) async {
+    Response response = await myService.getRequest(
+      pathRequest: "api/event/user/$userId",
+      isRequiredToken: false,
+    );
+
+    if (response.statusCode == 200) {
+      return (jsonDecode(response.body)['events'] as List<dynamic>)
+          .map((e) => GetEventsByUserResponseModel.fromJson(e))
+          .toList();
+    } else {
+      throw GetEventsByUserError();
+    }
+  }
+
+  Future<List<int>> getEventIdsJointUser(int userId) async {
+    Response response = await myService.getRequest(
+      pathRequest: "api/event/userevents/$userId",
+      isRequiredToken: false,
+    );
+
+    if (response.statusCode == 200) {
+      return (jsonDecode(response.body)['events'] as List<dynamic>)
+          .map((e) => e['event_id'] as int)
+          .toList();
+    } else {
+      throw GetEventIdsJointUserError();
+    }
+  }
+
+  Future<GetEventResponseModel> getEventById(int eventId) async{
+    Response response = await myService.getRequest(pathRequest: "api/event/$eventId", isRequiredToken: false,);
+
+    if (response.statusCode == 200){
+      return GetEventResponseModel.fromJson(jsonDecode(response.body)['event']);
     }
     else {
-      throw UpdateEventError();
+      throw GetEventByIdError();
     }
   }
 }

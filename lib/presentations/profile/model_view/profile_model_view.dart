@@ -1,6 +1,7 @@
 import 'package:agu_meetup_mobile/core/assets.dart';
 import 'package:agu_meetup_mobile/data/user/models/get_user_info_response_model.dart';
 import 'package:agu_meetup_mobile/data/user/models/update_user_info_request.dart';
+import 'package:agu_meetup_mobile/domains/event/repository/event_repository.dart';
 import 'package:agu_meetup_mobile/domains/user/repository/user_repository.dart';
 import 'package:agu_meetup_mobile/presentations/authentication/view/authentication_view.dart';
 import 'package:agu_meetup_mobile/presentations/authentication/view_model/authentication_model_view.dart';
@@ -10,14 +11,22 @@ import 'package:flutter/material.dart';
 import '../../../components/my_dialogs/my_simple_dialog_widget.dart';
 import '../model/profile_event_model.dart';
 
+enum ProfilePageStatus {
+  loading,
+  success,
+  failed,
+}
+
 class ProfileModelView extends ChangeNotifier {
   BuildContext? ctx;
 
   /// Attributes
   GetUserInfoResponseModel? userInfo;
+  ProfilePageStatus profilePageStatus = ProfilePageStatus.loading;
 
   /// Domain Layers
   UserRepository userRepository = UserRepository();
+  EventRepository eventRepository = EventRepository();
 
   /// Other Model Views
   AuthenticationModelView authenticationModelView = AuthenticationModelView();
@@ -29,129 +38,32 @@ class ProfileModelView extends ChangeNotifier {
 
   void initializeMethods() async {
     getUserInfoFromDomain();
+    await getAllEventsListFromRepository();
+    profilePageStatus = ProfilePageStatus.success;
+    notifyListeners();
   }
 
   void getUserInfoFromDomain() {
     userInfo = userRepository.getUserInfo();
   }
 
+  Future<void> getAllEventsListFromRepository() async{
+    myEventsList = [];
+    upcomingEventsList = [];
+    pastEventsList = [];
+    await eventRepository.eventsCreatedCurrentUser(userInfo!.id);
+    myEventsList = eventRepository.getProfileMyEventsListFromDomain();
+    await eventRepository.eventsUpcomingAndPastCurrentUser(userInfo!.id);
+    upcomingEventsList = eventRepository.getProfileUpcomingEventsListFromDomain();
+    pastEventsList = eventRepository.getProfilePastEventsListFromDomain();
+    notifyListeners();
+  }
+
   /// Dummy Values
-  List<ProfileEventModel> myEventsList = [
-    ProfileEventModel(
-      eventId: 1,
-      eventDate: "Tomorrow",
-      eventTime: "6:30 pm",
-      eventPlace: "Caribou Coffee",
-      eventTitle: "Batak",
-      numberCurrentMember: 5,
-      numberMaxMember: 24,
-    ),
-    ProfileEventModel(
-      eventId: 2,
-      eventDate: "Tomorrow",
-      eventTime: "6:45 pm",
-      eventPlace: "Caribou Coffee",
-      eventTitle: "Okey",
-      numberCurrentMember: 3,
-      numberMaxMember: 8,
-    ),
-    ProfileEventModel(
-      eventId: 3,
-      eventDate: "29.03.22",
-      eventTime: "8:30 pm",
-      eventPlace: "Caribou Coffee",
-      eventTitle: "101",
-      numberCurrentMember: 5,
-      numberMaxMember: 6,
-    ),
-  ];
-  List<ProfileEventModel> upcomingEventsList = [
-    ProfileEventModel(
-      eventId: 1,
-      eventDate: "Tomorrow",
-      eventTime: "6:30 pm",
-      eventPlace: "Caribou Coffee",
-      eventTitle: "Batak",
-      numberCurrentMember: 5,
-      numberMaxMember: 24,
-    ),
-    ProfileEventModel(
-      eventId: 2,
-      eventDate: "Tomorrow",
-      eventTime: "6:45 pm",
-      eventPlace: "Caribou Coffee",
-      eventTitle: "Okey",
-      numberCurrentMember: 3,
-      numberMaxMember: 8,
-    ),
-    ProfileEventModel(
-      eventId: 3,
-      eventDate: "29.03.22",
-      eventTime: "8:30 pm",
-      eventPlace: "Caribou Coffee",
-      eventTitle: "101",
-      numberCurrentMember: 5,
-      numberMaxMember: 6,
-    ),
-  ];
-  List<ProfileEventModel> pastEventsList = [
-    ProfileEventModel(
-      eventId: 1,
-      eventDate: "Tomorrow",
-      eventTime: "6:30 pm",
-      eventPlace: "Caribou Coffee",
-      eventTitle: "Batak",
-      numberCurrentMember: 5,
-      numberMaxMember: 24,
-    ),
-    ProfileEventModel(
-      eventId: 2,
-      eventDate: "Tomorrow",
-      eventTime: "6:45 pm",
-      eventPlace: "Caribou Coffee",
-      eventTitle: "Okey",
-      numberCurrentMember: 3,
-      numberMaxMember: 8,
-    ),
-    ProfileEventModel(
-      eventId: 3,
-      eventDate: "29.03.22",
-      eventTime: "8:30 pm",
-      eventPlace: "Caribou Coffee",
-      eventTitle: "101",
-      numberCurrentMember: 5,
-      numberMaxMember: 6,
-    ),
-  ];
-  List<ProfileEventModel> myBookmarksList = [
-    ProfileEventModel(
-      eventId: 1,
-      eventDate: "Tomorrow",
-      eventTime: "6:30 pm",
-      eventPlace: "Caribou Coffee",
-      eventTitle: "Batak",
-      numberCurrentMember: 5,
-      numberMaxMember: 24,
-    ),
-    ProfileEventModel(
-      eventId: 2,
-      eventDate: "Tomorrow",
-      eventTime: "6:45 pm",
-      eventPlace: "Caribou Coffee",
-      eventTitle: "Okey",
-      numberCurrentMember: 3,
-      numberMaxMember: 8,
-    ),
-    ProfileEventModel(
-      eventId: 3,
-      eventDate: "29.03.22",
-      eventTime: "8:30 pm",
-      eventPlace: "Caribou Coffee",
-      eventTitle: "101",
-      numberCurrentMember: 5,
-      numberMaxMember: 6,
-    ),
-  ];
+  List<ProfileEventModel> myEventsList = [];
+  List<ProfileEventModel> upcomingEventsList = [];
+  List<ProfileEventModel> pastEventsList = [];
+  List<ProfileEventModel> myBookmarksList = [];
 
   /// My Events
   String myEventsIconPath = circularMore;

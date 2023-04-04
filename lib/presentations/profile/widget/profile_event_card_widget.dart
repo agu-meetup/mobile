@@ -12,6 +12,7 @@ class ProfileEventCardWidget extends StatelessWidget {
   int maxMember;
   Function? iconFunc;
   String? iconImagePath;
+  String networkImageLink;
   bool isClosed;
 
   ProfileEventCardWidget({
@@ -24,6 +25,7 @@ class ProfileEventCardWidget extends StatelessWidget {
     required this.maxMember,
     this.iconFunc,
     this.iconImagePath,
+    required this.networkImageLink,
     this.isClosed = false,
   });
 
@@ -50,7 +52,7 @@ class ProfileEventCardWidget extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               image: DecorationImage(
-                image: AssetImage("assets/test_image/test_cinema.png"),
+                image: NetworkImage(networkImageLink),
                 fit: BoxFit.cover,
               ),
             ),

@@ -6,6 +6,8 @@ class ProfileEventModel {
   String eventTitle;
   int numberCurrentMember;
   int numberMaxMember;
+  String firstImagePath;
+  DateTime eventDateByDateTime;
 
   ProfileEventModel({
     required  this.eventId,
@@ -15,5 +17,7 @@ class ProfileEventModel {
     required this.eventTitle,
     required this.numberCurrentMember,
     required this.numberMaxMember,
+    required this.firstImagePath,
+    required this.eventDateByDateTime,
   });
 }

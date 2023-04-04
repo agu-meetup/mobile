@@ -52,6 +52,7 @@ class ProfileTabBarsView extends StatelessWidget {
                             eventPlace: mv.myEventsList[index].eventPlace,
                             currentMember: mv.myEventsList[index].numberCurrentMember,
                             maxMember: mv.myEventsList[index].numberMaxMember,
+                            networkImageLink: mv.myEventsList[index].firstImagePath,
                             iconFunc: mv.myEventsFunc,
                             iconImagePath: mv.myEventsIconPath,
                           );
@@ -68,6 +69,7 @@ class ProfileTabBarsView extends StatelessWidget {
                             eventPlace: mv.upcomingEventsList[index].eventPlace,
                             currentMember: mv.upcomingEventsList[index].numberCurrentMember,
                             maxMember: mv.upcomingEventsList[index].numberMaxMember,
+                            networkImageLink: mv.upcomingEventsList[index].firstImagePath,
                             iconFunc: mv.upcomingEventsFunc,
                             iconImagePath: mv.upcomingEventsIconPath,
                           );
@@ -82,6 +84,7 @@ class ProfileTabBarsView extends StatelessWidget {
                             eventDate: mv.pastEventsList[index].eventDate,
                             eventTime: mv.pastEventsList[index].eventTime,
                             eventPlace: mv.pastEventsList[index].eventPlace,
+                            networkImageLink: mv.pastEventsList[index].firstImagePath,
                             currentMember: mv.pastEventsList[index].numberCurrentMember,
                             maxMember: mv.pastEventsList[index].numberMaxMember,
                             isClosed: true,
