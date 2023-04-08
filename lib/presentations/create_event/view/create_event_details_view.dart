@@ -30,7 +30,7 @@ class CreateEventDetailsView extends StatelessWidget {
             MyTextFieldWidget(
               hintText: 'Details about event',
               changeValueFunc: (val) {},
-              controller: mv.detailCtr,
+              controller: mv.createEventInfoModel.detailCtr,
               isThereShadow: false,
               maxLength: 4,
             ),

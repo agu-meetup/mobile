@@ -30,15 +30,15 @@ class CreateEventPriceView extends StatelessWidget {
                 CreateEventSwitchButtonWidget(
                   text: "Free",
                   changeSwitchValueFunc: mv.changeIsFree,
-                  value: mv.isFree,
+                  value: mv.createEventInfoModel.isFree,
                 ),
               ],
             ),
             const SizedBox(height: 4),
             CreateEventPriceTextFieldWidget(
               onChangeFunc: (val) {},
-              controller: mv.priceCtr,
-              isEnabled: !mv.isFree,
+              controller: mv.createEventInfoModel.priceCtr,
+              isEnabled: !mv.createEventInfoModel.isFree,
               textInputType: mv.priceInputType,
             ),
           ],

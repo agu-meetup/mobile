@@ -29,7 +29,7 @@ class CreateEventTitleView extends StatelessWidget {
             MyTextFieldWidget(
               hintText: '',
               changeValueFunc: (val) {},
-              controller: mv.titleCtr,
+              controller: mv.createEventInfoModel.titleCtr,
               isThereShadow: false,
             ),
           ],

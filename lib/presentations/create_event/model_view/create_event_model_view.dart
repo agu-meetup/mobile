@@ -9,6 +9,8 @@ import 'package:agu_meetup_mobile/data/event/models/create_event_request_model.d
 import 'package:agu_meetup_mobile/domains/event/repository/event_repository.dart';
 import 'package:agu_meetup_mobile/domains/user/repository/user_repository.dart';
 import 'package:agu_meetup_mobile/presentations/create_event/model/create_event_current_user_model.dart';
+import 'package:agu_meetup_mobile/presentations/create_event/model/create_event_info_model.dart';
+import 'package:agu_meetup_mobile/presentations/create_event/widget/create_event_preview_dialog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -25,21 +27,45 @@ class CreateEventModelView extends ChangeNotifier {
   EventRepository eventRepository = EventRepository();
 
   late BuildContext ctx;
+  late BuildContext previewDialogCtx;
+  late CreateEventInfoModel createEventInfoModel;
   bool isPageLoaded = false;
   final ImagePicker _picker = ImagePicker();
   XFile? photo;
-  List<XFile> selectedImages = [];
 
   void updateBuildContext(BuildContext context) {
     ctx = context;
   }
 
+  void updatePreviewDialogBuildContext(BuildContext context) {
+    previewDialogCtx = context;
+  }
+
   Future<void> initialMethods() async {
+    // initializeCreateEventInfo();
     updateCreateEventUserModel();
     isPageLoaded = true;
   }
 
+  void initializeCreateEventInfo() {
+    createEventInfoModel = CreateEventInfoModel(
+      selectedImages: [],
+      titleCtr: TextEditingController(),
+      placeNameCtr: TextEditingController(),
+      isActiveAllDay: false,
+      dateSelectorController: TextEditingController(),
+      startTimeController: TextEditingController(),
+      endTimeController: TextEditingController(),
+      detailCtr: TextEditingController(),
+      quotaCtr: TextEditingController(),
+      isFree: false,
+      priceCtr: TextEditingController(),
+      hostsControllers: [],
+    );
+  }
+
   /// Image Upload
+  // List<File> imageFiles;
   void photoUploadButtonFunc() {
     showModalBottomSheet<void>(
       backgroundColor: Colors.transparent,
@@ -65,7 +91,7 @@ class CreateEventModelView extends ChangeNotifier {
                     photo =
                         await _picker.pickImage(source: ImageSource.gallery);
                     if (photo != null) {
-                      selectedImages.add(photo!);
+                      createEventInfoModel.selectedImages.add(photo!);
                     }
                     notifyListeners();
                   },
@@ -75,7 +101,7 @@ class CreateEventModelView extends ChangeNotifier {
                   onTanFunc: () async {
                     photo = await _picker.pickImage(source: ImageSource.camera);
                     if (photo != null) {
-                      selectedImages.add(photo!);
+                      createEventInfoModel.selectedImages.add(photo!);
                     }
                     notifyListeners();
                   },
@@ -89,16 +115,13 @@ class CreateEventModelView extends ChangeNotifier {
   }
 
   void removeImage(int imageIndex) {
-    selectedImages.removeAt(imageIndex);
+    createEventInfoModel.selectedImages.removeAt(imageIndex);
     notifyListeners();
   }
 
   /// Event Title
-  TextEditingController titleCtr = TextEditingController();
 
   /// Google Maps - Location
-  TextEditingController placeNameCtr = TextEditingController();
-  String? addressSelectedLocation;
   Completer<GoogleMapController> mapController =
       Completer<GoogleMapController>();
 
@@ -108,17 +131,16 @@ class CreateEventModelView extends ChangeNotifier {
   );
 
   Position? currentPosition;
-  LatLng? targetPosition;
 
   void updateTargetPosition(LatLng newTargetPosition) {
-    targetPosition = newTargetPosition;
-    if (targetPosition != null) {
+    createEventInfoModel.targetPosition = newTargetPosition;
+    if (createEventInfoModel.targetPosition != null) {
       notifyListeners();
     }
   }
 
   void clearTargetPosition() {
-    targetPosition = null;
+    createEventInfoModel.targetPosition = null;
     currentPosition = null;
     notifyListeners();
   }
@@ -133,9 +155,10 @@ class CreateEventModelView extends ChangeNotifier {
     try {
       currentPosition = await _determinePosition();
       if (currentPosition != null) {
-        if (targetPosition != null) {
+        if (createEventInfoModel.targetPosition != null) {
           initialLocation = CameraPosition(
-            target: LatLng(targetPosition!.latitude, targetPosition!.longitude),
+            target: LatLng(createEventInfoModel.targetPosition!.latitude,
+                createEventInfoModel.targetPosition!.longitude),
             zoom: 14.4746,
           );
         } else {
@@ -186,49 +209,47 @@ class CreateEventModelView extends ChangeNotifier {
 
   Future<void> updateAddress() async {
     List<Placemark> placemarks = await placemarkFromCoordinates(
-        targetPosition!.latitude, targetPosition!.longitude);
+        createEventInfoModel.targetPosition!.latitude,
+        createEventInfoModel.targetPosition!.longitude);
     if (placemarks.isNotEmpty) {
-      addressSelectedLocation = "";
+      createEventInfoModel.addressSelectedLocation = "";
       if (placemarks[0].subLocality!.isNotEmpty) {
-        addressSelectedLocation =
-            "$addressSelectedLocation${placemarks[0].subLocality}, ";
+        createEventInfoModel.addressSelectedLocation =
+            "${createEventInfoModel.addressSelectedLocation}${placemarks[0].subLocality}, ";
       }
       if (placemarks[0].thoroughfare!.isNotEmpty) {
-        addressSelectedLocation =
-            "$addressSelectedLocation${placemarks[0].thoroughfare}, ";
+        createEventInfoModel.addressSelectedLocation =
+            "${createEventInfoModel.addressSelectedLocation}${placemarks[0].thoroughfare}, ";
       }
       if (placemarks[0].subThoroughfare!.isNotEmpty) {
-        addressSelectedLocation =
-            "$addressSelectedLocation${placemarks[0].subThoroughfare}, ";
+        createEventInfoModel.addressSelectedLocation =
+            "${createEventInfoModel.addressSelectedLocation}${placemarks[0].subThoroughfare}, ";
       }
       if (placemarks[0].subAdministrativeArea!.isNotEmpty) {
-        addressSelectedLocation =
-            "$addressSelectedLocation${placemarks[0].subAdministrativeArea}/";
+        createEventInfoModel.addressSelectedLocation =
+            "${createEventInfoModel.addressSelectedLocation}${placemarks[0].subAdministrativeArea}/";
       }
       if (placemarks[0].administrativeArea!.isNotEmpty) {
-        addressSelectedLocation =
-            "$addressSelectedLocation${placemarks[0].administrativeArea!.toUpperCase()}";
+        createEventInfoModel.addressSelectedLocation =
+            "${createEventInfoModel.addressSelectedLocation}${placemarks[0].administrativeArea!.toUpperCase()}";
       }
     }
   }
 
   /// Capture ScreenShot
-  Uint8List? imageBytes;
   Future<void> captureSsMap() async {
     print(mapController);
     GoogleMapController controller = await mapController.future;
-    imageBytes = await controller.takeSnapshot();
+    createEventInfoModel.imageBytes = await controller.takeSnapshot();
     notifyListeners();
   }
 
   /// Select Date
-  bool isActiveAllDay = false;
   void changeActiveAllDayValue(bool newVal) {
-    isActiveAllDay = newVal;
+    createEventInfoModel.isActiveAllDay = newVal;
     notifyListeners();
   }
 
-  TextEditingController dateSelectorController = TextEditingController();
   DateTime? selectedDate;
   Icon dateIcon = Icon(Icons.date_range, color: kGray.withOpacity(0.5));
   void changeDateValueFunc() async {
@@ -241,13 +262,12 @@ class CreateEventModelView extends ChangeNotifier {
     if (pickedDate != null) {
       selectedDate = pickedDate;
       String formattedDate = intl.DateFormat('yMMMMd').format(pickedDate);
-      dateSelectorController.text = formattedDate;
+      createEventInfoModel.dateSelectorController.text = formattedDate;
       notifyListeners();
     }
   }
 
   /// Times
-  TextEditingController startTimeController = TextEditingController();
   int startTimeHour = -1;
   int startTimeMinute = -1;
   void changeStartTimeValueFunc() async {
@@ -264,13 +284,12 @@ class CreateEventModelView extends ChangeNotifier {
     if (selectedTimeRTL != null) {
       startTimeHour = selectedTimeRTL.hour;
       startTimeMinute = selectedTimeRTL.minute;
-      startTimeController.text =
+      createEventInfoModel.startTimeController.text =
           "${selectedTimeRTL.hour}:${selectedTimeRTL.minute}";
       notifyListeners();
     }
   }
 
-  TextEditingController endTimeController = TextEditingController();
   int endTimeHour = -1;
   int endTimeMinute = -1;
   void changeEndTimeValueFunc() async {
@@ -287,21 +306,18 @@ class CreateEventModelView extends ChangeNotifier {
     if (selectedTimeRTL != null) {
       endTimeHour = selectedTimeRTL.hour;
       endTimeMinute = selectedTimeRTL.minute;
-      endTimeController.text =
+      createEventInfoModel.endTimeController.text =
           "${selectedTimeRTL.hour}:${selectedTimeRTL.minute}";
       notifyListeners();
     }
   }
 
   /// Detail
-  TextEditingController detailCtr = TextEditingController();
 
   /// Quota
   TextInputType quotaInputType = TextInputType.number;
-  TextEditingController quotaCtr = TextEditingController();
 
   /// Gender
-  String? genderDropdownValue;
 
   List<String> genderList = const [
     "All",
@@ -309,12 +325,11 @@ class CreateEventModelView extends ChangeNotifier {
     "Female",
   ];
   void changeSelectedGender(String? selectedGender) {
-    genderDropdownValue = selectedGender;
+    createEventInfoModel.genderDropdownValue = selectedGender;
     notifyListeners();
   }
 
   /// Category
-  String? categoryDropdownValue;
   List<String> categoryList = const [
     "Sport",
     "Table Game",
@@ -323,19 +338,17 @@ class CreateEventModelView extends ChangeNotifier {
     "Trip",
   ];
   void changeSelectedCategory(String? selectedCategory) {
-    categoryDropdownValue = selectedCategory;
+    createEventInfoModel.categoryDropdownValue = selectedCategory;
     notifyListeners();
   }
 
   /// Price
-  bool isFree = false;
   void changeIsFree(bool newVal) {
-    isFree = newVal;
+    createEventInfoModel.isFree = newVal;
     notifyListeners();
   }
 
   TextInputType priceInputType = TextInputType.number;
-  TextEditingController priceCtr = TextEditingController();
 
   /// Hosts
   CreateEventCurrentUserModel? createEventCurrentUserModel;
@@ -347,18 +360,52 @@ class CreateEventModelView extends ChangeNotifier {
     );
   }
 
-  List<TextEditingController> hostsControllers = [];
+  String hostTextFieldToString(){
+    String tempHosts =
+        "${userRepository.getUserInfo()!.name} ${userRepository.getUserInfo()!.surname}";
+    for (int i = 0; i < createEventInfoModel.hostsControllers.length; i++) {
+      if (createEventInfoModel.hostsControllers[i].text != "") {
+        tempHosts += "-${createEventInfoModel.hostsControllers[i].text}";
+      }
+    }
+    return tempHosts;
+  }
+
+  String hostTextFieldToStringForPreview(){
+    String tempHosts =
+        "${userRepository.getUserInfo()!.name} ${userRepository.getUserInfo()!.surname}";
+    for (int i = 0; i < createEventInfoModel.hostsControllers.length; i++) {
+      if (createEventInfoModel.hostsControllers[i].text != "") {
+        tempHosts += ", ${createEventInfoModel.hostsControllers[i].text}";
+      }
+    }
+    return tempHosts;
+  }
+
   void addNewHostValue() {
-    hostsControllers.add(TextEditingController());
+    createEventInfoModel.hostsControllers.add(TextEditingController());
     notifyListeners();
   }
 
   void removeHostValue(int index) {
-    hostsControllers.removeAt(index);
+    createEventInfoModel.hostsControllers.removeAt(index);
+    notifyListeners();
+  }
+
+  /// Alert Dialog Parameters
+  int sliderImageIndex = 0;
+  void updateSliderImageIndex(int newImageIndex) {
+    sliderImageIndex = newImageIndex;
     notifyListeners();
   }
 
   /// Create Event Button
+  bool isPreviewCreatedEventClicked = false;
+
+  void previewCreateButtonFunc(){
+    isPreviewCreatedEventClicked = true;
+    Navigator.pop(previewDialogCtx);
+  }
   void createEventButtonFunc() async {
     try {
       if (selectedDate != null &&
@@ -366,33 +413,51 @@ class CreateEventModelView extends ChangeNotifier {
           startTimeMinute != -1 &&
           endTimeHour != -1 &&
           endTimeMinute != -1 &&
-          targetPosition != null &&
-          titleCtr.text != "" &&
-          detailCtr.text != "" &&
-          categoryDropdownValue != null &&
-          quotaCtr.text != "" &&
-          genderDropdownValue != null) {
-        if (int.tryParse(quotaCtr.text) == null) {
+          createEventInfoModel.targetPosition != null &&
+          createEventInfoModel.titleCtr.text != "" &&
+          createEventInfoModel.detailCtr.text != "" &&
+          createEventInfoModel.categoryDropdownValue != null &&
+          createEventInfoModel.quotaCtr.text != "" &&
+          createEventInfoModel.genderDropdownValue != null) {
+        createEventInfoModel.allHostsText = hostTextFieldToStringForPreview();
+        isPreviewCreatedEventClicked = false;
+        if (int.tryParse(createEventInfoModel.quotaCtr.text) == null) {
           await mySimpleDialogWidget(
             imagePath: errorRedCross,
             context: ctx,
             title: 'Error',
             description: 'Please enter valid quota number',
           );
-        } else if (priceCtr.text != "" && isFree == false) {
-          if (double.tryParse(priceCtr.text) == null) {
+        } else if (createEventInfoModel.priceCtr.text != "" &&
+            createEventInfoModel.isFree == false) {
+          if (double.tryParse(createEventInfoModel.priceCtr.text) == null) {
             await mySimpleDialogWidget(
               imagePath: errorRedCross,
               context: ctx,
               title: 'Error',
               description: 'Please enter valid price number',
             );
-          }
-          else {
-            await createEventRequestFunction();
+          } else {
+            await createEventPreviewDialogWidget(
+              context: ctx,
+              createEventInfoModel: createEventInfoModel,
+              updateSliderImageIndex: updateSliderImageIndex,
+              previewFinishButton: previewCreateButtonFunc,
+            );
+            if (isPreviewCreatedEventClicked){
+              await createEventRequestFunction();
+            }
           }
         } else {
-          await createEventRequestFunction();
+          await createEventPreviewDialogWidget(
+            context: ctx,
+            createEventInfoModel: createEventInfoModel,
+            updateSliderImageIndex: updateSliderImageIndex,
+            previewFinishButton: previewCreateButtonFunc,
+          );
+          if (isPreviewCreatedEventClicked){
+            await createEventRequestFunction();
+          }
         }
       } else {
         await mySimpleDialogWidget(
@@ -408,39 +473,35 @@ class CreateEventModelView extends ChangeNotifier {
   }
 
   Future<void> createEventRequestFunction() async {
-    String priceTempText = priceCtr.text;
-    if (isFree == true || priceCtr.text == "") {
+    String priceTempText = createEventInfoModel.priceCtr.text;
+    if (createEventInfoModel.isFree == true ||
+        createEventInfoModel.priceCtr.text == "") {
       priceTempText = "0";
     }
-    String tempHosts =
-        "${userRepository.getUserInfo()!.name} ${userRepository.getUserInfo()!.surname}";
-    for (int i = 0; i < hostsControllers.length; i++) {
-      if (hostsControllers[i].text != "") {
-        tempHosts += "-${hostsControllers[i].text}";
-      }
-    }
-    List<File> imageFiles = selectedImages.map((e) => File(e.path)).toList();
+    String tempHosts = hostTextFieldToString();
+    List<File> imageFiles =
+        createEventInfoModel.selectedImages.map((e) => File(e.path)).toList();
     try {
       await eventRepository.createEvent(
         CreateEventRequestModel(
           userId: userRepository.getUserInfo()!.id,
           creatingTime: DateTime.now().toIso8601String(),
           startTime: DateTime(selectedDate!.year, selectedDate!.month,
-              selectedDate!.day, startTimeHour, startTimeMinute)
+                  selectedDate!.day, startTimeHour, startTimeMinute)
               .toIso8601String(),
           endTime: DateTime(selectedDate!.year, selectedDate!.month,
-              selectedDate!.day, endTimeHour, endTimeMinute)
+                  selectedDate!.day, endTimeHour, endTimeMinute)
               .toIso8601String(),
           users: "${userRepository.getUserInfo()!.id}",
-          lattiude: targetPosition!.latitude,
-          longitude: targetPosition!.longitude,
-          name: titleCtr.text,
-          description: detailCtr.text,
-          title: titleCtr.text,
-          category: categoryDropdownValue!,
-          maxParticipants: int.parse(quotaCtr.text),
+          lattiude: createEventInfoModel.targetPosition!.latitude,
+          longitude: createEventInfoModel.targetPosition!.longitude,
+          name: createEventInfoModel.titleCtr.text,
+          description: createEventInfoModel.detailCtr.text,
+          title: createEventInfoModel.titleCtr.text,
+          category: createEventInfoModel.categoryDropdownValue!,
+          maxParticipants: int.parse(createEventInfoModel.quotaCtr.text),
           hosts: tempHosts,
-          gender: genderDropdownValue!,
+          gender: createEventInfoModel.genderDropdownValue!,
           imageUrl: "img",
           price: double.parse(priceTempText),
           imageFiles: imageFiles,
@@ -461,6 +522,5 @@ class CreateEventModelView extends ChangeNotifier {
         context: ctx,
       );
     }
-
   }
 }

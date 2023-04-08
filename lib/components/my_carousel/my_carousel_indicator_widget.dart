@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants.dart';
-import '../model_view/detail_model_view.dart';
 
-class DetailCarouselIndicatorWidget extends StatelessWidget {
+class MyCarouselIndicatorWidget extends StatelessWidget {
   int lengthOfImages;
   int imageIndex;
 
-  DetailCarouselIndicatorWidget({
+  MyCarouselIndicatorWidget({
     required this.lengthOfImages,
     required this.imageIndex,
   });

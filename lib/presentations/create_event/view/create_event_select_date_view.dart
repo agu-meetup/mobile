@@ -31,7 +31,7 @@ class CreateEventSelectDateView extends StatelessWidget {
                 const Spacer(),
                 CreateEventSwitchButtonWidget(
                   changeSwitchValueFunc: mv.changeActiveAllDayValue,
-                  value: mv.isActiveAllDay,
+                  value: mv.createEventInfoModel.isActiveAllDay,
                   text: "All Day Event",
                 ),
               ],
@@ -40,7 +40,7 @@ class CreateEventSelectDateView extends StatelessWidget {
               hintText: 'Select Date',
               changeValueFunc: () {},
               isThereShadow: false,
-              controller: mv.dateSelectorController,
+              controller: mv.createEventInfoModel.dateSelectorController,
               onTabFunc: mv.changeDateValueFunc,
               isReadOnly: true,
               specificSuffixIcon: mv.dateIcon,

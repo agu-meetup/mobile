@@ -37,28 +37,28 @@ class CreateEventSelectLocationView extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: kDarkGray),
-                  image: mv.imageBytes != null
+                  image: mv.createEventInfoModel.imageBytes != null
                       ? DecorationImage(
-                          image: MemoryImage(mv.imageBytes!),
+                          image: MemoryImage(mv.createEventInfoModel.imageBytes!),
                           fit: BoxFit.cover,
                         )
                       : null,
                 ),
                 child: Center(
-                  child: mv.imageBytes == null ? Text('Select Location') : null,
+                  child: mv.createEventInfoModel.imageBytes == null ? Text('Select Location') : null,
                 ),
               ),
             ),
             const SizedBox(height: 8),
             Row(
               children: [
-                mv.addressSelectedLocation != null
+                mv.createEventInfoModel.addressSelectedLocation != null
                     ? Image(image: AssetImage(pinGray))
                     : Container(),
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(
-                    mv.addressSelectedLocation ?? "",
+                    mv.createEventInfoModel.addressSelectedLocation ?? "",
                     // overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -69,7 +69,7 @@ class CreateEventSelectLocationView extends StatelessWidget {
               hintText: "Enter Place Name",
               changeValueFunc: (val) {},
               isThereShadow: false,
-              controller: mv.placeNameCtr,
+              controller: mv.createEventInfoModel.placeNameCtr,
             ),
           ],
         );

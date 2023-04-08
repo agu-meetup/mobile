@@ -29,7 +29,7 @@ class CreateEventCategoryView extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             MyDropdownWidget(
-              dropdownValue: mv.categoryDropdownValue,
+              dropdownValue: mv.createEventInfoModel.categoryDropdownValue,
               elementList: mv.categoryList,
               onChangedFunc: mv.changeSelectedCategory,
               isThereShadow: false,

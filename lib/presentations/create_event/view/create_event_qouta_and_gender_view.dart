@@ -32,7 +32,7 @@ class CreateEventQuotaAndGenderView extends StatelessWidget {
                   MyTextFieldWidget(
                     hintText: '',
                     changeValueFunc: (val) {},
-                    controller: mv.quotaCtr,
+                    controller: mv.createEventInfoModel.quotaCtr,
                     textInputType: mv.quotaInputType,
                     isThereShadow: false,
                   ),
@@ -55,7 +55,7 @@ class CreateEventQuotaAndGenderView extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   MyDropdownWidget(
-                    dropdownValue: mv.genderDropdownValue,
+                    dropdownValue: mv.createEventInfoModel.genderDropdownValue,
                     elementList: mv.genderList,
                     onChangedFunc: mv.changeSelectedGender,
                     isThereShadow: false,

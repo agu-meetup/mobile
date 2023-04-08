@@ -1,39 +1,45 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../../core/constants.dart';
-import '../../../core/size_config.dart';
-import '../model_view/detail_model_view.dart';
 
-class DetailCarouselSliderWidget extends StatelessWidget {
+class MyCarouselSliderWidget extends StatelessWidget {
   Function updateImageIndexFunc;
-  List<String> imagePaths;
+  List<String>? imageAssetPaths;
+  List<String>? imageFilePaths;
+  double widthOfSlider;
 
-  DetailCarouselSliderWidget({
+  MyCarouselSliderWidget({
     required this.updateImageIndexFunc,
-    required this.imagePaths,
+    this.imageAssetPaths,
+    this.imageFilePaths,
+    required this.widthOfSlider,
   });
 
   @override
   Widget build(BuildContext context) {
     return CarouselSlider.builder(
       options: CarouselOptions(
-          // height: SizeConfig.screenHeight! / 4,
+        // height: SizeConfig.screenHeight! / 4,
           viewportFraction: 1,
           onPageChanged: (index, reason) {
             updateImageIndexFunc(index);
           }),
-      itemCount: imagePaths.length,
+      itemCount: imageAssetPaths != null ? imageAssetPaths!.length : imageFilePaths!.length,
       itemBuilder: (context, index, realIndex) {
         return Container(
           // height: SizeConfig.screenHeight! / 4 - 36,
           margin: const EdgeInsets.all(12),
-          width: SizeConfig.screenWidth!,
+          width: widthOfSlider,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            image: DecorationImage(
-              image: AssetImage(imagePaths[index]),
+            image: imageAssetPaths != null ? DecorationImage(
+              image: AssetImage(imageAssetPaths![index]),
+              fit: BoxFit.cover,
+            ) : DecorationImage(
+              image: FileImage(File(imageFilePaths![index])),
               fit: BoxFit.cover,
             ),
             boxShadow: [

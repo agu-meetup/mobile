@@ -17,15 +17,15 @@ class CreateEventImagesView extends StatelessWidget {
         height: 60,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: mv.selectedImages.length + 1,
+          itemCount: mv.createEventInfoModel.selectedImages.length + 1,
           itemBuilder: (context, index) {
-            if (index == mv.selectedImages.length) {
+            if (index == mv.createEventInfoModel.selectedImages.length) {
               return CreateEventUploadButtonWidget(
                 onTabFunc: mv.photoUploadButtonFunc,
               );
             }
             return CreateEventSelectedImageWidget(
-              selectedImagePath: mv.selectedImages[index].path,
+              selectedImagePath: mv.createEventInfoModel.selectedImages[index].path,
               index: index,
               removeFunc: mv.removeImage,
             );
