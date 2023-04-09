@@ -1,22 +1,37 @@
 import 'dart:async';
 
+import 'package:agu_meetup_mobile/domains/event/repository/event_repository.dart';
 import 'package:agu_meetup_mobile/presentations/detail/model/detail_comment_model.dart';
+import 'package:agu_meetup_mobile/presentations/detail/model/detail_info_model.dart';
 import 'package:agu_meetup_mobile/presentations/detail/view/detail_map_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class DetailModelView extends ChangeNotifier {
+  /// Domain Layer
+  EventRepository eventRepository = EventRepository();
+
   late BuildContext ctx;
   void updateBuildContext(BuildContext context) {
     ctx = context;
   }
 
+  DetailInfoModel? detailInfoModel;
+
+  bool isPageLoaded = false;
+
+  void initializeMethods() async{
+    isPageLoaded = false;
+    await getEventDetailById();
+    isPageLoaded = true;
+    notifyListeners();
+  }
+
+  Future<void> getEventDetailById() async{
+    detailInfoModel = await eventRepository.getEventDetail();
+  }
+
   /// Carousel Slider
-  List<String> imagePaths = [
-    'assets/test_image/test_detail_1.png',
-    'assets/test_image/test_detail_2.png',
-    'assets/test_image/test_detail_3.png',
-  ];
   int imageIndex = 0;
   void updateImageIndex(int newImageIndex) {
     imageIndex = newImageIndex;
@@ -25,18 +40,15 @@ class DetailModelView extends ChangeNotifier {
 
   /// Hosted people and price
   String mainHostImage = "assets/test_image/test_profile_pic.png";
-  List<String> hostsMembers = ['Kerem Keskin', "Hamza Duman"];
-  String price = 'free';
 
   /// Event Title
-  String eventTitle = "Batak Etkinliği";
 
   /// General Info
-  String eventDateInfo = "December 13, 2022";
-  String eventTimeInfo = "6:30 pm - 7:30 pm";
-  String eventPlaceInfo = "KIRAATHANE";
-  String eventCityInfo = "Kocasinan, KAYSERI";
-  String eventMembersInfo = "3 / 5";
+  // String eventDateInfo = "December 13, 2022";
+  // String eventTimeInfo = "6:30 pm - 7:30 pm";
+  // String eventPlaceInfo = "KIRAATHANE";
+  // String eventCityInfo = "Kocasinan, KAYSERI";
+  // String eventMembersInfo = "3 / 5";
 
   /// Detail
   String detailTextInfo =
@@ -93,23 +105,25 @@ class DetailModelView extends ChangeNotifier {
   /// Map
   Completer<GoogleMapController> mapController =
       Completer<GoogleMapController>();
-  String eventAddress = "Erciyesevler, Güney Sk. 2-8, 38020 Kocasinan/Kayseri";
+  // String eventAddress = "Erciyesevler, Güney Sk. 2-8, 38020 Kocasinan/Kayseri";
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 
   void openMapButton() {
+    mapController =
+        Completer<GoogleMapController>();
     setPlaceLocationToInitialLocation();
     setPlaceMarker();
     Navigator.push(ctx, MaterialPageRoute(builder: (_) => DetailMapView()));
   }
 
-  late CameraPosition initialLocation = const CameraPosition(
+  late CameraPosition initialLocation = CameraPosition(
     target: LatLng(0, 0),
     zoom: 14.4746,
   );
 
   void setPlaceLocationToInitialLocation() {
-    initialLocation = const CameraPosition(
-      target: LatLng(38.731639, 35.518228),
+    initialLocation = CameraPosition(
+      target: LatLng(detailInfoModel!.lattiude, detailInfoModel!.longitude),
       zoom: 14.4746,
     );
   }
@@ -118,7 +132,7 @@ class DetailModelView extends ChangeNotifier {
     MarkerId markerId = const MarkerId("marker1");
     Marker marker = Marker(
       markerId: markerId,
-      position: const LatLng(38.731639, 35.518228),
+      position: LatLng(detailInfoModel!.lattiude, detailInfoModel!.longitude),
     );
     markers[markerId] = marker;
   }

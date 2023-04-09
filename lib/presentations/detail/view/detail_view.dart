@@ -1,4 +1,5 @@
 import 'package:agu_meetup_mobile/components/my_buttons/my_button_widget.dart';
+import 'package:agu_meetup_mobile/components/my_loadings/my_loading_widget.dart';
 import 'package:agu_meetup_mobile/core/constants.dart';
 import 'package:agu_meetup_mobile/core/size_config.dart';
 import 'package:agu_meetup_mobile/presentations/detail/model_view/detail_model_view.dart';
@@ -21,33 +22,48 @@ class DetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<DetailModelView>().updateBuildContext(context);
-    return Scaffold(
-      appBar: DetailAppBarView(),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                children: [
-                  DetailImageSliderView(),
-                  SizedBox(height: 16),
-                  DetailHostsAndPriceView(),
-                  SizedBox(height: 16),
-                  DetailTitleView(),
-                  Divider(height: 12, thickness: 1.5),
-                  DetailGeneralInfoView(),
-                  Divider(height: 12, thickness: 1.5),
-                  DetailGeneralDetailView(),
-                  Divider(height: 12, thickness: 1.5),
-                  DetailCommentView(),
-                ],
+    context.read<DetailModelView>().initializeMethods();
+    return Consumer<DetailModelView>(
+      builder: (context, mv, child) {
+        if (!mv.isPageLoaded) {
+          return Scaffold(
+            body: Center(
+              child: MyLoadingWidget(
+                size: SizeConfig.screenWidth! / 4,
+                color: kOrange,
               ),
             ),
-            DetailJoinButtonView(),
-          ],
-        ),
-      ),
+          );
+        }
+        return Scaffold(
+          appBar: DetailAppBarView(),
+          body: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView(
+                    children: [
+                      DetailImageSliderView(),
+                      SizedBox(height: 16),
+                      DetailHostsAndPriceView(),
+                      SizedBox(height: 16),
+                      DetailTitleView(),
+                      Divider(height: 12, thickness: 1.5),
+                      DetailGeneralInfoView(),
+                      Divider(height: 12, thickness: 1.5),
+                      DetailGeneralDetailView(),
+                      Divider(height: 12, thickness: 1.5),
+                      DetailCommentView(),
+                    ],
+                  ),
+                ),
+                DetailJoinButtonView(),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

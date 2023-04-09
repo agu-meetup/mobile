@@ -25,7 +25,7 @@ class DetailMapView extends StatelessWidget {
               },
             ),
             title: Text(
-              mv.eventPlaceInfo,
+              mv.detailInfoModel!.locationName,
               style: TextStyle(
                 color: Colors.black,
               ),
@@ -50,14 +50,15 @@ class DetailMapView extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  mv.eventPlaceInfo,
+                  mv.detailInfoModel!.locationName,
                   style: const TextStyle(
                     fontSize: 16,
                     color: Colors.black,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                Text(mv.eventCityInfo),
+                Text(
+                    "${mv.detailInfoModel!.district} / ${mv.detailInfoModel!.province}"),
                 SizedBox(height: 16),
                 Row(
                   children: [
@@ -65,7 +66,10 @@ class DetailMapView extends StatelessWidget {
                       image: AssetImage(pinGray),
                     ),
                     SizedBox(width: 4),
-                    Text(mv.eventAddress),
+                    Expanded(
+                      child: Text(
+                          "${mv.detailInfoModel!.subLocality} ${mv.detailInfoModel!.district}/${mv.detailInfoModel!.province}"),
+                    ),
                   ],
                 ),
                 SizedBox(height: 16),

@@ -1,9 +1,12 @@
+import 'package:agu_meetup_mobile/data/address/datasources/address_server_datasource.dart';
+import 'package:agu_meetup_mobile/data/address/model/get_address_response_model.dart';
 import 'package:agu_meetup_mobile/data/detail/datasources/detail_server_datasource.dart';
 import 'package:agu_meetup_mobile/data/detail/models/get_detail_by_id_response_model.dart';
 import 'package:agu_meetup_mobile/data/event/datasources/event_server_datasource.dart';
 import 'package:agu_meetup_mobile/data/event/models/create_event_request_model.dart';
 import 'package:agu_meetup_mobile/data/event/models/get_event_response_model.dart';
 import 'package:agu_meetup_mobile/data/event/models/get_events_by_user_response_model.dart';
+import 'package:agu_meetup_mobile/presentations/detail/model/detail_info_model.dart';
 
 import '../../../core/my_firebase_storage.dart';
 import '../../../presentations/profile/model/profile_event_model.dart';
@@ -12,12 +15,19 @@ class EventRepository {
   /// Data Layers
   EventServerDatasource eventServerDatasource = EventServerDatasource();
   DetailServerDatasource detailServerDatasource = DetailServerDatasource();
+  AddressServerDatasource addressServerDatasource = AddressServerDatasource();
   MyFirebaseStorage myFirebaseStorage = MyFirebaseStorage();
 
   /// Attibutes
   List<ProfileEventModel> profileMyEventsList = [];
   List<ProfileEventModel> profileUpcomingEventList = [];
   List<ProfileEventModel> profilePastEventList = [];
+  static int? eventIdWhenEventSelect;
+
+  void eventDetailPageClicked(int eventId) {
+    print("eventIdWhenEventSelect is updated...");
+    eventIdWhenEventSelect = eventId;
+  }
 
   Future<int> createEvent(
       CreateEventRequestModel createEventRequestModel) async {
@@ -86,7 +96,8 @@ class EventRepository {
   Future<void> eventsUpcomingAndPastCurrentUser(int userId) async {
     List<int> eventIdsJointFromCurrentUserList =
         await eventServerDatasource.getEventIdsJointUser(userId);
-    print("eventIdsJointFromCurrentUserList.length: ${eventIdsJointFromCurrentUserList.length}");
+    print(
+        "eventIdsJointFromCurrentUserList.length: ${eventIdsJointFromCurrentUserList.length}");
     profileUpcomingEventList = [];
     profilePastEventList = [];
     for (int selectedEventId in eventIdsJointFromCurrentUserList) {
@@ -94,11 +105,11 @@ class EventRepository {
           await eventServerDatasource.getEventById(selectedEventId);
 
       String tempDate =
-      specificDateTranslate(tempGetEventResponseModel.startTime);
+          specificDateTranslate(tempGetEventResponseModel.startTime);
       String tempTime =
-      specificTimeTranslate(tempGetEventResponseModel.startTime);
+          specificTimeTranslate(tempGetEventResponseModel.startTime);
       String tempFirstImageLink =
-      (await getAllImageLinks(tempGetEventResponseModel.imageUrl))[0];
+          (await getAllImageLinks(tempGetEventResponseModel.imageUrl))[0];
 
       ProfileEventModel tempProfileEventModel = ProfileEventModel(
         eventId: tempGetEventResponseModel.id,
@@ -113,25 +124,67 @@ class EventRepository {
       );
       if (tempGetEventResponseModel.startTime.compareTo(DateTime.now()) > 0) {
         profileUpcomingEventList.add(tempProfileEventModel);
-      }
-      else {
+      } else {
         profilePastEventList.add(tempProfileEventModel);
       }
     }
-    print("profileUpcomingEventList.length: ${profileUpcomingEventList.length}");
+    print(
+        "profileUpcomingEventList.length: ${profileUpcomingEventList.length}");
     profileUpcomingEventList
         .sort((a, b) => a.eventDateByDateTime.compareTo(b.eventDateByDateTime));
     profilePastEventList
         .sort((a, b) => a.eventDateByDateTime.compareTo(b.eventDateByDateTime));
   }
 
+  Future<DetailInfoModel> getEventDetail() async {
+    GetEventResponseModel tempGetEventResponseModel =
+        await eventServerDatasource.getEventById(eventIdWhenEventSelect!);
+    GetAddressResponseModel tempGetAddressResponseModel =
+        await addressServerDatasource.getAddressByEventId(eventIdWhenEventSelect!);
+
+    String eventDate =
+        specificDateTranslate(tempGetEventResponseModel.startTime);
+    String startTime =
+        specificTimeTranslate(tempGetEventResponseModel.startTime);
+    String endTime = specificTimeTranslate(tempGetEventResponseModel.endTime);
+
+    List<String> imageLinks =
+        await getAllImageLinks(tempGetEventResponseModel.imageUrl);
+
+    return DetailInfoModel(
+      eventId: eventIdWhenEventSelect!,
+      title: tempGetEventResponseModel.title,
+      detail: tempGetEventResponseModel.description,
+      price: tempGetEventResponseModel.price == 0
+          ? 'Free'
+          : '${tempGetEventResponseModel.price}',
+      hosts: tempGetEventResponseModel.hosts.split("-"),
+      imageLinks: imageLinks,
+      eventDate: eventDate,
+      startTime: startTime,
+      endTime: endTime,
+      locationName: tempGetAddressResponseModel.locationName,
+      province: tempGetAddressResponseModel.province,
+      district: tempGetAddressResponseModel.district,
+      subLocality: tempGetAddressResponseModel.subLocality,
+      currentParticipants: tempGetEventResponseModel.currentParticipants,
+      maxParticipants: tempGetEventResponseModel.maxParticipants,
+      lattiude: tempGetEventResponseModel.lattiude,
+      longitude: tempGetEventResponseModel.longitude,
+      gender: tempGetEventResponseModel.gender,
+      forDirection: tempGetAddressResponseModel.forDirection,
+    );
+  }
+
   /// Get Method domain -> repository
   List<ProfileEventModel> getProfileMyEventsListFromDomain() {
     return profileMyEventsList;
   }
+
   List<ProfileEventModel> getProfileUpcomingEventsListFromDomain() {
     return profileUpcomingEventList;
   }
+
   List<ProfileEventModel> getProfilePastEventsListFromDomain() {
     return profilePastEventList;
   }
@@ -153,7 +206,15 @@ class EventRepository {
   }
 
   String specificTimeTranslate(DateTime date) {
-    return "${date.hour}:${date.minute}";
+    String hour = "${date.hour}";
+    String minute = "${date.minute}";
+    if (date.hour < 10) {
+      hour = "0${date.hour}";
+    }
+    if (date.minute < 10) {
+      minute = "0${date.minute}";
+    }
+    return "$hour:$minute";
   }
 
   Future<List<String>> getAllImageLinks(String imagePaths) async {

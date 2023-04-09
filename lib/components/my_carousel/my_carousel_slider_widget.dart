@@ -7,13 +7,13 @@ import '../../../core/constants.dart';
 
 class MyCarouselSliderWidget extends StatelessWidget {
   Function updateImageIndexFunc;
-  List<String>? imageAssetPaths;
+  List<String>? imageNetworkPaths;
   List<String>? imageFilePaths;
   double widthOfSlider;
 
   MyCarouselSliderWidget({
     required this.updateImageIndexFunc,
-    this.imageAssetPaths,
+    this.imageNetworkPaths,
     this.imageFilePaths,
     required this.widthOfSlider,
   });
@@ -27,7 +27,7 @@ class MyCarouselSliderWidget extends StatelessWidget {
           onPageChanged: (index, reason) {
             updateImageIndexFunc(index);
           }),
-      itemCount: imageAssetPaths != null ? imageAssetPaths!.length : imageFilePaths!.length,
+      itemCount: imageNetworkPaths != null ? imageNetworkPaths!.length : imageFilePaths!.length,
       itemBuilder: (context, index, realIndex) {
         return Container(
           // height: SizeConfig.screenHeight! / 4 - 36,
@@ -35,8 +35,8 @@ class MyCarouselSliderWidget extends StatelessWidget {
           width: widthOfSlider,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            image: imageAssetPaths != null ? DecorationImage(
-              image: AssetImage(imageAssetPaths![index]),
+            image: imageNetworkPaths != null ? DecorationImage(
+              image: NetworkImage(imageNetworkPaths![index]),
               fit: BoxFit.cover,
             ) : DecorationImage(
               image: FileImage(File(imageFilePaths![index])),

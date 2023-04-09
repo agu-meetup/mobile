@@ -17,11 +17,11 @@ class DetailHostsAndPriceView extends StatelessWidget {
         return Row(
           children: [
             DetailHostsWidget(
-              hostsMembers: mv.hostsMembers,
+              hostsMembers: mv.detailInfoModel!.hosts,
               mainHostImage: mv.mainHostImage,
             ),
             const Spacer(),
-            DetailPriceWidget(price: mv.price),
+            DetailPriceWidget(price: mv.detailInfoModel!.price),
           ],
         );
       },

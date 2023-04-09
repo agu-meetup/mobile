@@ -17,12 +17,12 @@ class DetailImageSliderView extends StatelessWidget {
           children: [
             MyCarouselSliderWidget(
               updateImageIndexFunc: mv.updateImageIndex,
-              imageAssetPaths: mv.imagePaths,
+              imageNetworkPaths: mv.detailInfoModel!.imageLinks,
               widthOfSlider: SizeConfig.screenWidth!,
             ),
             MyCarouselIndicatorWidget(
               imageIndex: mv.imageIndex,
-              lengthOfImages: mv.imagePaths.length,
+              lengthOfImages: mv.detailInfoModel!.imageLinks.length,
             ),
           ],
         );

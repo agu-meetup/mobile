@@ -13,7 +13,7 @@ class DetailTitleView extends StatelessWidget {
         return Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            mv.eventTitle,
+            mv.detailInfoModel!.title,
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,

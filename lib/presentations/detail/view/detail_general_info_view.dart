@@ -27,14 +27,14 @@ class DetailGeneralInfoView extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    mv.eventDateInfo,
+                    mv.detailInfoModel!.eventDate,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   VerticalDivider(thickness: 1.5, color: kDarkGray),
                   Text(
-                    mv.eventTimeInfo,
+                    "${mv.detailInfoModel!.startTime} - ${mv.detailInfoModel!.endTime}",
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: kDarkGray,
@@ -60,14 +60,14 @@ class DetailGeneralInfoView extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            mv.eventPlaceInfo,
+                            mv.detailInfoModel!.locationName,
                             style: const TextStyle(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           VerticalDivider(thickness: 1.5, color: kDarkGray),
                           Text(
-                            mv.eventCityInfo,
+                            "${mv.detailInfoModel!.district}, ${mv.detailInfoModel!.province}",
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: kDarkGray,
@@ -94,6 +94,27 @@ class DetailGeneralInfoView extends StatelessWidget {
                   ),
                 ],
               ),
+              mv.detailInfoModel!.forDirection != "" ? Column(
+                children: [
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.directions,
+                        color: kGray,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        mv.detailInfoModel!.forDirection,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ) : Container(),
               const SizedBox(height: 12),
               Row(
                 children: [
@@ -107,7 +128,27 @@ class DetailGeneralInfoView extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    "${mv.eventMembersInfo} people are going",
+                    "${mv.detailInfoModel!.currentParticipants} / ${mv.detailInfoModel!.maxParticipants} people are going",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Image(
+                    image: AssetImage(
+                      allGender,
+                    ),
+                    height: 20,
+                    width: 20,
+                    fit: BoxFit.cover,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    mv.detailInfoModel!.gender,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                     ),

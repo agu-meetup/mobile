@@ -24,7 +24,7 @@ class DetailGeneralDetailView extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            Text(mv.detailTextInfo),
+            Text(mv.detailInfoModel!.detail),
             SizedBox(height: 12),
           ],
         );

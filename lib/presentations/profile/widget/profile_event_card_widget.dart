@@ -15,6 +15,7 @@ class ProfileEventCardWidget extends StatelessWidget {
   String? iconImagePath;
   String networkImageLink;
   bool isClosed;
+  Function eventOnTabFunc;
 
   ProfileEventCardWidget({
     required this.eventId,
@@ -28,12 +29,14 @@ class ProfileEventCardWidget extends StatelessWidget {
     this.iconImagePath,
     required this.networkImageLink,
     this.isClosed = false,
+    required this.eventOnTabFunc,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        eventOnTabFunc(eventId);
         Navigator.push(
             context, MaterialPageRoute(builder: (_) => const DetailView()));
       },

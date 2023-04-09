@@ -45,6 +45,7 @@ class ProfileBookmarksView extends StatelessWidget {
                 networkImageLink: mv.myBookmarksList[index].firstImagePath,
                 iconFunc: mv.removeEventFromMyBookmarks,
                 iconImagePath: mv.myBookmarksIconPath,
+                eventOnTabFunc: mv.clickEventFunc,
               );
             },
           ),

@@ -65,6 +65,11 @@ class ProfileModelView extends ChangeNotifier {
   List<ProfileEventModel> pastEventsList = [];
   List<ProfileEventModel> myBookmarksList = [];
 
+  /// ClickEventFunction
+  void clickEventFunc(int eventId){
+    eventRepository.eventDetailPageClicked(eventId);
+  }
+
   /// My Events
   String myEventsIconPath = circularMore;
   void myEventsFunc(int eventId) {
