@@ -7,7 +7,8 @@ import 'package:image_picker/image_picker.dart';
 class CreateEventInfoModel {
   List<XFile> selectedImages;
   TextEditingController titleCtr;
-  String? addressSelectedLocation;
+  TextEditingController locationAddressCtr;
+  TextEditingController forDirectionsCtr;
   LatLng? targetPosition;
   Uint8List? imageBytes;
   TextEditingController placeNameCtr;
@@ -23,11 +24,12 @@ class CreateEventInfoModel {
   TextEditingController priceCtr;
   List<TextEditingController> hostsControllers;
   String? allHostsText;
+  String? city;
+  String? subCity;
 
   CreateEventInfoModel({
     required this.selectedImages,
     required this.titleCtr,
-    this.addressSelectedLocation,
     this.targetPosition,
     this.imageBytes,
     required this.placeNameCtr,
@@ -43,5 +45,9 @@ class CreateEventInfoModel {
     required this.priceCtr,
     required this.hostsControllers,
     this.allHostsText,
+    required this.locationAddressCtr,
+    required this.forDirectionsCtr,
+    this.city,
+    this.subCity,
   });
 }

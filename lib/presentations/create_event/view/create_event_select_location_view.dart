@@ -39,38 +39,91 @@ class CreateEventSelectLocationView extends StatelessWidget {
                   border: Border.all(color: kDarkGray),
                   image: mv.createEventInfoModel.imageBytes != null
                       ? DecorationImage(
-                          image: MemoryImage(mv.createEventInfoModel.imageBytes!),
+                          image:
+                              MemoryImage(mv.createEventInfoModel.imageBytes!),
                           fit: BoxFit.cover,
                         )
                       : null,
                 ),
                 child: Center(
-                  child: mv.createEventInfoModel.imageBytes == null ? Text('Select Location') : null,
+                  child: mv.createEventInfoModel.imageBytes == null
+                      ? Text('Select Location')
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.location_on, size: 32, color: kOrange),
+                            const SizedBox(height: 24),
+                          ],
+                        ),
                 ),
               ),
             ),
             const SizedBox(height: 8),
             Row(
               children: [
-                mv.createEventInfoModel.addressSelectedLocation != null
-                    ? Image(image: AssetImage(pinGray))
+                mv.createEventInfoModel.targetPosition != null
+                    ? Icon(
+                        Icons.location_city,
+                        color: kGray,
+                      )
                     : Container(),
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(
-                    mv.createEventInfoModel.addressSelectedLocation ?? "",
+                    mv.createEventInfoModel.targetPosition != null
+                        ? "${mv.createEventInfoModel.subCity}/${mv.createEventInfoModel.city}"
+                        : "",
                     // overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            MyTextFieldWidget(
-              hintText: "Enter Place Name",
-              changeValueFunc: (val) {},
-              isThereShadow: false,
-              controller: mv.createEventInfoModel.placeNameCtr,
-            ),
+            mv.createEventInfoModel.targetPosition != null
+                ? Column(
+                    children: [
+                      const SizedBox(height: 8),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Sub locality, Street, No',
+                          style: TextStyle(
+                            color: kDarkGray,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      MyTextFieldWidget(
+                        hintText: "Sub locality, street, no",
+                        changeValueFunc: (val) {},
+                        isThereShadow: false,
+                        controller: mv.createEventInfoModel.locationAddressCtr,
+                      ),
+                      const SizedBox(height: 8),
+                      MyTextFieldWidget(
+                        hintText: "For directions (optional)",
+                        changeValueFunc: (val) {},
+                        isThereShadow: false,
+                        controller: mv.createEventInfoModel.forDirectionsCtr,
+                        specificSuffixIcon: Icon(
+                          Icons.directions,
+                          color: kGray,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      MyTextFieldWidget(
+                        hintText: "Enter Place Name",
+                        changeValueFunc: (val) {},
+                        isThereShadow: false,
+                        controller: mv.createEventInfoModel.placeNameCtr,
+                        specificSuffixIcon:
+                            Icon(Icons.home_filled, color: kGray),
+                      ),
+                    ],
+                  )
+                : Container(),
           ],
         );
       },

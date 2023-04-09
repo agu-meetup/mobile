@@ -19,7 +19,7 @@ class EventRepository {
   List<ProfileEventModel> profileUpcomingEventList = [];
   List<ProfileEventModel> profilePastEventList = [];
 
-  Future<void> createEvent(
+  Future<int> createEvent(
       CreateEventRequestModel createEventRequestModel) async {
     int createdEventId =
         await eventServerDatasource.createEvent(createEventRequestModel);
@@ -44,6 +44,7 @@ class EventRepository {
 
     await eventServerDatasource.updateEventImageValue(
         eventImageInfoMap: eventImageInfoMap, eventId: createdEventId);
+    return createdEventId;
   }
 
   Future<void> eventsCreatedCurrentUser(int userId) async {

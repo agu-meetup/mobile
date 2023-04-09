@@ -17,3 +17,5 @@ class GetDetailByIdError implements Exception {}
 class GetEventIdsJointUserError implements Exception {}
 
 class GetEventByIdError implements Exception {}
+
+class CreateAddressError implements Exception {}

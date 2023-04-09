@@ -101,13 +101,21 @@ Future<void> createEventPreviewDialogWidget({
                     Container(
                       height: SizeConfig.screenWidth! / 3,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.black),
-                          image: DecorationImage(
-                            image:
-                                MemoryImage(createEventInfoModel.imageBytes!),
-                            fit: BoxFit.cover,
-                          )),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.black),
+                        image: DecorationImage(
+                          image: MemoryImage(createEventInfoModel.imageBytes!),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.location_on, size: 32, color: kOrange),
+                          const SizedBox(height: 24),
+                        ],
+                      ),
                     ),
 
                     const SizedBox(height: 8),
@@ -118,7 +126,51 @@ Future<void> createEventPreviewDialogWidget({
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            createEventInfoModel.addressSelectedLocation!,
+                            "${createEventInfoModel.locationAddressCtr.text}, ${createEventInfoModel.subCity}/${createEventInfoModel.city!.toUpperCase()}",
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    createEventInfoModel.forDirectionsCtr.text != ""
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Icon(Icons.directions,
+                                      color: kGray, size: 20),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      createEventInfoModel
+                                          .forDirectionsCtr.text,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )
+                        : Container(),
+
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(Icons.home_filled, color: kGray, size: 20),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            createEventInfoModel.placeNameCtr.text,
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.black,
@@ -224,7 +276,7 @@ Future<void> createEventPreviewDialogWidget({
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          createEventInfoModel.isFree
+                          createEventInfoModel.isFree || createEventInfoModel.priceCtr.text == ""
                               ? 'Free'
                               : '${createEventInfoModel.priceCtr.text} TL',
                           style: const TextStyle(
