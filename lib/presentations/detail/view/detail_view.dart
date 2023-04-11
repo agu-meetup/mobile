@@ -13,7 +13,7 @@ import 'detail_general_detail_view.dart';
 import 'detail_general_info_view.dart';
 import 'detail_hosts_and_price_view.dart';
 import 'detail_image_slider_view.dart';
-import 'detail_join_button_view.dart';
+import 'detail_bottom_button_view.dart';
 import 'detail_title_view.dart';
 
 class DetailView extends StatelessWidget {
@@ -58,7 +58,7 @@ class DetailView extends StatelessWidget {
                     ],
                   ),
                 ),
-                DetailJoinButtonView(),
+                DetailBottomButtonView(),
               ],
             ),
           ),

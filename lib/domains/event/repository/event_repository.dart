@@ -66,6 +66,9 @@ class EventRepository {
       GetDetailByIdResponseModel getDetailByIdResponseModel =
           await detailServerDatasource
               .getDetailById(getEventsByUserResponseModelList[i].detailId);
+      GetAddressResponseModel tempGetAddressResponseModel =
+          await addressServerDatasource
+              .getAddressByEventId(getEventsByUserResponseModelList[i].id);
       String tempDate =
           specificDateTranslate(getEventsByUserResponseModelList[i].startTime);
 
@@ -80,7 +83,7 @@ class EventRepository {
         eventDate: tempDate,
         eventTime: tempTime,
         eventDateByDateTime: getEventsByUserResponseModelList[i].startTime,
-        eventPlace: "Caribou Cafe",
+        eventPlace: tempGetAddressResponseModel.locationName,
         eventTitle: getDetailByIdResponseModel.title,
         numberCurrentMember:
             getEventsByUserResponseModelList[i].currentParticipants,
@@ -103,6 +106,8 @@ class EventRepository {
     for (int selectedEventId in eventIdsJointFromCurrentUserList) {
       GetEventResponseModel tempGetEventResponseModel =
           await eventServerDatasource.getEventById(selectedEventId);
+      GetAddressResponseModel tempGetAddressResponseModel =
+          await addressServerDatasource.getAddressByEventId(selectedEventId);
 
       String tempDate =
           specificDateTranslate(tempGetEventResponseModel.startTime);
@@ -115,7 +120,7 @@ class EventRepository {
         eventId: tempGetEventResponseModel.id,
         eventDate: tempDate,
         eventTime: tempTime,
-        eventPlace: "Caribou Cafe",
+        eventPlace: tempGetAddressResponseModel.locationName,
         eventTitle: tempGetEventResponseModel.title,
         numberCurrentMember: tempGetEventResponseModel.currentParticipants,
         numberMaxMember: tempGetEventResponseModel.maxParticipants,
@@ -140,7 +145,8 @@ class EventRepository {
     GetEventResponseModel tempGetEventResponseModel =
         await eventServerDatasource.getEventById(eventIdWhenEventSelect!);
     GetAddressResponseModel tempGetAddressResponseModel =
-        await addressServerDatasource.getAddressByEventId(eventIdWhenEventSelect!);
+        await addressServerDatasource
+            .getAddressByEventId(eventIdWhenEventSelect!);
 
     String eventDate =
         specificDateTranslate(tempGetEventResponseModel.startTime);
@@ -153,6 +159,7 @@ class EventRepository {
 
     return DetailInfoModel(
       eventId: eventIdWhenEventSelect!,
+      userId: tempGetEventResponseModel.userId,
       title: tempGetEventResponseModel.title,
       detail: tempGetEventResponseModel.description,
       price: tempGetEventResponseModel.price == 0
@@ -173,6 +180,10 @@ class EventRepository {
       longitude: tempGetEventResponseModel.longitude,
       gender: tempGetEventResponseModel.gender,
       forDirection: tempGetAddressResponseModel.forDirection,
+      userIdList: tempGetEventResponseModel.users
+          .split("-")
+          .map((e) => int.parse(e))
+          .toList(),
     );
   }
 

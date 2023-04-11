@@ -23,6 +23,20 @@ class UserServerDatasource {
     }
   }
 
+  Future<GetUserInfoResponseModel> getUserInfoById(int userId) async {
+    Response response = await myService.getRequest(
+      pathRequest: "api/user/userInfoById/$userId",
+    );
+
+    if (response.statusCode == 200){
+      var responseMap = jsonDecode(response.body);
+      return GetUserInfoResponseModel.fromJson(responseMap['user']);
+    }
+    else {
+      throw GetUserInfoByIdError();
+    }
+  }
+
   Future<GetUserInfoResponseModel?> updateUserInfo(UpdateUserInfoRequest updateUserInfoRequest) async {
     Response response = await myService.postRequest(
       parameters: jsonEncode(updateUserInfoRequest.toJson()),

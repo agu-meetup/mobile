@@ -1,5 +1,6 @@
 class DetailInfoModel {
   int eventId;
+  int userId;
   String title;
   String detail;
   String price;
@@ -18,9 +19,11 @@ class DetailInfoModel {
   double lattiude;
   double longitude;
   String gender;
+  List<int> userIdList;
 
   DetailInfoModel({
     required this.eventId,
+    required this.userId,
     required this.title,
     required this.detail,
     required this.price,
@@ -39,5 +42,6 @@ class DetailInfoModel {
     required this.lattiude,
     required this.longitude,
     required this.gender,
+    required this.userIdList,
   });
 }

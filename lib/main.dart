@@ -2,6 +2,7 @@ import 'package:agu_meetup_mobile/presentations/authentication/view_model/authen
 import 'package:agu_meetup_mobile/presentations/bottom_bar/model_view/bottom_bar_model_view.dart';
 import 'package:agu_meetup_mobile/presentations/create_event/model_view/create_event_model_view.dart';
 import 'package:agu_meetup_mobile/presentations/detail/model_view/detail_model_view.dart';
+import 'package:agu_meetup_mobile/presentations/detail_participants/model_view/detail_participants_model_view.dart';
 import 'package:agu_meetup_mobile/presentations/forgot_password/view_model/forgot_password_change_view_model.dart';
 import 'package:agu_meetup_mobile/presentations/forgot_password/view_model/forgot_password_code_view_model.dart';
 import 'package:agu_meetup_mobile/presentations/forgot_password/view_model/forgot_password_mail_phone_view_model.dart';
@@ -18,7 +19,7 @@ import 'package:provider/provider.dart';
 import './app.dart';
 import 'firebase_options.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -68,6 +69,9 @@ void main() async{
         ),
         ChangeNotifierProvider(
           create: (_) => ProfileModelView(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => DetailParticipantsModelView(),
         ),
       ],
       child: const MyApp(),

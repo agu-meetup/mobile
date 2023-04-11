@@ -1,5 +1,6 @@
 class GetEventResponseModel {
   int id;
+  int userId;
   DateTime startTime;
   DateTime endTime;
   String gender;
@@ -17,6 +18,7 @@ class GetEventResponseModel {
 
   GetEventResponseModel({
     required this.id,
+    required this.userId,
     required this.startTime,
     required this.endTime,
     required this.gender,
@@ -36,6 +38,7 @@ class GetEventResponseModel {
   factory GetEventResponseModel.fromJson(Map map) {
     return GetEventResponseModel(
       id: int.parse(map['id']),
+      userId: map['user_id'] as int,
       startTime: DateTime.parse(map['start_time']),
       endTime: DateTime.parse(map['end_time']),
       gender: map['gender'],
