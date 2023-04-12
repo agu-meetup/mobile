@@ -15,48 +15,53 @@ class DetailBottomButtonView extends StatelessWidget {
         return Column(
           children: [
             const SizedBox(height: 8),
-            mv.isMyEvent
-                ? Row(
-                    children: [
-                      Expanded(
-                        child: Center(
-                          child: MyButtonWidget(
-                            buttonText: 'MEMBERS',
-                            buttonTextColor: kWhite,
-                            backgroundColor: kOrange,
-                            onTapFunction: mv.membersButtonFunc,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: MyButtonWidget(
-                          buttonText: 'UPDATE',
-                          buttonTextColor: kWhite,
-                          backgroundColor: kBeige,
-                          onTapFunction: () {},
-                        ),
-                      ),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: MyButtonWidget(
-                          buttonText: 'DELETE',
-                          buttonTextColor: kWhite,
-                          backgroundColor: Colors.red,
-                          onTapFunction: () {},
-                        ),
-                      )
-                    ],
-                  )
-                : MyButtonWidget(
-                    buttonText: 'JOIN',
-                    buttonTextColor: kWhite,
-                    backgroundColor: kBeige,
-                    onTapFunction: () {},
-                  ),
+            buttonTypeFunction(mv),
           ],
         );
       },
     );
+  }
+
+  Widget buttonTypeFunction(DetailModelView mv) {
+    switch (mv.detailPageType){
+      case DetailPageType.myEvent:
+        return Row(
+          children: [
+            Expanded(
+              child: Center(
+                child: MyButtonWidget(
+                  buttonText: 'MEMBERS',
+                  buttonTextColor: kWhite,
+                  backgroundColor: kOrange,
+                  onTapFunction: mv.membersButtonFunc,
+                ),
+              ),
+            ),
+            SizedBox(width: 8),
+            Expanded(
+              child: MyButtonWidget(
+                buttonText: 'DELETE',
+                buttonTextColor: kWhite,
+                backgroundColor: Colors.red,
+                onTapFunction: () {},
+              ),
+            )
+          ],
+        );
+      case DetailPageType.joinedEvent:
+        return MyButtonWidget(
+          buttonText: 'LEAVE',
+          buttonTextColor: kWhite,
+          backgroundColor: Colors.red,
+          onTapFunction: () {},
+        );
+      default:
+        return MyButtonWidget(
+          buttonText: 'JOIN',
+          buttonTextColor: kWhite,
+          backgroundColor: kBeige,
+          onTapFunction: () {},
+        );
+    }
   }
 }

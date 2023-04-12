@@ -6,6 +6,7 @@ import 'package:agu_meetup_mobile/data/event/datasources/event_server_datasource
 import 'package:agu_meetup_mobile/data/event/models/create_event_request_model.dart';
 import 'package:agu_meetup_mobile/data/event/models/get_event_response_model.dart';
 import 'package:agu_meetup_mobile/data/event/models/get_events_by_user_response_model.dart';
+import 'package:agu_meetup_mobile/domains/profile/repository/profile_repository.dart';
 import 'package:agu_meetup_mobile/presentations/detail/model/detail_info_model.dart';
 
 import '../../../core/my_firebase_storage.dart';
@@ -19,14 +20,19 @@ class EventRepository {
   MyFirebaseStorage myFirebaseStorage = MyFirebaseStorage();
 
   /// Attibutes
-  List<ProfileEventModel> profileMyEventsList = [];
-  List<ProfileEventModel> profileUpcomingEventList = [];
-  List<ProfileEventModel> profilePastEventList = [];
+  static List<int> bookmarksEventIds = [];
   static int? eventIdWhenEventSelect;
 
   void eventDetailPageClicked(int eventId) {
     print("eventIdWhenEventSelect is updated...");
     eventIdWhenEventSelect = eventId;
+  }
+
+  /// Domain -> Data methods
+  Future<void> fetchBookmarksEventIdsFromDS(int userId) async{
+    bookmarksEventIds = [];
+    bookmarksEventIds =
+        await eventServerDatasource.getSaveEventsByUserId(userId);
   }
 
   Future<int> createEvent(
@@ -55,90 +61,6 @@ class EventRepository {
     await eventServerDatasource.updateEventImageValue(
         eventImageInfoMap: eventImageInfoMap, eventId: createdEventId);
     return createdEventId;
-  }
-
-  Future<void> eventsCreatedCurrentUser(int userId) async {
-    profileMyEventsList = [];
-    List<GetEventsByUserResponseModel> getEventsByUserResponseModelList =
-        await eventServerDatasource.getEventsByUser(userId);
-
-    for (int i = 0; i < getEventsByUserResponseModelList.length; i++) {
-      GetDetailByIdResponseModel getDetailByIdResponseModel =
-          await detailServerDatasource
-              .getDetailById(getEventsByUserResponseModelList[i].detailId);
-      GetAddressResponseModel tempGetAddressResponseModel =
-          await addressServerDatasource
-              .getAddressByEventId(getEventsByUserResponseModelList[i].id);
-      String tempDate =
-          specificDateTranslate(getEventsByUserResponseModelList[i].startTime);
-
-      String tempTime =
-          specificTimeTranslate(getEventsByUserResponseModelList[i].startTime);
-
-      String tempFirstImageLink = (await getAllImageLinks(
-          getEventsByUserResponseModelList[i].imageUrl))[0];
-
-      ProfileEventModel tempProfileEventModel = ProfileEventModel(
-        eventId: getEventsByUserResponseModelList[i].id,
-        eventDate: tempDate,
-        eventTime: tempTime,
-        eventDateByDateTime: getEventsByUserResponseModelList[i].startTime,
-        eventPlace: tempGetAddressResponseModel.locationName,
-        eventTitle: getDetailByIdResponseModel.title,
-        numberCurrentMember:
-            getEventsByUserResponseModelList[i].currentParticipants,
-        numberMaxMember: getEventsByUserResponseModelList[i].maxParticipants,
-        firstImagePath: tempFirstImageLink,
-      );
-      profileMyEventsList.add(tempProfileEventModel);
-    }
-    profileMyEventsList
-        .sort((a, b) => a.eventDateByDateTime.compareTo(b.eventDateByDateTime));
-  }
-
-  Future<void> eventsUpcomingAndPastCurrentUser(int userId) async {
-    List<int> eventIdsJointFromCurrentUserList =
-        await eventServerDatasource.getEventIdsJointUser(userId);
-    print(
-        "eventIdsJointFromCurrentUserList.length: ${eventIdsJointFromCurrentUserList.length}");
-    profileUpcomingEventList = [];
-    profilePastEventList = [];
-    for (int selectedEventId in eventIdsJointFromCurrentUserList) {
-      GetEventResponseModel tempGetEventResponseModel =
-          await eventServerDatasource.getEventById(selectedEventId);
-      GetAddressResponseModel tempGetAddressResponseModel =
-          await addressServerDatasource.getAddressByEventId(selectedEventId);
-
-      String tempDate =
-          specificDateTranslate(tempGetEventResponseModel.startTime);
-      String tempTime =
-          specificTimeTranslate(tempGetEventResponseModel.startTime);
-      String tempFirstImageLink =
-          (await getAllImageLinks(tempGetEventResponseModel.imageUrl))[0];
-
-      ProfileEventModel tempProfileEventModel = ProfileEventModel(
-        eventId: tempGetEventResponseModel.id,
-        eventDate: tempDate,
-        eventTime: tempTime,
-        eventPlace: tempGetAddressResponseModel.locationName,
-        eventTitle: tempGetEventResponseModel.title,
-        numberCurrentMember: tempGetEventResponseModel.currentParticipants,
-        numberMaxMember: tempGetEventResponseModel.maxParticipants,
-        firstImagePath: tempFirstImageLink,
-        eventDateByDateTime: tempGetEventResponseModel.startTime,
-      );
-      if (tempGetEventResponseModel.startTime.compareTo(DateTime.now()) > 0) {
-        profileUpcomingEventList.add(tempProfileEventModel);
-      } else {
-        profilePastEventList.add(tempProfileEventModel);
-      }
-    }
-    print(
-        "profileUpcomingEventList.length: ${profileUpcomingEventList.length}");
-    profileUpcomingEventList
-        .sort((a, b) => a.eventDateByDateTime.compareTo(b.eventDateByDateTime));
-    profilePastEventList
-        .sort((a, b) => a.eventDateByDateTime.compareTo(b.eventDateByDateTime));
   }
 
   Future<DetailInfoModel> getEventDetail() async {
@@ -187,17 +109,19 @@ class EventRepository {
     );
   }
 
-  /// Get Method domain -> repository
-  List<ProfileEventModel> getProfileMyEventsListFromDomain() {
-    return profileMyEventsList;
+  Future<void> addEventToBookmarks({required int userId, required int eventId}) async {
+    await eventServerDatasource.addSaveEventByUserId(userId: userId, eventId: eventId);
+    bookmarksEventIds.add(eventId);
   }
 
-  List<ProfileEventModel> getProfileUpcomingEventsListFromDomain() {
-    return profileUpcomingEventList;
+  Future<void> deleteEventToBookmarks({required int userId, required int eventId}) async {
+    await eventServerDatasource.deleteSaveEventByUserId(userId: userId, eventId: eventId);
+    bookmarksEventIds.removeWhere((e) => e == eventId);
   }
 
-  List<ProfileEventModel> getProfilePastEventsListFromDomain() {
-    return profilePastEventList;
+  /// Get Methods for attributes of Repo
+  List<int> getBookmarksEventIds() {
+    return bookmarksEventIds;
   }
 
   /// Required Methods for event repository

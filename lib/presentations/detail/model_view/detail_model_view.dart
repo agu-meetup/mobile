@@ -10,6 +10,13 @@ import 'package:agu_meetup_mobile/presentations/detail_participants/view/detail_
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+enum DetailPageType {
+  myEvent,
+  newEvent,
+  joinedEvent,
+  pastEvent,
+}
+
 class DetailModelView extends ChangeNotifier {
   /// Domain Layer
   EventRepository eventRepository = EventRepository();
@@ -24,12 +31,13 @@ class DetailModelView extends ChangeNotifier {
 
   DetailInfoModel? detailInfoModel;
   bool isPageLoaded = false;
-  bool isMyEvent = false;
+  DetailPageType detailPageType = DetailPageType.newEvent;
 
   void initializeMethods() async {
     isPageLoaded = false;
     await getEventDetailById();
-    checkIsMyEvent();
+    checkEventStatus();
+    isEventBookmarkedFunc();
     isPageLoaded = true;
     notifyListeners();
   }
@@ -38,10 +46,37 @@ class DetailModelView extends ChangeNotifier {
     detailInfoModel = await eventRepository.getEventDetail();
   }
 
-  void checkIsMyEvent() {
+  void checkEventStatus() {
     if (userRepository.getUserInfo()!.id == detailInfoModel!.userId) {
-      isMyEvent = true;
+      detailPageType = DetailPageType.myEvent;
+    } else if (detailInfoModel!.userIdList
+        .contains(userRepository.getUserInfo()!.id)) {
+      detailPageType = DetailPageType.joinedEvent;
     }
+  }
+
+  /// AppBar Functions
+  bool isEventSaved = false;
+  void isEventBookmarkedFunc() {
+    isEventSaved = eventRepository
+        .getBookmarksEventIds()
+        .contains(detailInfoModel!.eventId);
+  }
+
+  void bookmarkButtonFunc() async {
+    if (isEventSaved) {
+      await eventRepository.deleteEventToBookmarks(
+        userId: userRepository.getUserInfo()!.id,
+        eventId: detailInfoModel!.eventId,
+      );
+    } else {
+      await eventRepository.addEventToBookmarks(
+        userId: userRepository.getUserInfo()!.id,
+        eventId: detailInfoModel!.eventId,
+      );
+    }
+    isEventBookmarkedFunc();
+    notifyListeners();
   }
 
   /// Carousel Slider

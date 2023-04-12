@@ -72,4 +72,26 @@ class MyService {
     );
     return response;
   }
+
+  Future<Response> deleteRequest({
+    required String pathRequest,
+    required String parameters,
+    bool isRequiredToken = true,
+  }) async {
+    var headersMap = {
+      'Content-type': 'application/json;charset=UTF-8',
+      'Charset': 'utf-8',
+    };
+    if (isRequiredToken) {
+      headersMap["Authorization"] = "bearer ${jwtToken!}";
+    }
+    var client = http.Client();
+    var url = Uri.http(baseUrl, pathRequest);
+    var response = await client.delete(
+      url,
+      headers: headersMap,
+      body: parameters,
+    );
+    return response;
+  }
 }

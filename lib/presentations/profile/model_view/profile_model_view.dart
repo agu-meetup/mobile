@@ -2,6 +2,7 @@ import 'package:agu_meetup_mobile/core/assets.dart';
 import 'package:agu_meetup_mobile/data/user/models/get_user_info_response_model.dart';
 import 'package:agu_meetup_mobile/data/user/models/update_user_info_request.dart';
 import 'package:agu_meetup_mobile/domains/event/repository/event_repository.dart';
+import 'package:agu_meetup_mobile/domains/profile/repository/profile_repository.dart';
 import 'package:agu_meetup_mobile/domains/user/repository/user_repository.dart';
 import 'package:agu_meetup_mobile/presentations/authentication/view/authentication_view.dart';
 import 'package:agu_meetup_mobile/presentations/authentication/view_model/authentication_model_view.dart';
@@ -9,6 +10,7 @@ import 'package:agu_meetup_mobile/presentations/profile/view/profile_edit_view.d
 import 'package:flutter/material.dart';
 
 import '../../../components/my_dialogs/my_simple_dialog_widget.dart';
+import '../../detail/view/detail_view.dart';
 import '../model/profile_event_model.dart';
 
 enum ProfilePageStatus {
@@ -27,6 +29,7 @@ class ProfileModelView extends ChangeNotifier {
   /// Domain Layers
   UserRepository userRepository = UserRepository();
   EventRepository eventRepository = EventRepository();
+  ProfileRepository profileRepository = ProfileRepository();
 
   /// Other Model Views
   AuthenticationModelView authenticationModelView = AuthenticationModelView();
@@ -47,15 +50,18 @@ class ProfileModelView extends ChangeNotifier {
     userInfo = userRepository.getUserInfo();
   }
 
-  Future<void> getAllEventsListFromRepository() async{
+  Future<void> getAllEventsListFromRepository() async {
     myEventsList = [];
     upcomingEventsList = [];
     pastEventsList = [];
-    await eventRepository.eventsCreatedCurrentUser(userInfo!.id);
-    myEventsList = eventRepository.getProfileMyEventsListFromDomain();
-    await eventRepository.eventsUpcomingAndPastCurrentUser(userInfo!.id);
-    upcomingEventsList = eventRepository.getProfileUpcomingEventsListFromDomain();
-    pastEventsList = eventRepository.getProfilePastEventsListFromDomain();
+    myBookmarksList = [];
+
+    myEventsList = await profileRepository.getProfileMyEventList(userInfo!.id);
+    upcomingEventsList =
+        await profileRepository.getUpcomingEventList(userInfo!.id);
+    pastEventsList = await profileRepository.getPastEventList(userInfo!.id);
+    myBookmarksList = await profileRepository.getProfileBookmarksEventList();
+
     notifyListeners();
   }
 
@@ -66,8 +72,16 @@ class ProfileModelView extends ChangeNotifier {
   List<ProfileEventModel> myBookmarksList = [];
 
   /// ClickEventFunction
-  void clickEventFunc(int eventId){
+  void clickEventFunc(int eventId) {
     eventRepository.eventDetailPageClicked(eventId);
+    Navigator.push(ctx!, MaterialPageRoute(builder: (_) => const DetailView()))
+        .then((value) async {
+      profilePageStatus = ProfilePageStatus.loading;
+      notifyListeners();
+      myBookmarksList = await profileRepository.getProfileBookmarksEventList();
+      profilePageStatus = ProfilePageStatus.success;
+      notifyListeners();
+    });
   }
 
   /// My Events
@@ -89,10 +103,10 @@ class ProfileModelView extends ChangeNotifier {
         ctx!, MaterialPageRoute(builder: (context) => ProfileEditView()));
   }
 
-  void logoutActionButtonFunc() async{
+  void logoutActionButtonFunc() async {
     await authenticationModelView.logout();
-    Navigator.push(
-        ctx!, MaterialPageRoute(builder: (context) => const AuthenticationView()));
+    Navigator.push(ctx!,
+        MaterialPageRoute(builder: (context) => const AuthenticationView()));
   }
 
   /// Edit Profile Page
@@ -137,8 +151,7 @@ class ProfileModelView extends ChangeNotifier {
           description: "Please fill all blanks",
           imagePath: errorRedCross,
         );
-      }
-      else {
+      } else {
         await userRepository.updateUserInfoFromDS(
           UpdateUserInfoRequest(
             name: nameCtr.text,
@@ -171,8 +184,12 @@ class ProfileModelView extends ChangeNotifier {
     ctxEditPage = context;
   }
 
-  void removeEventFromMyBookmarks(int index) {
-    myBookmarksList.removeWhere((element) => element.eventId == index);
+  void removeEventFromMyBookmarks(int eventId) async {
+    await eventRepository.deleteEventToBookmarks(
+      userId: userRepository.getUserInfo()!.id,
+      eventId: eventId,
+    );
+    myBookmarksList = await profileRepository.getProfileBookmarksEventList();
     notifyListeners();
   }
 }

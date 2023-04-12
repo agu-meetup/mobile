@@ -78,14 +78,65 @@ class EventServerDatasource {
     }
   }
 
-  Future<GetEventResponseModel> getEventById(int eventId) async{
-    Response response = await myService.getRequest(pathRequest: "api/event/$eventId", isRequiredToken: false,);
+  Future<GetEventResponseModel> getEventById(int eventId) async {
+    Response response = await myService.getRequest(
+      pathRequest: "api/event/$eventId",
+      isRequiredToken: false,
+    );
 
-    if (response.statusCode == 200){
+    if (response.statusCode == 200) {
       return GetEventResponseModel.fromJson(jsonDecode(response.body)['event']);
-    }
-    else {
+    } else {
       throw GetEventByIdError();
+    }
+  }
+
+  Future<List<int>> getSaveEventsByUserId(int userId) async {
+    Response response = await myService.getRequest(
+      pathRequest: 'api/event/saveevent/$userId',
+      isRequiredToken: false,
+    );
+
+    if (response.statusCode == 200) {
+      return (jsonDecode(response.body)['events'] as List)
+          .map((e) => e['event_id'] as int)
+          .toList();
+    } else {
+      throw GetSaveEventsByUserIdError();
+    }
+  }
+
+  Future<void> addSaveEventByUserId({
+    required int userId,
+    required int eventId,
+  }) async {
+    Response response = await myService.postRequest(
+      pathRequest: "api/event/saveevent/$userId",
+      parameters: jsonEncode({'eventId': eventId}),
+      isRequiredToken: false,
+    );
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw AddSaveEventsByUserIdError();
+    }
+  }
+
+  Future<void> deleteSaveEventByUserId({
+    required int userId,
+    required int eventId,
+  }) async {
+    Response response = await myService.deleteRequest(
+      pathRequest: "api/event/saveevent/$userId",
+      parameters: jsonEncode({"eventId": eventId}),
+      isRequiredToken: false,
+    );
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw DeleteSaveEventsByUserIdError();
     }
   }
 }

@@ -23,3 +23,9 @@ class CreateAddressError implements Exception {}
 class GetAddressError implements Exception {}
 
 class GetUserInfoByIdError implements Exception {}
+
+class GetSaveEventsByUserIdError implements Exception {}
+
+class AddSaveEventsByUserIdError implements Exception {}
+
+class DeleteSaveEventsByUserIdError implements Exception {}

@@ -1,3 +1,4 @@
+import 'package:agu_meetup_mobile/presentations/detail/model_view/detail_model_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +11,7 @@ class DetailAppBarView extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, mv, child) {
+    return Consumer<DetailModelView>(builder: (context, mv, child) {
       return AppBar(
         leading: IconButton(
           icon: const Icon(
@@ -32,8 +33,12 @@ class DetailAppBarView extends StatelessWidget with PreferredSizeWidget {
         centerTitle: true,
         actions: [
           GestureDetector(
-            onTap: () {},
-            child: Image(
+            onTap: () {
+              mv.bookmarkButtonFunc();
+            },
+            child: mv.isEventSaved ? Image(
+              image: AssetImage(saveBeige),
+            ) : Image(
               image: AssetImage(saveBlack),
             ),
           ),

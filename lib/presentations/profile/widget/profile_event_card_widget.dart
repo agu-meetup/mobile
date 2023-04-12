@@ -37,8 +37,6 @@ class ProfileEventCardWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         eventOnTabFunc(eventId);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (_) => const DetailView()));
       },
       child: Container(
         height: 100,

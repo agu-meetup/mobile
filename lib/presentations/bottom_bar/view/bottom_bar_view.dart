@@ -1,6 +1,9 @@
+import 'package:agu_meetup_mobile/components/my_loadings/my_loading_widget.dart';
+import 'package:agu_meetup_mobile/core/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/size_config.dart';
 import '../../create_event/view/create_event_view.dart';
 import '../../home/view/home_view.dart';
 import '../../notification/view/notification_view.dart';
@@ -16,62 +19,76 @@ class BottomBarView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bottomBarMV = context.read<BottomBarModelView>();
-    return StreamBuilder<int>(
-      stream: bottomBarMV.loadingStatus,
-      builder: (context, snapshot) {
-        return Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: changingPage(snapshot.data),
-          floatingActionButton: BottomBarFloatingActButtonWidget(
-            onTabFunc: bottomBarMV.changeBarIndex,
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          bottomNavigationBar: BottomAppBar(
-            color: Colors.white,
-            shape: const CircularNotchedRectangle(),
-            notchMargin: 5,
-            child: Container(
-              height: 70,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  BottomBarButtonWidget(
-                    buttonActive: bottomBarMV.homeButtonActiveIcon,
-                    buttonPassive: bottomBarMV.homeButtonPassiveIcon,
-                    buttonIndex: 0,
-                    isActive: snapshot.data == 0 ? true : false,
-                    onTabFunc: bottomBarMV.changeBarIndex,
-                  ),
-                  BottomBarButtonWidget(
-                    buttonActive: bottomBarMV.searchButtonActiveIcon,
-                    buttonPassive: bottomBarMV.searchButtonPassiveIcon,
-                    buttonIndex: 1,
-                    isActive: snapshot.data == 1 ? true : false,
-                    onTabFunc: bottomBarMV.changeBarIndex,
-                  ),
-                  SizedBox(
-                    width: 30,
-                  ),
-                  BottomBarButtonWidget(
-                    buttonActive: bottomBarMV.notificationButtonActiveIcon,
-                    buttonPassive: bottomBarMV.notificationButtonPassiveIcon,
-                    buttonIndex: 3,
-                    isActive: snapshot.data == 3 ? true : false,
-                    onTabFunc: bottomBarMV.changeBarIndex,
-                  ),
-                  BottomBarButtonWidget(
-                    buttonActive: bottomBarMV.profileButtonActiveIcon,
-                    buttonPassive: bottomBarMV.profileButtonPassiveIcon,
-                    buttonIndex: 4,
-                    isActive: snapshot.data == 4 ? true : false,
-                    onTabFunc: bottomBarMV.changeBarIndex,
-                  ),
-                ],
-              ),
+    context.read<BottomBarModelView>().initializeMethods();
+    return Consumer<BottomBarModelView>(
+      builder: (context, mv, child) {
+        if (!mv.isPageLoaded) {
+          return Scaffold(
+            body: Center(
+              child: MyLoadingWidget(
+                  size: SizeConfig.screenWidth! / 4, color: kOrange),
             ),
-          ),
+          );
+        }
+        return StreamBuilder<int>(
+          stream: bottomBarMV.loadingStatus,
+          builder: (context, snapshot) {
+            return Scaffold(
+              resizeToAvoidBottomInset: false,
+              body: changingPage(snapshot.data),
+              floatingActionButton: BottomBarFloatingActButtonWidget(
+                onTabFunc: bottomBarMV.changeBarIndex,
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
+              bottomNavigationBar: BottomAppBar(
+                color: Colors.white,
+                shape: const CircularNotchedRectangle(),
+                notchMargin: 5,
+                child: Container(
+                  height: 70,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      BottomBarButtonWidget(
+                        buttonActive: bottomBarMV.homeButtonActiveIcon,
+                        buttonPassive: bottomBarMV.homeButtonPassiveIcon,
+                        buttonIndex: 0,
+                        isActive: snapshot.data == 0 ? true : false,
+                        onTabFunc: bottomBarMV.changeBarIndex,
+                      ),
+                      BottomBarButtonWidget(
+                        buttonActive: bottomBarMV.searchButtonActiveIcon,
+                        buttonPassive: bottomBarMV.searchButtonPassiveIcon,
+                        buttonIndex: 1,
+                        isActive: snapshot.data == 1 ? true : false,
+                        onTabFunc: bottomBarMV.changeBarIndex,
+                      ),
+                      SizedBox(
+                        width: 30,
+                      ),
+                      BottomBarButtonWidget(
+                        buttonActive: bottomBarMV.notificationButtonActiveIcon,
+                        buttonPassive:
+                            bottomBarMV.notificationButtonPassiveIcon,
+                        buttonIndex: 3,
+                        isActive: snapshot.data == 3 ? true : false,
+                        onTabFunc: bottomBarMV.changeBarIndex,
+                      ),
+                      BottomBarButtonWidget(
+                        buttonActive: bottomBarMV.profileButtonActiveIcon,
+                        buttonPassive: bottomBarMV.profileButtonPassiveIcon,
+                        buttonIndex: 4,
+                        isActive: snapshot.data == 4 ? true : false,
+                        onTabFunc: bottomBarMV.changeBarIndex,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
         );
       },
     );
