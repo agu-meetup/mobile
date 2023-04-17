@@ -16,6 +16,7 @@ String homeButtonActive = "$assetsIconRoot/home_button_active.png";
 String homeButtonPassive = "$assetsIconRoot/home_button_passive.png";
 String searchButtonActive = "$assetsIconRoot/search_button_active.png";
 String searchButtonPassive = "$assetsIconRoot/search_button_passive.png";
+String adjustSearch = "$assetsIconRoot/adjust_search.png";
 String notificationButtonActive =
     "$assetsIconRoot/notification_button_active.png";
 String notificationButtonPassive =

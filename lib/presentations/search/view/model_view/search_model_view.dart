@@ -1,10 +1,10 @@
+import 'package:agu_meetup_mobile/core/assets.dart';
 import 'package:flutter/cupertino.dart';
 
-class SearchModelView extends ChangeNotifier{
-
+class SearchModelView extends ChangeNotifier {
   BuildContext? ctx;
 
-  void updateContextData(BuildContext context){
+  void updateContextData(BuildContext context) {
     ctx = context;
   }
 
@@ -12,7 +12,23 @@ class SearchModelView extends ChangeNotifier{
   String searchHintText = "Search event..";
   String? searchVal;
 
-  void changeSearchVal(String? newSearchVal){
+  ///Search Icons
+  String adjustSearchIcon = adjustSearch;
+
+  void changeSearchVal(String? newSearchVal) {
     searchVal = newSearchVal;
+  }
+
+  /// SortBy
+  String? sortDropdownValue;
+
+  List<String> sortOptionList = const [
+    "Sort Option 1",
+    "Sort Option 2",
+    "Sort Option 3",
+  ];
+  void changeSelectedSortOption(String? selectedSortOption) {
+    sortDropdownValue = selectedSortOption;
+    notifyListeners();
   }
 }
