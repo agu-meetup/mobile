@@ -1,3 +1,4 @@
+import 'package:agu_meetup_mobile/presentations/search/view/view/search_card_view.dart';
 import 'package:agu_meetup_mobile/presentations/search/view/view/search_sort_field.dart';
 import 'package:agu_meetup_mobile/presentations/search/view/view/search_text_field_view.dart';
 import 'package:flutter/material.dart';
@@ -33,19 +34,43 @@ class SearchView extends StatelessWidget {
                               end: Alignment.bottomCenter,
 
                               ///give colors as constants by using their names to make dynamic rather than static.
-                              colors: [
-                                Color(0xffFD7C88),
-                                Color(0xffFEB281)
-                              ])),
+                              colors: [Color(0xffFD7C88), Color(0xffFEB281)])),
                       child: IconButton(
-                          onPressed: () {}, icon: Icon(Icons.settings))),
+                          onPressed: () {
+                            showModalBottomSheet<void>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return SizedBox(
+                                  height: 200,
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        const Text('Modal BottomSheet'),
+                                        ElevatedButton(
+                                          child:
+                                              const Text('Close BottomSheet'),
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          icon: Icon(Icons.settings))),
                 ],
               ),
             ),
             Container(
                 margin: EdgeInsets.all(8.0),
                 height: 50,
-                child: SearchSortDropdown())
+                child: SearchSortDropdown()),
+            Expanded(child: SearchCardView()),
           ]),
         ),
       ),

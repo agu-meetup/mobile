@@ -1,4 +1,5 @@
 import 'package:agu_meetup_mobile/components/my_dropdowns/my_dropdown_widget.dart';
+import 'package:agu_meetup_mobile/presentations/search/view/widgets/search_dropdown_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,40 +25,54 @@ class _SearchSortDropdownState extends State<SearchSortDropdown> {
             children: <Widget>[
               Container(
                 width: 100,
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                child: MyDropdownWidget(
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                child: SearchDropdown(
+                    hintText: "Sort By",
                     dropdownValue: mv.searchVal,
                     elementList: mv.sortOptionList,
                     onChangedFunc: mv.changeSelectedSortOption),
               ),
               Container(
                 width: 100,
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                child: MyDropdownWidget(
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                child: SearchDropdown(
+                    hintText: "Location",
                     dropdownValue: mv.searchVal,
                     elementList: mv.sortOptionList,
                     onChangedFunc: mv.changeSelectedSortOption),
               ),
               Container(
                 width: 100,
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                child: MyDropdownWidget(
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                child: SearchDropdown(
+                    hintText: "Date",
                     dropdownValue: mv.searchVal,
                     elementList: mv.sortOptionList,
                     onChangedFunc: mv.changeSelectedSortOption),
               ),
               Container(
                 width: 100,
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                child: MyDropdownWidget(
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                child: SearchDropdown(
+                    hintText: "Time",
                     dropdownValue: mv.searchVal,
                     elementList: mv.sortOptionList,
                     onChangedFunc: mv.changeSelectedSortOption),
               ),
               Container(
                 width: 100,
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                child: MyDropdownWidget(
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                child: SearchDropdown(
+                    hintText: "Gender",
+                    dropdownValue: mv.searchVal,
+                    elementList: mv.sortOptionList,
+                    onChangedFunc: mv.changeSelectedSortOption),
+              ),
+              Container(
+                width: 100,
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                child: SearchDropdown(
+                    hintText: "Price",
                     dropdownValue: mv.searchVal,
                     elementList: mv.sortOptionList,
                     onChangedFunc: mv.changeSelectedSortOption),
