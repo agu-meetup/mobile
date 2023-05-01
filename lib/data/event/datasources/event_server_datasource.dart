@@ -139,4 +139,15 @@ class EventServerDatasource {
       throw DeleteSaveEventsByUserIdError();
     }
   }
+  
+  Future<void> deleteEventById({required int eventId}) async {
+    Response response = await myService.deleteRequest(pathRequest: "api/event/$eventId", parameters: "", isRequiredToken: false,);
+
+    if (response.statusCode == 200) {
+      return;
+    }
+    else {
+      throw DeleteEventsByEventIdError();
+    }
+  }
 }

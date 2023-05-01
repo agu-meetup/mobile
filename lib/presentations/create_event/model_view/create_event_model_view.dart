@@ -214,9 +214,15 @@ class CreateEventModelView extends ChangeNotifier {
   }
 
   Future<void> updateAddress() async {
+
+    if (createEventInfoModel.targetPosition == null) {
+      createEventInfoModel.targetPosition = LatLng(currentPosition!.latitude, currentPosition!.longitude);
+    }
+
     List<Placemark> placemarks = await placemarkFromCoordinates(
         createEventInfoModel.targetPosition!.latitude,
         createEventInfoModel.targetPosition!.longitude);
+
     if (placemarks.isNotEmpty) {
       createEventInfoModel.locationAddressCtr.text = "";
       if (placemarks[0].subLocality!.isNotEmpty) {

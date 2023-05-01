@@ -1,4 +1,6 @@
-
+import 'package:agu_meetup_mobile/components/my_loadings/my_loading_widget.dart';
+import 'package:agu_meetup_mobile/core/constants.dart';
+import 'package:agu_meetup_mobile/core/size_config.dart';
 import 'package:agu_meetup_mobile/presentations/profile/view/profile_app_bar_view.dart';
 import 'package:agu_meetup_mobile/presentations/profile/view/profile_general_info_view.dart';
 import 'package:agu_meetup_mobile/presentations/profile/view/profile_tab_bars_view.dart';
@@ -29,11 +31,15 @@ class ProfileView extends StatelessWidget {
                 ],
               );
             }
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: MyLoadingWidget(
+                size: SizeConfig.screenWidth! / 4,
+                color: kOrange,
+              ),
+            );
           },
         ),
       ),
     );
   }
 }
-

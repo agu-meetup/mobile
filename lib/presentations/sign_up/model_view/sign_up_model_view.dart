@@ -166,7 +166,7 @@ class SignUpModelView extends ChangeNotifier {
         if (e == EmailAlreadyUsed()) {
           print("Email is already used");
         } else {
-          print("Hata");
+          print(e);
         }
       }
     }

@@ -29,3 +29,5 @@ class GetSaveEventsByUserIdError implements Exception {}
 class AddSaveEventsByUserIdError implements Exception {}
 
 class DeleteSaveEventsByUserIdError implements Exception {}
+
+class DeleteEventsByEventIdError implements Exception {}

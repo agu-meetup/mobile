@@ -43,7 +43,7 @@ class DetailBottomButtonView extends StatelessWidget {
                 buttonText: 'DELETE',
                 buttonTextColor: kWhite,
                 backgroundColor: Colors.red,
-                onTapFunction: () {},
+                onTapFunction: mv.deleteButtonFunc,
               ),
             )
           ],

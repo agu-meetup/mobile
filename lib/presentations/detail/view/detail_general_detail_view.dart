@@ -24,7 +24,12 @@ class DetailGeneralDetailView extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            Text(mv.detailInfoModel!.detail),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                mv.detailInfoModel!.detail
+              ),
+            ),
             SizedBox(height: 12),
           ],
         );

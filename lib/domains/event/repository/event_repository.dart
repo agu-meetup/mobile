@@ -119,6 +119,10 @@ class EventRepository {
     bookmarksEventIds.removeWhere((e) => e == eventId);
   }
 
+  Future<void> deleteEventById({required int eventId}) async {
+    await eventServerDatasource.deleteEventById(eventId: eventId);
+  }
+
   /// Get Methods for attributes of Repo
   List<int> getBookmarksEventIds() {
     return bookmarksEventIds;

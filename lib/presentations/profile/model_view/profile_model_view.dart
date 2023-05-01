@@ -40,6 +40,7 @@ class ProfileModelView extends ChangeNotifier {
   }
 
   void initializeMethods() async {
+    profilePageStatus = ProfilePageStatus.loading;
     getUserInfoFromDomain();
     await getAllEventsListFromRepository();
     profilePageStatus = ProfilePageStatus.success;
@@ -78,7 +79,7 @@ class ProfileModelView extends ChangeNotifier {
         .then((value) async {
       profilePageStatus = ProfilePageStatus.loading;
       notifyListeners();
-      myBookmarksList = await profileRepository.getProfileBookmarksEventList();
+      await getAllEventsListFromRepository();
       profilePageStatus = ProfilePageStatus.success;
       notifyListeners();
     });

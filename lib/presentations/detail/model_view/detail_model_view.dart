@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:agu_meetup_mobile/components/my_dialogs/my_simple_dialog_widget.dart';
+import 'package:agu_meetup_mobile/core/assets.dart';
 import 'package:agu_meetup_mobile/domains/detail_participants/repository/detail_participants_repository.dart';
 import 'package:agu_meetup_mobile/domains/event/repository/event_repository.dart';
 import 'package:agu_meetup_mobile/domains/user/repository/user_repository.dart';
@@ -101,6 +103,27 @@ class DetailModelView extends ChangeNotifier {
       ..removeWhere((e) => e == userRepository.getUserInfo()!.id));
     Navigator.push(
         ctx, MaterialPageRoute(builder: (_) => DetailParticipantsView()));
+  }
+
+  /// Delete Function
+  Future<void> deleteButtonFunc() async {
+    try {
+      await eventRepository.deleteEventById(eventId: detailInfoModel!.eventId);
+      await mySimpleDialogWidget(
+          context: ctx,
+          title: "Success",
+          description: "Event removed successfully",
+          imagePath: successStar);
+      Navigator.pop(ctx);
+    } catch (e) {
+      print(e);
+      await mySimpleDialogWidget(
+        context: ctx,
+        title: "Error",
+        description: "Event are NOT removed",
+        imagePath: errorRedCross,
+      );
+    }
   }
 
   /// Comments
