@@ -20,6 +20,7 @@ class DetailInfoModel {
   double longitude;
   String gender;
   List<int> userIdList;
+  DateTime eventStartDate;
 
   DetailInfoModel({
     required this.eventId,
@@ -43,5 +44,6 @@ class DetailInfoModel {
     required this.longitude,
     required this.gender,
     required this.userIdList,
+    required this.eventStartDate,
   });
 }

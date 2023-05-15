@@ -139,15 +139,31 @@ class EventServerDatasource {
       throw DeleteSaveEventsByUserIdError();
     }
   }
-  
+
   Future<void> deleteEventById({required int eventId}) async {
-    Response response = await myService.deleteRequest(pathRequest: "api/event/$eventId", parameters: "", isRequiredToken: false,);
+    Response response = await myService.deleteRequest(
+      pathRequest: "api/event/$eventId",
+      parameters: "",
+      isRequiredToken: false,
+    );
 
     if (response.statusCode == 200) {
       return;
-    }
-    else {
+    } else {
       throw DeleteEventsByEventIdError();
+    }
+  }
+
+  Future<void> leaveEvent({required int eventId, required int userId}) async {
+    Response response = await myService.deleteRequest(
+      pathRequest: "api/event/leaveevent/$eventId",
+      parameters: jsonEncode({"userId": userId}),
+    );
+
+    if (response.statusCode == 200){
+      return;
+    } else {
+      throw LeaveEventError();
     }
   }
 }

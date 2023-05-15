@@ -38,4 +38,5 @@ class AuthenticationServerDatasource {
       throw EmailAlreadyUsed();
     }
   }
+
 }

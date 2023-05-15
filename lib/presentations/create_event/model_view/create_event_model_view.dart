@@ -219,9 +219,18 @@ class CreateEventModelView extends ChangeNotifier {
       createEventInfoModel.targetPosition = LatLng(currentPosition!.latitude, currentPosition!.longitude);
     }
 
-    List<Placemark> placemarks = await placemarkFromCoordinates(
-        createEventInfoModel.targetPosition!.latitude,
-        createEventInfoModel.targetPosition!.longitude);
+    print("LOCATIONS: ${createEventInfoModel.targetPosition}");
+
+    List<Placemark> placemarks = [];
+
+    try {
+      placemarks = await placemarkFromCoordinates(
+          createEventInfoModel.targetPosition!.latitude,
+          createEventInfoModel.targetPosition!.longitude);
+    } catch(e) {
+      print("ERROR: $e");
+    }
+
 
     if (placemarks.isNotEmpty) {
       createEventInfoModel.locationAddressCtr.text = "";

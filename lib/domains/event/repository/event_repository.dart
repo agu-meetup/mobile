@@ -106,6 +106,7 @@ class EventRepository {
           .split("-")
           .map((e) => int.parse(e))
           .toList(),
+      eventStartDate: tempGetEventResponseModel.startTime,
     );
   }
 
@@ -121,6 +122,10 @@ class EventRepository {
 
   Future<void> deleteEventById({required int eventId}) async {
     await eventServerDatasource.deleteEventById(eventId: eventId);
+  }
+
+  Future<void> leaveEvent({required int userId, required int eventId}) async {
+    await eventServerDatasource.leaveEvent(eventId: eventId, userId: userId);
   }
 
   /// Get Methods for attributes of Repo

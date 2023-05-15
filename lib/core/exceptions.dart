@@ -31,3 +31,11 @@ class AddSaveEventsByUserIdError implements Exception {}
 class DeleteSaveEventsByUserIdError implements Exception {}
 
 class DeleteEventsByEventIdError implements Exception {}
+
+class LeaveEventError implements Exception {}
+
+class ForgotPasswordCodeSenderError implements Exception {}
+
+class ForgotPasswordVerifyCodeError implements Exception {}
+
+class ForgotPasswordResetPasswordError implements Exception {}

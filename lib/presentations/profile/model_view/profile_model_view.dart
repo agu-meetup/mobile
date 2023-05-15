@@ -93,10 +93,27 @@ class ProfileModelView extends ChangeNotifier {
 
   /// Upcoming Events
   String upcomingEventsIconPath = closeRed;
-  void upcomingEventsFunc(int eventId) {
-    upcomingEventsList.removeWhere((element) => element.eventId == eventId);
-    notifyListeners();
+  void upcomingEventsFunc(int eventId) async{
+    try {
+      await eventRepository.leaveEvent(eventId: eventId, userId: userRepository.getUserInfo()!.id,);
+      await mySimpleDialogWidget(
+      context: ctx!,
+      title: "Success",
+      description: "You leave from the event successfully",
+      imagePath: successStar);
+      upcomingEventsList.removeWhere((element) => element.eventId == eventId);
+      notifyListeners();
+    } catch (e) {
+      print(e);
+      await mySimpleDialogWidget(
+      context: ctx!,
+      title: "Error",
+      description: "You DIDN'T leave from event",
+      imagePath: errorRedCross,
+      );
+    }
   }
+
 
   /// Action Buttons
   void editActionButtonFunc() {

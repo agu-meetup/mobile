@@ -11,6 +11,7 @@ import 'package:agu_meetup_mobile/presentations/detail/view/detail_map_view.dart
 import 'package:agu_meetup_mobile/presentations/detail_participants/view/detail_participants_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 
 enum DetailPageType {
   myEvent,
@@ -53,7 +54,12 @@ class DetailModelView extends ChangeNotifier {
       detailPageType = DetailPageType.myEvent;
     } else if (detailInfoModel!.userIdList
         .contains(userRepository.getUserInfo()!.id)) {
-      detailPageType = DetailPageType.joinedEvent;
+      if(detailInfoModel!.eventStartDate.isBefore(DateTime.now())){
+        detailPageType = DetailPageType.pastEvent;
+      }
+      else {
+        detailPageType = DetailPageType.joinedEvent;
+      }
     }
   }
 
@@ -98,6 +104,7 @@ class DetailModelView extends ChangeNotifier {
   /// Detail
 
   /// Button Functions
+  // Participants Func
   void membersButtonFunc() {
     detailParticipantsRepository.updateUserIdList(detailInfoModel!.userIdList
       ..removeWhere((e) => e == userRepository.getUserInfo()!.id));
@@ -105,7 +112,7 @@ class DetailModelView extends ChangeNotifier {
         ctx, MaterialPageRoute(builder: (_) => DetailParticipantsView()));
   }
 
-  /// Delete Function
+  // Delete Func
   Future<void> deleteButtonFunc() async {
     try {
       await eventRepository.deleteEventById(eventId: detailInfoModel!.eventId);
@@ -121,6 +128,27 @@ class DetailModelView extends ChangeNotifier {
         context: ctx,
         title: "Error",
         description: "Event are NOT removed",
+        imagePath: errorRedCross,
+      );
+    }
+  }
+
+  // Leave Func
+  Future<void> leaveEventButtonFunc() async {
+    try {
+      await eventRepository.leaveEvent(eventId: detailInfoModel!.eventId, userId: userRepository.getUserInfo()!.id,);
+      await mySimpleDialogWidget(
+          context: ctx,
+          title: "Success",
+          description: "You leave from the event successfully",
+          imagePath: successStar);
+      Navigator.pop(ctx);
+    } catch (e) {
+      print(e);
+      await mySimpleDialogWidget(
+        context: ctx,
+        title: "Error",
+        description: "You CAN'T leave from event",
         imagePath: errorRedCross,
       );
     }

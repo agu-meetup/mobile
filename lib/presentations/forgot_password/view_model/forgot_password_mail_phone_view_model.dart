@@ -1,3 +1,4 @@
+import 'package:agu_meetup_mobile/domains/forgot_password/repository/forgot_password_repository.dart';
 import 'package:agu_meetup_mobile/presentations/forgot_password/view_model/forgot_password_view_model.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:provider/provider.dart';
 class ForgotPasswordMailPhoneViewModel extends ChangeNotifier {
   String? forgotPasswordWay;
   late BuildContext ctx;
+  ForgotPasswordRepository forgotPasswordRepository = ForgotPasswordRepository();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void updateForgotPasswordWay(String? newWay) {
@@ -53,9 +55,10 @@ class ForgotPasswordMailPhoneViewModel extends ChangeNotifier {
   }
 
   /// Button
-  void continueButtonFunc() {
+  void continueButtonFunc() async{
     if (formKey.currentState!.validate()) {
       if (forgotPasswordWay == "Email") {
+        await forgotPasswordRepository.codeSender(email: emailVal!);
         ctx.read<ForgotPasswordViewModel>().updateMailOrPhone(emailVal!);
       } else {
         ctx.read<ForgotPasswordViewModel>().updateMailOrPhone(phoneNumVal!);

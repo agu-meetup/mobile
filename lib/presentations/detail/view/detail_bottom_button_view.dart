@@ -53,15 +53,17 @@ class DetailBottomButtonView extends StatelessWidget {
           buttonText: 'LEAVE',
           buttonTextColor: kWhite,
           backgroundColor: Colors.red,
-          onTapFunction: () {},
+          onTapFunction: mv.leaveEventButtonFunc,
         );
-      default:
+      case DetailPageType.newEvent:
         return MyButtonWidget(
           buttonText: 'JOIN',
           buttonTextColor: kWhite,
           backgroundColor: kBeige,
           onTapFunction: () {},
         );
+      default:
+        return Container();
     }
   }
 }

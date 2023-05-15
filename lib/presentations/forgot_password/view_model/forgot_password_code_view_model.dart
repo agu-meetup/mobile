@@ -1,3 +1,6 @@
+import 'package:agu_meetup_mobile/components/my_dialogs/my_simple_dialog_widget.dart';
+import 'package:agu_meetup_mobile/core/assets.dart';
+import 'package:agu_meetup_mobile/domains/forgot_password/repository/forgot_password_repository.dart';
 import 'package:agu_meetup_mobile/presentations/forgot_password/view_model/forgot_password_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +8,8 @@ import 'package:provider/provider.dart';
 class ForgotPasswordCodeViewModel extends ChangeNotifier {
   late BuildContext ctx;
   String? sentCodeTo;
+  ForgotPasswordRepository forgotPasswordRepository =
+      ForgotPasswordRepository();
 
   void updateBuildContext(BuildContext context) {
     ctx = context;
@@ -82,12 +87,23 @@ class ForgotPasswordCodeViewModel extends ChangeNotifier {
     });
   }
 
-  void verifyButtonFunc() {
+  void verifyButtonFunc() async {
     if (code1!.isNotEmpty &&
         code2!.isNotEmpty &&
         code3!.isNotEmpty &&
         code4!.isNotEmpty) {
-      ctx.read<ForgotPasswordViewModel>().goNextPage();
+      String recoveryCodeStr = code1! + code2! + code3! + code4!;
+      int recoveryCode = int.parse(recoveryCodeStr);
+      try {
+        await forgotPasswordRepository.verifyCode(recoveryCode: recoveryCode);
+        ctx.read<ForgotPasswordViewModel>().goNextPage();
+      } catch (e) {
+        await mySimpleDialogWidget(
+            context: ctx,
+            title: "Wrong",
+            description: "Recovery code you enter is wrong. Try again",
+            imagePath: errorRedCross);
+      }
     } else {
       ScaffoldMessenger.of(ctx)
           .showSnackBar(const SnackBar(content: Text('Please full all blank')));

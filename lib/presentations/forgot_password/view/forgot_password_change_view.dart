@@ -10,6 +10,7 @@ class ForgotPasswordChangeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<ForgotPasswordChangeViewModel>().updateBuildContext(context);
     return Consumer<ForgotPasswordChangeViewModel>(
       builder: (context, mv, child) {
         return Form(
