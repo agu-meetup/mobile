@@ -28,14 +28,7 @@ class SearchDropdown extends StatelessWidget {
         vertical: 6,
       ),
       decoration: BoxDecoration(
-        boxShadow: isThereShadow
-            ? [
-                const BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 8,
-                    offset: Offset(0.0, 0.75))
-              ]
-            : [],
+        boxShadow: isThereShadow ? [] : [],
         color: kWhite,
         borderRadius: BorderRadius.circular(10),
       ),

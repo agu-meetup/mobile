@@ -17,9 +17,15 @@ class _SearchTextFieldViewState extends State<SearchTextFieldView> {
   @override
   Widget build(BuildContext context) {
     context.read<SearchModelView>().updateContextData(context);
-    return Consumer<SearchModelView>(builder: (context,mv,child){
-      return MyTextFieldWidget(hintText: mv.searchHintText, changeValueFunc: mv.changeSearchVal, isThereShadow: false,maxLength: 1,);
-      
-    },);
+    return Consumer<SearchModelView>(
+      builder: (context, mv, child) {
+        return MyTextFieldWidget(
+          hintText: mv.searchHintText,
+          changeValueFunc: mv.changeSearchVal,
+          isThereShadow: false,
+          maxLength: 1,
+        );
+      },
+    );
   }
 }

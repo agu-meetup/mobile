@@ -1,4 +1,3 @@
-import 'package:agu_meetup_mobile/components/my_dropdowns/my_dropdown_widget.dart';
 import 'package:agu_meetup_mobile/presentations/search/view/widgets/search_dropdown_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

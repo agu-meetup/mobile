@@ -1,7 +1,5 @@
 import 'package:agu_meetup_mobile/presentations/search/view/widgets/search_card_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:provider/provider.dart';
 
 import '../model_view/search_model_view.dart';
