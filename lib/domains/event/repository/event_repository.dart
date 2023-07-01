@@ -11,6 +11,7 @@ import 'package:agu_meetup_mobile/presentations/detail/model/detail_info_model.d
 
 import '../../../core/my_firebase_storage.dart';
 import '../../../presentations/profile/model/profile_event_model.dart';
+import '../model/event_info_model.dart';
 
 class EventRepository {
   /// Data Layers
@@ -23,6 +24,9 @@ class EventRepository {
   static List<int> bookmarksEventIds = [];
   static int? eventIdWhenEventSelect;
 
+  static List<EventInfoModel> myEvents = [];
+  static List<EventInfoModel> joinedEvents = [];
+
   void eventDetailPageClicked(int eventId) {
     print("eventIdWhenEventSelect is updated...");
     eventIdWhenEventSelect = eventId;
@@ -33,6 +37,30 @@ class EventRepository {
     bookmarksEventIds = [];
     bookmarksEventIds =
         await eventServerDatasource.getSaveEventsByUserId(userId);
+  }
+
+  Future<void> fetchMyEventsFromDS(int userId) async{
+    myEvents.clear();
+    List<dynamic> myEventListMap = await eventServerDatasource.getMyEventById(userId: userId);
+
+    for (int i = 0; i < myEventListMap.length; i++) {
+      var tempMyEvent = EventInfoModel.fromMap(myEventListMap[i]);
+      tempMyEvent.imageUrls = await getAllImageLinks(myEventListMap[i]['imageUrl']);
+      tempMyEvent.hosts = (myEventListMap[i]['hosts'] as String).split("-");
+      myEvents.add(tempMyEvent);
+    }
+  }
+
+  Future<void> fetchJoinedEventsFromDS(int userId) async {
+    joinedEvents.clear();
+    List<dynamic> joinedEventsListMap = await eventServerDatasource.getJoinedEventById(userId: userId);
+
+    for (int i = 0; i < joinedEventsListMap.length; i++) {
+      var tempJoinedEvent = EventInfoModel.fromMap(joinedEventsListMap[i]);
+      tempJoinedEvent.imageUrls = await getAllImageLinks(joinedEventsListMap[i]['imageUrl']);
+      tempJoinedEvent.hosts = (joinedEventsListMap[i]['hosts'] as String).split("-");
+      joinedEvents.add(tempJoinedEvent);
+    }
   }
 
   Future<int> createEvent(
@@ -131,6 +159,10 @@ class EventRepository {
   /// Get Methods for attributes of Repo
   List<int> getBookmarksEventIds() {
     return bookmarksEventIds;
+  }
+
+  List<EventInfoModel> getJoinedEvents() {
+    return joinedEvents;
   }
 
   /// Required Methods for event repository

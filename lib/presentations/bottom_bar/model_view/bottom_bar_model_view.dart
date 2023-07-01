@@ -45,6 +45,8 @@ class BottomBarModelView extends ChangeNotifier {
   void initializeMethods() async{
     isPageLoaded = false;
     await fetchBookmarksEventIds();
+    await fetchMyEvents();
+    await fetchJoinedEvents();
     isPageLoaded = true;
     notifyListeners();
   }
@@ -52,5 +54,13 @@ class BottomBarModelView extends ChangeNotifier {
   Future<void> fetchBookmarksEventIds() async {
     await eventRepository
         .fetchBookmarksEventIdsFromDS(userRepository.getUserInfo()!.id);
+  }
+
+  Future<void> fetchMyEvents() async {
+    await eventRepository.fetchMyEventsFromDS(userRepository.getUserInfo()!.id);
+  }
+
+  Future<void> fetchJoinedEvents() async {
+    await eventRepository.fetchJoinedEventsFromDS(userRepository.getUserInfo()!.id);
   }
 }

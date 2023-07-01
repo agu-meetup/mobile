@@ -5,6 +5,7 @@ String assetsIconRoot = "assets/icons";
 String signInUpBg1 = "$assetsImageRoot/sign_in_up_bg_1.png";
 String signInUpBg2 = "$assetsImageRoot/sign_in_up_bg_2.png";
 String signInUpBg3 = "$assetsImageRoot/sign_in_up_bg_3.png";
+String homeBg = "$assetsImageRoot/home_bg.png";
 String successStar = "$assetsImageRoot/success_star.png";
 String errorRedCross = "$assetsImageRoot/error_red_cross.png";
 

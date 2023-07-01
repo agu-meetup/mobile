@@ -3,7 +3,7 @@ import 'package:http/http.dart';
 
 class MyService {
   static String? jwtToken;
-  static String baseUrl = "172.16.1.211:3006";
+  static String baseUrl = "192.168.41.1:3006";
 
   void updateJwtToken(String? newJwtToken) {
     jwtToken = newJwtToken;

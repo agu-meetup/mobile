@@ -1,9 +1,9 @@
-import 'package:agu_meetup_mobile/core/assets.dart';
-import 'package:agu_meetup_mobile/core/constants.dart';
-import 'package:agu_meetup_mobile/presentations/detail/view/detail_view.dart';
 import 'package:flutter/material.dart';
 
-class ProfileEventCardWidget extends StatelessWidget {
+import '../../core/assets.dart';
+import '../../core/constants.dart';
+
+class MyEventCardWidget extends StatelessWidget {
   int eventId;
   String eventDate;
   String eventTime;
@@ -17,7 +17,7 @@ class ProfileEventCardWidget extends StatelessWidget {
   bool isClosed;
   Function eventOnTabFunc;
 
-  ProfileEventCardWidget({
+  MyEventCardWidget({
     required this.eventId,
     required this.eventDate,
     required this.eventTime,
@@ -75,34 +75,34 @@ class ProfileEventCardWidget extends StatelessWidget {
                         children: [
                           isClosed == false
                               ? Row(
-                                  children: [
-                                    Text(
-                                      eventDate,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      eventTime,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: kBeige,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : Text(
-                                  "Closed",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: kBeige,
-                                  ),
+                            children: [
+                              Text(
+                                eventDate,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black,
                                 ),
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                eventTime,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: kBeige,
+                                ),
+                              ),
+                            ],
+                          )
+                              : Text(
+                            "Closed",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: kBeige,
+                            ),
+                          ),
                           Row(
                             children: [
                               Container(
@@ -129,13 +129,13 @@ class ProfileEventCardWidget extends StatelessWidget {
                       Spacer(),
                       iconImagePath != null
                           ? GestureDetector(
-                              onTap: () {
-                                iconFunc!(eventId);
-                              },
-                              child: Image(
-                                image: AssetImage(iconImagePath!),
-                              ),
-                            )
+                        onTap: () {
+                          iconFunc!(eventId);
+                        },
+                        child: Image(
+                          image: AssetImage(iconImagePath!),
+                        ),
+                      )
                           : Container(),
                     ],
                   ),

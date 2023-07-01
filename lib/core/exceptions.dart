@@ -39,3 +39,7 @@ class ForgotPasswordCodeSenderError implements Exception {}
 class ForgotPasswordVerifyCodeError implements Exception {}
 
 class ForgotPasswordResetPasswordError implements Exception {}
+
+class GetMyEventError implements Exception {}
+
+class GetJoinedEventError implements Exception {}

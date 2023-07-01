@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../components/my_cards/my_event_card_widget.dart';
 import '../model_view/profile_model_view.dart';
-import '../widget/profile_event_card_widget.dart';
 
 class ProfileBookmarksView extends StatelessWidget {
   const ProfileBookmarksView({Key? key}) : super(key: key);
@@ -34,7 +34,7 @@ class ProfileBookmarksView extends StatelessWidget {
           body: ListView.builder(
             itemCount: mv.myBookmarksList.length,
             itemBuilder: (context, index) {
-              return ProfileEventCardWidget(
+              return MyEventCardWidget(
                 eventId: mv.myBookmarksList[index].eventId,
                 eventTitle: mv.myBookmarksList[index].eventTitle,
                 eventDate: mv.myBookmarksList[index].eventDate,

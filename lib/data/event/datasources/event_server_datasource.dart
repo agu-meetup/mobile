@@ -160,10 +160,36 @@ class EventServerDatasource {
       parameters: jsonEncode({"userId": userId}),
     );
 
-    if (response.statusCode == 200){
+    if (response.statusCode == 200) {
       return;
     } else {
       throw LeaveEventError();
+    }
+  }
+
+  Future<List<dynamic>> getMyEventById({required int userId}) async {
+    Response response = await myService.getRequest(
+      pathRequest: "api/event/myEvent/$userId",
+      isRequiredToken: false,
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)['detailedMyEvents'] as List<dynamic>;
+    } else {
+      throw GetMyEventError();
+    }
+  }
+
+  Future<List<dynamic>> getJoinedEventById({required int userId}) async {
+    Response response = await myService.getRequest(
+      pathRequest: 'api/event/joinedEvent/$userId',
+      isRequiredToken: false,
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)['detailedJoinedEvents'] as List<dynamic>;
+    } else {
+      throw GetJoinedEventError();
     }
   }
 }

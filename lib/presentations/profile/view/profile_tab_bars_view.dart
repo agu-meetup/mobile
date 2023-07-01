@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../components/my_cards/my_event_card_widget.dart';
 import '../../../core/constants.dart';
 import '../model_view/profile_model_view.dart';
-import '../widget/profile_event_card_widget.dart';
 
 class ProfileTabBarsView extends StatelessWidget {
   const ProfileTabBarsView({
@@ -44,7 +44,7 @@ class ProfileTabBarsView extends StatelessWidget {
                       ListView.builder(
                         itemCount: mv.myEventsList.length,
                         itemBuilder: (context, index) {
-                          return ProfileEventCardWidget(
+                          return MyEventCardWidget(
                             eventId: mv.myEventsList[index].eventId,
                             eventTitle: mv.myEventsList[index].eventTitle,
                             eventDate: mv.myEventsList[index].eventDate,
@@ -62,7 +62,7 @@ class ProfileTabBarsView extends StatelessWidget {
                       ListView.builder(
                         itemCount: mv.upcomingEventsList.length,
                         itemBuilder: (context, index) {
-                          return ProfileEventCardWidget(
+                          return MyEventCardWidget(
                             eventId: mv.upcomingEventsList[index].eventId,
                             eventTitle: mv.upcomingEventsList[index].eventTitle,
                             eventDate: mv.upcomingEventsList[index].eventDate,
@@ -80,7 +80,7 @@ class ProfileTabBarsView extends StatelessWidget {
                       ListView.builder(
                         itemCount: mv.pastEventsList.length,
                         itemBuilder: (context, index) {
-                          return ProfileEventCardWidget(
+                          return MyEventCardWidget(
                             eventId: mv.pastEventsList[index].eventId,
                             eventTitle: mv.pastEventsList[index].eventTitle,
                             eventDate: mv.pastEventsList[index].eventDate,
