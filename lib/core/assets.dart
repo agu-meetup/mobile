@@ -39,3 +39,4 @@ String eventMembers = "$assetsIconRoot/event_members.png";
 String circularMore = "$assetsIconRoot/circular_more.png";
 String closeRed = "$assetsIconRoot/close_red.png";
 String allGender = "$assetsIconRoot/all_gender.png";
+String filter = "$assetsIconRoot/filter.png";

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:agu_meetup_mobile/data/address/datasources/address_server_datasource.dart';
 import 'package:agu_meetup_mobile/data/address/model/get_address_response_model.dart';
 import 'package:agu_meetup_mobile/data/detail/datasources/detail_server_datasource.dart';
@@ -32,6 +34,7 @@ class EventRepository {
     eventIdWhenEventSelect = eventId;
   }
 
+
   /// Domain -> Data methods
   Future<void> fetchBookmarksEventIdsFromDS(int userId) async{
     bookmarksEventIds = [];
@@ -40,27 +43,29 @@ class EventRepository {
   }
 
   Future<void> fetchMyEventsFromDS(int userId) async{
-    myEvents.clear();
-    List<dynamic> myEventListMap = await eventServerDatasource.getMyEventById(userId: userId);
 
+    List<dynamic> myEventListMap = await eventServerDatasource.getMyEventById(userId: userId);
+    myEvents.clear();
+    List<EventInfoModel> tempMyEvents = [];
     for (int i = 0; i < myEventListMap.length; i++) {
       var tempMyEvent = EventInfoModel.fromMap(myEventListMap[i]);
       tempMyEvent.imageUrls = await getAllImageLinks(myEventListMap[i]['imageUrl']);
-      tempMyEvent.hosts = (myEventListMap[i]['hosts'] as String).split("-");
-      myEvents.add(tempMyEvent);
+      tempMyEvents.add(tempMyEvent);
     }
+
+    myEvents = [ ...tempMyEvents ];
   }
 
   Future<void> fetchJoinedEventsFromDS(int userId) async {
-    joinedEvents.clear();
     List<dynamic> joinedEventsListMap = await eventServerDatasource.getJoinedEventById(userId: userId);
-
+    joinedEvents.clear();
+    List<EventInfoModel> tempJoinedEvents = [];
     for (int i = 0; i < joinedEventsListMap.length; i++) {
       var tempJoinedEvent = EventInfoModel.fromMap(joinedEventsListMap[i]);
       tempJoinedEvent.imageUrls = await getAllImageLinks(joinedEventsListMap[i]['imageUrl']);
-      tempJoinedEvent.hosts = (joinedEventsListMap[i]['hosts'] as String).split("-");
-      joinedEvents.add(tempJoinedEvent);
+      tempJoinedEvents.add(tempJoinedEvent);
     }
+    joinedEvents = [ ...tempJoinedEvents ];
   }
 
   Future<int> createEvent(
@@ -68,19 +73,7 @@ class EventRepository {
     int createdEventId =
         await eventServerDatasource.createEvent(createEventRequestModel);
 
-    String imageUrls = "Events/$createdEventId/,";
-    for (int i = 0; i < createEventRequestModel.imageFiles.length; i++) {
-      await myFirebaseStorage.updateImage(
-        "Events",
-        createEventRequestModel.imageFiles[i],
-        createdEventId.toString(),
-        (i + 1),
-      );
-      imageUrls += "${i + 1}.jpg";
-      if (i != createEventRequestModel.imageFiles.length - 1) {
-        imageUrls += ",";
-      }
-    }
+    String imageUrls = await updateImagesToFirebase(createdEventId, createEventRequestModel.imageFiles);
 
     Map<String, dynamic> eventImageInfoMap = {
       "imgUrl": imageUrls,
@@ -162,7 +155,7 @@ class EventRepository {
   }
 
   List<EventInfoModel> getJoinedEvents() {
-    return joinedEvents;
+    return [ ...joinedEvents ];
   }
 
   /// Required Methods for event repository
@@ -210,5 +203,23 @@ class EventRepository {
     }
 
     return imagesLinks;
+  }
+
+  Future<String> updateImagesToFirebase(int createdEventId, List<File> imageFiles) async{
+    String imageUrls = "Events/$createdEventId/,";
+    for (int i = 0; i < imageFiles.length; i++) {
+      await myFirebaseStorage.updateImage(
+        "Events",
+        imageFiles[i],
+        createdEventId.toString(),
+        (i + 1),
+      );
+      imageUrls += "${i + 1}.jpg";
+      if (i != imageFiles.length - 1) {
+        imageUrls += ",";
+      }
+    }
+
+    return imageUrls;
   }
 }

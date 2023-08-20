@@ -36,7 +36,7 @@ class EventInfoModel {
       maxParticipants: map['max_participants'] as int,
       startTime: DateTime.parse(map['start_time']),
       endTime: DateTime.parse(map['end_time']),
-      hosts: [],
+      hosts: (map['hosts'] as String).split("-"),
       gender: map['gender'],
       imageUrls: [],
       price: map['price'] as int,

@@ -12,6 +12,7 @@ import 'package:agu_meetup_mobile/presentations/home/model_view/home_model_view.
 import 'package:agu_meetup_mobile/presentations/intro/model_view/intro_model_view.dart';
 import 'package:agu_meetup_mobile/presentations/notification/model_view/notification_model_view.dart';
 import 'package:agu_meetup_mobile/presentations/profile/model_view/profile_model_view.dart';
+import 'package:agu_meetup_mobile/presentations/search/model_view/search_model_view.dart';
 import 'package:agu_meetup_mobile/presentations/sign_in/model_view/sign_in_model_view.dart';
 import 'package:agu_meetup_mobile/presentations/sign_up/model_view/sign_up_model_view.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -76,6 +77,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => HomeModelView(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => SearchModelView(),
         ),
       ],
       child: const MyApp(),

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:agu_meetup_mobile/components/my_buttons/my_text_button_widget.dart';
 import 'package:agu_meetup_mobile/core/assets.dart';
@@ -24,6 +23,7 @@ import 'package:provider/provider.dart';
 
 import '../../../components/my_dialogs/my_simple_dialog_widget.dart';
 import '../view/create_event_maps_view.dart';
+import '../widget/create_event_bottom_sheet_widget.dart';
 
 class CreateEventModelView extends ChangeNotifier {
   /// Domain Layers
@@ -35,8 +35,6 @@ class CreateEventModelView extends ChangeNotifier {
   late BuildContext previewDialogCtx;
   late CreateEventInfoModel createEventInfoModel;
   bool isPageLoaded = false;
-  final ImagePicker _picker = ImagePicker();
-  XFile? photo;
 
   void updateBuildContext(BuildContext context) {
     ctx = context;
@@ -47,75 +45,32 @@ class CreateEventModelView extends ChangeNotifier {
   }
 
   Future<void> initialMethods() async {
-    initializeCreateEventInfo();
+    createEventInfoModel = CreateEventInfoModel();
     updateCreateEventUserModel();
     isPageLoaded = true;
   }
 
-  void initializeCreateEventInfo() {
-    createEventInfoModel = CreateEventInfoModel(
-      selectedImages: [],
-      titleCtr: TextEditingController(),
-      placeNameCtr: TextEditingController(),
-      isActiveAllDay: false,
-      dateSelectorController: TextEditingController(),
-      startTimeController: TextEditingController(),
-      endTimeController: TextEditingController(),
-      detailCtr: TextEditingController(),
-      quotaCtr: TextEditingController(),
-      isFree: false,
-      priceCtr: TextEditingController(),
-      hostsControllers: [],
-      locationAddressCtr: TextEditingController(),
-      forDirectionsCtr: TextEditingController(),
-    );
-  }
-
   /// Image Upload
+  final ImagePicker _picker = ImagePicker();
+  XFile? photo;
+
   void photoUploadButtonFunc() {
-    showModalBottomSheet<void>(
-      backgroundColor: Colors.transparent,
-      context: ctx,
-      builder: (BuildContext context) {
-        return Container(
-          height: 150,
-          decoration: BoxDecoration(
-            color: kWhite,
-            borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(12),
-              topLeft: Radius.circular(12),
-            ),
-          ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                MyTextButtonWidget(
-                  text: 'From Gallery',
-                  onTanFunc: () async {
-                    photo =
-                        await _picker.pickImage(source: ImageSource.gallery);
-                    if (photo != null) {
-                      createEventInfoModel.selectedImages.add(photo!);
-                    }
-                    notifyListeners();
-                  },
-                ),
-                MyTextButtonWidget(
-                  text: 'From Camera',
-                  onTanFunc: () async {
-                    photo = await _picker.pickImage(source: ImageSource.camera);
-                    if (photo != null) {
-                      createEventInfoModel.selectedImages.add(photo!);
-                    }
-                    notifyListeners();
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
+    photoUploadBottomSheet(
+      ctx: ctx,
+      galleryFunc: () async {
+        photo =
+        await _picker.pickImage(source: ImageSource.gallery);
+        if (photo != null) {
+          createEventInfoModel.selectedImages.add(photo!);
+        }
+        notifyListeners();
+      },
+      cameraFunc: () async {
+        photo = await _picker.pickImage(source: ImageSource.camera);
+        if (photo != null) {
+          createEventInfoModel.selectedImages.add(photo!);
+        }
+        notifyListeners();
       },
     );
   }
@@ -124,8 +79,6 @@ class CreateEventModelView extends ChangeNotifier {
     createEventInfoModel.selectedImages.removeAt(imageIndex);
     notifyListeners();
   }
-
-  /// Event Title
 
   /// Google Maps - Location
   Completer<GoogleMapController> mapController =
@@ -215,11 +168,7 @@ class CreateEventModelView extends ChangeNotifier {
 
   Future<void> updateAddress() async {
 
-    if (createEventInfoModel.targetPosition == null) {
-      createEventInfoModel.targetPosition = LatLng(currentPosition!.latitude, currentPosition!.longitude);
-    }
-
-    print("LOCATIONS: ${createEventInfoModel.targetPosition}");
+    createEventInfoModel.targetPosition ??= LatLng(currentPosition!.latitude, currentPosition!.longitude);
 
     List<Placemark> placemarks = [];
 
@@ -258,7 +207,6 @@ class CreateEventModelView extends ChangeNotifier {
 
   /// Capture ScreenShot
   Future<void> captureSsMap() async {
-    print(mapController);
     GoogleMapController controller = await mapController.future;
     createEventInfoModel.imageBytes = await controller.takeSnapshot();
     notifyListeners();
@@ -344,18 +292,13 @@ class CreateEventModelView extends ChangeNotifier {
     return "$hourText:$minuteText";
   }
 
-  /// Detail
-
-  /// Quota
-  TextInputType quotaInputType = TextInputType.number;
-
   /// Gender
-
   List<String> genderList = const [
     "All",
     "Male",
     "Female",
   ];
+
   void changeSelectedGender(String? selectedGender) {
     createEventInfoModel.genderDropdownValue = selectedGender;
     notifyListeners();
@@ -369,6 +312,7 @@ class CreateEventModelView extends ChangeNotifier {
     "Cinema",
     "Trip",
   ];
+
   void changeSelectedCategory(String? selectedCategory) {
     createEventInfoModel.categoryDropdownValue = selectedCategory;
     notifyListeners();
@@ -424,7 +368,9 @@ class CreateEventModelView extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// ************************
   /// Alert Dialog Parameters
+  /// ************************
   int sliderImageIndex = 0;
   void updateSliderImageIndex(int newImageIndex) {
     sliderImageIndex = newImageIndex;
@@ -442,19 +388,7 @@ class CreateEventModelView extends ChangeNotifier {
 
   void createEventButtonFunc() async {
     try {
-      if (selectedDate != null &&
-          (createEventInfoModel.isActiveAllDay ||
-              (startTimeHour != -1 &&
-                  startTimeMinute != -1 &&
-                  endTimeHour != -1 &&
-                  endTimeMinute != -1)) &&
-          createEventInfoModel.targetPosition != null &&
-          createEventInfoModel.titleCtr.text != "" &&
-          createEventInfoModel.detailCtr.text != "" &&
-          createEventInfoModel.categoryDropdownValue != null &&
-          createEventInfoModel.quotaCtr.text != "" &&
-          createEventInfoModel.genderDropdownValue != null &&
-          createEventInfoModel.locationAddressCtr.text != "") {
+      if (createEventButtonValidation()) {
         createEventInfoModel.allHostsText = hostTextFieldToStringForPreview();
         isPreviewCreatedEventClicked = false;
         if (createEventInfoModel.isActiveAllDay) {
@@ -523,12 +457,10 @@ class CreateEventModelView extends ChangeNotifier {
   }
 
   Future<void> createEventRequestFunction() async {
-    String priceTempText = createEventInfoModel.priceCtr.text;
     if (createEventInfoModel.isFree == true ||
         createEventInfoModel.priceCtr.text == "") {
-      priceTempText = "0";
+      createEventInfoModel.priceCtr.text = "0";
     }
-    String tempHosts = hostTextFieldToString();
     List<File> imageFiles =
         createEventInfoModel.selectedImages.map((e) => File(e.path)).toList();
     try {
@@ -550,10 +482,10 @@ class CreateEventModelView extends ChangeNotifier {
           title: createEventInfoModel.titleCtr.text,
           category: createEventInfoModel.categoryDropdownValue!,
           maxParticipants: int.parse(createEventInfoModel.quotaCtr.text),
-          hosts: tempHosts,
+          hosts: hostTextFieldToString(),
           gender: createEventInfoModel.genderDropdownValue!,
           imageUrl: "img",
-          price: double.parse(priceTempText),
+          price: double.parse(createEventInfoModel.priceCtr.text),
           imageFiles: imageFiles,
         ),
       );
@@ -587,5 +519,21 @@ class CreateEventModelView extends ChangeNotifier {
         context: ctx,
       );
     }
+  }
+
+  bool createEventButtonValidation() {
+    return selectedDate != null &&
+        (createEventInfoModel.isActiveAllDay ||
+            (startTimeHour != -1 &&
+                startTimeMinute != -1 &&
+                endTimeHour != -1 &&
+                endTimeMinute != -1)) &&
+        createEventInfoModel.targetPosition != null &&
+        createEventInfoModel.titleCtr.text != "" &&
+        createEventInfoModel.detailCtr.text != "" &&
+        createEventInfoModel.categoryDropdownValue != null &&
+        createEventInfoModel.quotaCtr.text != "" &&
+        createEventInfoModel.genderDropdownValue != null &&
+        createEventInfoModel.locationAddressCtr.text != "";
   }
 }

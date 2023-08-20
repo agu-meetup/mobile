@@ -46,7 +46,7 @@ class BottomBarModelView extends ChangeNotifier {
     isPageLoaded = false;
     await fetchBookmarksEventIds();
     await fetchMyEvents();
-    await fetchJoinedEvents();
+    // await fetchJoinedEvents();
     isPageLoaded = true;
     notifyListeners();
   }

@@ -13,6 +13,7 @@ class HomeModelView extends ChangeNotifier {
 
   /// Core Attributes
   late BuildContext ctx;
+  bool isLoaded = false;
 
   /// Attributes
   late HomeUserInfoModel userInfo;
@@ -24,7 +25,9 @@ class HomeModelView extends ChangeNotifier {
 
   void inializeMethods() async {
     fetchUserInfo();
-    fetchGoingEvent();
+    await fetchGoingEvent();
+    isLoaded = true;
+    notifyListeners();
   }
 
   void fetchUserInfo() {
@@ -47,9 +50,10 @@ class HomeModelView extends ChangeNotifier {
     notifyListeners();
   }
 
-  void fetchGoingEvent() {
-    goingEventList = eventRepository
-        .getJoinedEvents()
+  Future<void> fetchGoingEvent() async{
+    await eventRepository.fetchJoinedEventsFromDS(userRepository.getUserInfo()!.id);
+    goingEventList.clear();
+    goingEventList = eventRepository.getJoinedEvents()
         .where((e) => e.startTime.isAfter(DateTime.now()))
         .map((e) => HomeEventModel.fromEventInfoModel(e))
         .toList();

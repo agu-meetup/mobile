@@ -18,6 +18,7 @@ class MyTextFieldWidget extends StatelessWidget {
   Function? onTabFunc;
   bool isReadOnly;
   Icon? specificSuffixIcon;
+  Icon? specificPrefixIcon;
   bool isEnabled;
   int maxLength;
 
@@ -36,6 +37,7 @@ class MyTextFieldWidget extends StatelessWidget {
     this.onTabFunc,
     this.isReadOnly = false,
     this.specificSuffixIcon,
+    this.specificPrefixIcon,
     this.isEnabled = true,
     this.maxLength = 1,
   }) : super(key: key);
@@ -84,6 +86,7 @@ class MyTextFieldWidget extends StatelessWidget {
                           ),
                   )
                 : null),
+        prefixIcon: specificPrefixIcon,
         enabledBorder: textFieldBorder(
           isThereShadow ? Colors.transparent : kDarkGray,
         ),
