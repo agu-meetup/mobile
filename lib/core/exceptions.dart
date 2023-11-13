@@ -43,3 +43,9 @@ class ForgotPasswordResetPasswordError implements Exception {}
 class GetMyEventError implements Exception {}
 
 class GetJoinedEventError implements Exception {}
+
+class CreateCommentError implements Exception {}
+
+class GetCommentError implements Exception {}
+
+class GetClosestLocationName implements Exception {}

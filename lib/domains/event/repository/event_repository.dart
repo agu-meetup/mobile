@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:agu_meetup_mobile/data/address/datasources/address_server_datasource.dart';
 import 'package:agu_meetup_mobile/data/address/model/get_address_response_model.dart';
+import 'package:agu_meetup_mobile/data/comment/datasources/comment_server_datasource.dart';
+import 'package:agu_meetup_mobile/data/comment/models/get_comment_response_model.dart';
 import 'package:agu_meetup_mobile/data/detail/datasources/detail_server_datasource.dart';
 import 'package:agu_meetup_mobile/data/detail/models/get_detail_by_id_response_model.dart';
 import 'package:agu_meetup_mobile/data/event/datasources/event_server_datasource.dart';
@@ -9,6 +11,7 @@ import 'package:agu_meetup_mobile/data/event/models/create_event_request_model.d
 import 'package:agu_meetup_mobile/data/event/models/get_event_response_model.dart';
 import 'package:agu_meetup_mobile/data/event/models/get_events_by_user_response_model.dart';
 import 'package:agu_meetup_mobile/domains/profile/repository/profile_repository.dart';
+import 'package:agu_meetup_mobile/presentations/detail/model/detail_comment_model.dart';
 import 'package:agu_meetup_mobile/presentations/detail/model/detail_info_model.dart';
 
 import '../../../core/my_firebase_storage.dart';
@@ -20,6 +23,7 @@ class EventRepository {
   EventServerDatasource eventServerDatasource = EventServerDatasource();
   DetailServerDatasource detailServerDatasource = DetailServerDatasource();
   AddressServerDatasource addressServerDatasource = AddressServerDatasource();
+  CommentServerDatasource commentServerDatasource = CommentServerDatasource();
   MyFirebaseStorage myFirebaseStorage = MyFirebaseStorage();
 
   /// Attibutes
@@ -34,38 +38,40 @@ class EventRepository {
     eventIdWhenEventSelect = eventId;
   }
 
-
   /// Domain -> Data methods
-  Future<void> fetchBookmarksEventIdsFromDS(int userId) async{
+  Future<void> fetchBookmarksEventIdsFromDS(int userId) async {
     bookmarksEventIds = [];
     bookmarksEventIds =
         await eventServerDatasource.getSaveEventsByUserId(userId);
   }
 
-  Future<void> fetchMyEventsFromDS(int userId) async{
-
-    List<dynamic> myEventListMap = await eventServerDatasource.getMyEventById(userId: userId);
+  Future<void> fetchMyEventsFromDS(int userId) async {
+    List<dynamic> myEventListMap =
+        await eventServerDatasource.getMyEventById(userId: userId);
     myEvents.clear();
     List<EventInfoModel> tempMyEvents = [];
     for (int i = 0; i < myEventListMap.length; i++) {
       var tempMyEvent = EventInfoModel.fromMap(myEventListMap[i]);
-      tempMyEvent.imageUrls = await getAllImageLinks(myEventListMap[i]['imageUrl']);
+      tempMyEvent.imageUrls =
+          await getAllImageLinks(myEventListMap[i]['imageUrl']);
       tempMyEvents.add(tempMyEvent);
     }
 
-    myEvents = [ ...tempMyEvents ];
+    myEvents = [...tempMyEvents];
   }
 
   Future<void> fetchJoinedEventsFromDS(int userId) async {
-    List<dynamic> joinedEventsListMap = await eventServerDatasource.getJoinedEventById(userId: userId);
+    List<dynamic> joinedEventsListMap =
+        await eventServerDatasource.getJoinedEventById(userId: userId);
     joinedEvents.clear();
     List<EventInfoModel> tempJoinedEvents = [];
     for (int i = 0; i < joinedEventsListMap.length; i++) {
       var tempJoinedEvent = EventInfoModel.fromMap(joinedEventsListMap[i]);
-      tempJoinedEvent.imageUrls = await getAllImageLinks(joinedEventsListMap[i]['imageUrl']);
+      tempJoinedEvent.imageUrls =
+          await getAllImageLinks(joinedEventsListMap[i]['imageUrl']);
       tempJoinedEvents.add(tempJoinedEvent);
     }
-    joinedEvents = [ ...tempJoinedEvents ];
+    joinedEvents = [...tempJoinedEvents];
   }
 
   Future<int> createEvent(
@@ -73,7 +79,8 @@ class EventRepository {
     int createdEventId =
         await eventServerDatasource.createEvent(createEventRequestModel);
 
-    String imageUrls = await updateImagesToFirebase(createdEventId, createEventRequestModel.imageFiles);
+    String imageUrls = await updateImagesToFirebase(
+        createdEventId, createEventRequestModel.imageFiles);
 
     Map<String, dynamic> eventImageInfoMap = {
       "imgUrl": imageUrls,
@@ -84,18 +91,27 @@ class EventRepository {
     return createdEventId;
   }
 
+  Future<List<DetailCommentModel>> getCommentDetail() async {
+    List<GetCommentResponseModel> tempGetCommentResponseModel =
+        await commentServerDatasource
+            .getCommentsByEventId(eventIdWhenEventSelect!);
+    return tempGetCommentResponseModel
+        .map((e) => DetailCommentModel(
+            userPhoto: "assets/test_image/test_profile_pic.png",
+            nameSurname: e.userName,
+            commentDetail: e.commentText))
+        .toList();
+  }
+
   Future<DetailInfoModel> getEventDetail() async {
     GetEventResponseModel tempGetEventResponseModel =
         await eventServerDatasource.getEventById(eventIdWhenEventSelect!);
     GetAddressResponseModel tempGetAddressResponseModel =
         await addressServerDatasource
             .getAddressByEventId(eventIdWhenEventSelect!);
-
-    String eventDate =
-        specificDateTranslate(tempGetEventResponseModel.startTime);
-    String startTime =
-        specificTimeTranslate(tempGetEventResponseModel.startTime);
-    String endTime = specificTimeTranslate(tempGetEventResponseModel.endTime);
+    List<GetCommentResponseModel> tempGetCommentResponseModel =
+        await commentServerDatasource
+            .getCommentsByEventId(eventIdWhenEventSelect!);
 
     List<String> imageLinks =
         await getAllImageLinks(tempGetEventResponseModel.imageUrl);
@@ -110,9 +126,9 @@ class EventRepository {
           : '${tempGetEventResponseModel.price}',
       hosts: tempGetEventResponseModel.hosts.split("-"),
       imageLinks: imageLinks,
-      eventDate: eventDate,
-      startTime: startTime,
-      endTime: endTime,
+      eventDate: specificDateTranslate(tempGetEventResponseModel.startTime),
+      startTime: specificTimeTranslate(tempGetEventResponseModel.startTime),
+      endTime: specificTimeTranslate(tempGetEventResponseModel.endTime),
       locationName: tempGetAddressResponseModel.locationName,
       province: tempGetAddressResponseModel.province,
       district: tempGetAddressResponseModel.district,
@@ -131,13 +147,17 @@ class EventRepository {
     );
   }
 
-  Future<void> addEventToBookmarks({required int userId, required int eventId}) async {
-    await eventServerDatasource.addSaveEventByUserId(userId: userId, eventId: eventId);
+  Future<void> addEventToBookmarks(
+      {required int userId, required int eventId}) async {
+    await eventServerDatasource.addSaveEventByUserId(
+        userId: userId, eventId: eventId);
     bookmarksEventIds.add(eventId);
   }
 
-  Future<void> deleteEventToBookmarks({required int userId, required int eventId}) async {
-    await eventServerDatasource.deleteSaveEventByUserId(userId: userId, eventId: eventId);
+  Future<void> deleteEventToBookmarks(
+      {required int userId, required int eventId}) async {
+    await eventServerDatasource.deleteSaveEventByUserId(
+        userId: userId, eventId: eventId);
     bookmarksEventIds.removeWhere((e) => e == eventId);
   }
 
@@ -155,7 +175,7 @@ class EventRepository {
   }
 
   List<EventInfoModel> getJoinedEvents() {
-    return [ ...joinedEvents ];
+    return [...joinedEvents];
   }
 
   /// Required Methods for event repository
@@ -205,7 +225,8 @@ class EventRepository {
     return imagesLinks;
   }
 
-  Future<String> updateImagesToFirebase(int createdEventId, List<File> imageFiles) async{
+  Future<String> updateImagesToFirebase(
+      int createdEventId, List<File> imageFiles) async {
     String imageUrls = "Events/$createdEventId/,";
     for (int i = 0; i < imageFiles.length; i++) {
       await myFirebaseStorage.updateImage(

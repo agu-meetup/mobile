@@ -51,9 +51,9 @@ class DetailCommentView extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return DetailCommentWidget(
-                  userPhoto: mv.comments[index].userPhoto,
-                  nameSurname: mv.comments[index].nameSurname,
-                  commentDetail: mv.comments[index].commentDetail,
+                  userPhoto: mv.comments[index]!.userPhoto,
+                  nameSurname: mv.comments[index]!.nameSurname,
+                  commentDetail: mv.comments[index]!.commentDetail,
                 );
               },
             ),

@@ -1,5 +1,5 @@
 import 'package:agu_meetup_mobile/core/assets.dart';
-import 'package:control_style/decorated_input_border.dart';
+import 'package:control_style/control_style.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/constants.dart';

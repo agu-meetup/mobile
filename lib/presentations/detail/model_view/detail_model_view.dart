@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:agu_meetup_mobile/components/my_dialogs/my_simple_dialog_widget.dart';
 import 'package:agu_meetup_mobile/core/assets.dart';
+import 'package:agu_meetup_mobile/data/comment/models/create_comment_request_model.dart';
+import 'package:agu_meetup_mobile/domains/comment/repository/comment_repository.dart';
 import 'package:agu_meetup_mobile/domains/detail_participants/repository/detail_participants_repository.dart';
 import 'package:agu_meetup_mobile/domains/event/repository/event_repository.dart';
 import 'package:agu_meetup_mobile/domains/user/repository/user_repository.dart';
@@ -26,6 +28,7 @@ class DetailModelView extends ChangeNotifier {
   UserRepository userRepository = UserRepository();
   DetailParticipantsRepository detailParticipantsRepository =
       DetailParticipantsRepository();
+  CommentRepository commentRepository = CommentRepository();
 
   late BuildContext ctx;
   void updateBuildContext(BuildContext context) {
@@ -39,6 +42,7 @@ class DetailModelView extends ChangeNotifier {
   void initializeMethods() async {
     isPageLoaded = false;
     await getEventDetailById();
+    await getCommentDetail();
     checkEventStatus();
     isEventBookmarkedFunc();
     isPageLoaded = true;
@@ -54,10 +58,9 @@ class DetailModelView extends ChangeNotifier {
       detailPageType = DetailPageType.myEvent;
     } else if (detailInfoModel!.userIdList
         .contains(userRepository.getUserInfo()!.id)) {
-      if(detailInfoModel!.eventStartDate.isBefore(DateTime.now())){
+      if (detailInfoModel!.eventStartDate.isBefore(DateTime.now())) {
         detailPageType = DetailPageType.pastEvent;
-      }
-      else {
+      } else {
         detailPageType = DetailPageType.joinedEvent;
       }
     }
@@ -136,7 +139,10 @@ class DetailModelView extends ChangeNotifier {
   // Leave Func
   Future<void> leaveEventButtonFunc() async {
     try {
-      await eventRepository.leaveEvent(eventId: detailInfoModel!.eventId, userId: userRepository.getUserInfo()!.id,);
+      await eventRepository.leaveEvent(
+        eventId: detailInfoModel!.eventId,
+        userId: userRepository.getUserInfo()!.id,
+      );
       await mySimpleDialogWidget(
           context: ctx,
           title: "Success",
@@ -155,38 +161,11 @@ class DetailModelView extends ChangeNotifier {
   }
 
   /// Comments
-  List<DetailCommentModel> comments = [
-    DetailCommentModel(
-      userPhoto: 'assets/test_image/test_profile_pic.png',
-      nameSurname: 'Alaattin Öztürk',
-      commentDetail:
-          'Etkinliği merakla bekliyorum. Orada olmak. Şimşekleri içmek için sabırsızlanıyorum. <3.',
-    ),
-    DetailCommentModel(
-      userPhoto: 'assets/test_image/test_profile_pic.png',
-      nameSurname: 'Ömer Akçan',
-      commentDetail:
-          'Etkinliği merakla bekliyorum. Orada olmak. Şimşekleri içmek için sabırsızlanıyorum. <3.',
-    ),
-    DetailCommentModel(
-      userPhoto: 'assets/test_image/test_profile_pic.png',
-      nameSurname: 'Ömer Uluyağmur',
-      commentDetail:
-          'Etkinliği merakla bekliyorum. Orada olmak. Şimşekleri içmek için sabırsızlanıyorum. <3.',
-    ),
-    DetailCommentModel(
-      userPhoto: 'assets/test_image/test_profile_pic.png',
-      nameSurname: 'Buket Bayık',
-      commentDetail:
-          'Etkinliği merakla bekliyorum. Orada olmak. Şimşekleri içmek için sabırsızlanıyorum. <3.',
-    ),
-    DetailCommentModel(
-      userPhoto: 'assets/test_image/test_profile_pic.png',
-      nameSurname: 'Çağrı Karaca',
-      commentDetail:
-          'Etkinliği merakla bekliyorum. Orada olmak. Şimşekleri içmek için sabırsızlanıyorum. <3.',
-    ),
-  ];
+  late List<DetailCommentModel?> comments;
+  Future<void> getCommentDetail() async {
+    comments = await eventRepository.getCommentDetail();
+  }
+
   int showedComment = 2;
 
   void changeShowedComment() {
@@ -196,8 +175,14 @@ class DetailModelView extends ChangeNotifier {
 
   TextEditingController commentController = TextEditingController();
 
-  void sendComment() {
+  void sendComment() async {
     // Send Comment to back end
+    await commentRepository.createComment(CreateCommentRequestModel(
+      userId: userRepository.getUserInfo()!.id,
+      eventId: detailInfoModel!.eventId,
+      commentText: commentController.text,
+    ));
+    await getCommentDetail();
     commentController.text = "";
     notifyListeners();
   }

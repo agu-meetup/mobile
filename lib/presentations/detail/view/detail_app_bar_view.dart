@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/assets.dart';
 
-class DetailAppBarView extends StatelessWidget with PreferredSizeWidget {
+class DetailAppBarView extends StatelessWidget implements PreferredSizeWidget {
   const DetailAppBarView({
     Key? key,
   }) : super(key: key);

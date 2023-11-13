@@ -1,6 +1,14 @@
+import 'package:agu_meetup_mobile/domains/address/repository/address_repository.dart';
+import 'package:agu_meetup_mobile/presentations/profile/model_view/profile_model_view.dart';
 import 'package:flutter/material.dart';
 
 import '../widget/widget.dart';
+
+enum SearchPageStatus {
+  loading,
+  success,
+  failed,
+}
 
 class SearchModelView extends ChangeNotifier {
   late BuildContext ctx;
@@ -11,18 +19,24 @@ class SearchModelView extends ChangeNotifier {
 
   /// Attributes
   DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  SearchPageStatus searchPageStatus = SearchPageStatus.loading;
+
+  /// Domain Layers
+  AddressRepository addressRepository = AddressRepository();
 
   /// Filters
   void filterButtonFunc() {
     searchFilterBottomSheet(ctx: ctx);
   }
 
-  void initializeMethods() {
-    datesMap["All"] = null;
-    datesMap["Today"] = today;
-    datesMap["Tomorrow"] = today.add(const Duration(days: 1));
-    datesMap["StartDate"] = today;
-    datesMap["EndDate"] = today.add(const Duration(days: 14));
+  void initializeMethods() async{
+    searchPageStatus = SearchPageStatus.loading;
+
+    initializeDates();
+    initializeLocations();
+
+    searchPageStatus = SearchPageStatus.success;
+    // notifyListeners();
   }
 
   String locationFilterValue = "All";
@@ -33,6 +47,12 @@ class SearchModelView extends ChangeNotifier {
     "Talas",
     "Melikgazi",
   ];
+  void initializeLocations() {
+    locations.clear();
+    locations.add("All");
+    List<String> closestLocations = addressRepository.getClosestLocationNameFromStatic();
+    locations.addAll(closestLocations);
+  }
   void changeLocationFilterValue(String val) {
     locationFilterValue = val;
     notifyListeners();
@@ -86,7 +106,13 @@ class SearchModelView extends ChangeNotifier {
     notifyListeners();
   }
   Map<String, DateTime?> datesMap = {};
-
+  void initializeDates() {
+    datesMap["All"] = null;
+    datesMap["Today"] = today;
+    datesMap["Tomorrow"] = today.add(const Duration(days: 1));
+    datesMap["StartDate"] = today;
+    datesMap["EndDate"] = today.add(const Duration(days: 14));
+  }
   void selectStartDateFunc() async {
     DateTime? pickedDate = await showDatePicker(
       context: ctx,

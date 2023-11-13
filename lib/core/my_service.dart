@@ -34,6 +34,7 @@ class MyService {
   Future<Response> getRequest({
     required String pathRequest,
     bool isRequiredToken = true,
+    Map<String, dynamic>? queryParams,
   }) async {
     var headersMap = {
       'Content-type': 'application/json;charset=UTF-8',
@@ -43,10 +44,10 @@ class MyService {
       headersMap["Authorization"] = "bearer ${jwtToken!}";
     }
     var client = http.Client();
-    var url = Uri.http(baseUrl, pathRequest);
+    var url = Uri.http(baseUrl, pathRequest, queryParams);
     var response = await client.get(
       url,
-      headers: headersMap,
+      headers: headersMap
     );
     return response;
   }
